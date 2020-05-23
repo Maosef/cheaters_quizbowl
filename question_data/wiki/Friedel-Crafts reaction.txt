@@ -1,0 +1,105 @@
+The Friedel-Crafts reactions are a set of reactions developed by Charles Friedel and James Crafts in 1877 to attach substituents to an aromatic ring. There are two main types of Friedel-Crafts reactions: alkylation reactions and acylation reactions. Both proceed by electrophilic aromatic substitution. The general reaction scheme is shown below.
+
+Several reviews have been written.
+
+
+== Friedel-Crafts alkylation ==
+Friedel-Crafts alkylation involves the alkylation of an aromatic ring with an alkyl halide using a strong Lewis acid catalyst. With anhydrous ferric chloride as a catalyst, the alkyl group attaches at the former site of the chloride ion. The general mechanism is shown below.
+
+This reaction has one big disadvantage, namely that the product is more nucleophilic than the reactant due to the electron donating alkyl-chain. Therefore, another hydrogen is substituted with an alkyl-chain, which leads to overalkylation of the molecule. Also, if the chloride is not on a tertiary carbon or secondary carbon, then the carbocation formed (R+) will undergo a carbocation rearrangement reaction. This reactivity is due to the relative stability of the tertiary and secondary carbocation over the primary carbocations.
+Steric hindrance can be exploited to limit the number of alkylations, as in the t-butylation of 1,4-dimethoxybenzene.
+
+Alkylations are not limited to alkyl halides: Friedel-Crafts reactions are possible with any carbocationic intermediate such as those derived from alkenes and a protic acid, Lewis acid, enones, and epoxides. An example is the synthesis of neophyl chloride from benzene and methallyl chloride:
+H2C=C(CH3)CH2Cl + C6H6 - C6H5C(CH3)2CH2Cl
+In one study the electrophile is a bromonium ion derived from an alkene and NBS:
+
+In this reaction samarium(III) triflate is believed to activate the NBS halogen donor in halonium ion formation.
+
+
+== Friedel-Crafts dealkylation ==
+Friedel-Crafts alkylation is a reversible reaction. In a reversed Friedel-Crafts reaction or Friedel-Crafts dealkylation, alkyl groups can be removed in the presence of protons and a Lewis acid.
+For example, in a multiple addition of ethyl bromide to benzene, ortho and para substitution is expected after the first monosubstitution step because an alkyl group is an activating group. However, the actual reaction product is 1,3,5-triethylbenzene with all alkyl groups as a meta substituent. Thermodynamic reaction control makes sure that thermodynamically favored meta substitution with steric hindrance minimized takes prevalence over less favorable ortho and para substitution by chemical equilibration. The ultimate reaction product is thus the result of a series of alkylations and dealkylations.
+
+
+== Friedel-Crafts acylation ==
+Friedel-Crafts acylation is the acylation of aromatic rings with an acyl chloride using a strong Lewis acid catalyst. Friedel-Crafts acylation is also possible with acid anhydrides. Reaction conditions are similar to the Friedel-Crafts alkylation mentioned above. This reaction has several advantages over the alkylation reaction. Due to the electron-withdrawing effect of the carbonyl group, the ketone product is always less reactive than the original molecule, so multiple acylations do not occur. Also, there are no carbocation rearrangements, as the carbonium ion is stabilized by a resonance structure in which the positive charge is on the oxygen.
+
+The viability of the Friedel-Crafts acylation depends on the stability of the acyl chloride reagent. Formyl chloride, for example, is too unstable to be isolated. Thus, synthesis of benzaldehyde via the Friedel-Crafts pathway requires that formyl chloride be synthesized in situ. This is accomplished via the Gattermann-Koch reaction, accomplished by treating benzene with carbon monoxide and hydrogen chloride under high pressure, catalyzed by a mixture of aluminium chloride and cuprous chloride.
+
+
+=== Reaction mechanism ===
+In a simple mechanistic view, the first step consists of dissociation of a chloride ion to form an acyl cation (acylium ion):
+
+In some cases, the Lewis acid binds to the oxygen of the acyl chloride to form an adduct. Regardless, the resulting acylium ion or a related adduct is subject to nucleophilic attack by the arene:
+
+Finally, chloride anion (or AlCl4-) deprotonates the ring (an arenium ion) to form HCl, and the AlCl3 catalyst is regenerated:
+
+If desired, the resulting ketone can be subsequently reduced to the corresponding alkane substituent by either Wolff-Kishner reduction or Clemmensen reduction. The net result is the same as the Friedel-Crafts alkylation except that rearrangement is not possible.
+
+
+== Friedel-Crafts hydroxyalkylation ==
+Arenes react with certain aldehydes and ketones to form the hydroxyalkylated product for example in the reaction of the mesityl derivative of glyoxal with benzene to form a benzoin with an alcohol rather than a carbonyl group:
+
+
+== Friedel-Crafts sulfonylation ==
+Under Friedel-Crafts reaction conditions, arenes react with sulfonyl halides and sulfonic acid anhydrides affording sulfones. Commonly used catalysts include AlCl3, FeCl3, GaCl3, BF3, SbCl5, BiCl3 and Bi(OTf)3, among others. Intramolecular Friedel-Crafts cyclization occurs with 2-phenyl-1-ethanesulfonyl chloride, 3-phenyl-1-propanesulfonyl chloride and 4-phenyl-1-butanesulfonyl chloride on heating in nitrobenzene with AlCl3. Sulfenyl and sulfinyl chlorides also undergo Friedel-Crafts-type reactions, affording sulfides and sulfoxides, respectively. Both aryl sulfinyl chlorides and diaryl sulfoxides can be prepared from arenes through reaction with thionyl chloride in the presence of catalysts such as BiCl3, Bi(OTf)3, LiClO4 or NaClO4.
+
+
+== Scope and variations ==
+This reaction is related to several classic named reactions:
+The acylated reaction product can be converted into the alkylated product via a Clemmensen reduction.
+The Gattermann-Koch reaction can be used to synthesize benzaldehyde from benzene.
+The Gatterman reaction describes arene reactions with hydrocyanic acid.
+The Houben-Hoesch reaction describes arene reactions with nitriles.
+A reaction modification with an aromatic phenyl ester as a reactant is called the Fries rearrangement.
+In the Scholl reaction two arenes couple directly (sometimes called Friedel-Crafts arylation).
+In the Zincke-Suhl reaction p-cresol is alkylated to a cyclohexadienone with tetrachloromethane.
+In the Blanc chloromethylation a chloromethyl group is added to an arene with formaldehyde, hydrochloric acid and zinc chloride.
+The Bogert-Cook Synthesis (1933) involves the dehydration and isomerization of 1-b-phenylethylcyclohexanol to the octahydro derivative of phenanthrene
+
+The Darzens-Nenitzescu Synthesis of Ketones (1910, 1936) involves the acylation of cyclohexene with acetyl chloride to methylcyclohexenylketone.
+In the related Nenitzescu reductive acylation (1936) a saturated hydrocarbon is added making it a reductive acylation to methylcyclohexylketone
+Nencki Reaction (1881) is the ring acetylation of phenols with acids in the presence of zinc chloride.
+In a green chemistry variation aluminium chloride is replaced by graphite in an alkylation of p-xylene with 2-bromobutane. This variation will not work with primary halides from which less carbocation involvement is inferred.
+
+
+=== Dyes ===
+Friedel-Crafts reactions have been used in the synthesis of several triarylmethane and xanthene dyes. Examples are the synthesis of thymolphthalein (a pH indicator) from two equivalents of thymol and phthalic anhydride:
+
+A reaction of phthalic anhydride with resorcinol in the presence of zinc chloride gives the fluorophore Fluorescein. Replacing resorcinol by N,N-diethylaminophenol in this reaction gives rhodamine B:
+
+
+=== Haworth reactions ===
+The Haworth reaction is a classic method for the synthesis of 1-tetralone. In it benzene is reacted with succinic anhydride, the intermediate product is reduced and a second FC acylation takes place with addition of acid.
+
+In a related reaction, phenanthrene is synthesized from naphthalene and succinic anhydride in a series of steps.
+
+
+=== Friedel-Crafts test for aromatic hydrocarbons ===
+Reaction of chloroform with aromatic compounds using an aluminium chloride catalyst gives triarylmethanes, which are often brightly colored, as is the case in triarylmethane dyes. This is a bench test for aromatic compounds.
+
+
+== See also ==
+Friedel family, a rich lineage of French scientists
+Hydrodealkylation
+Transalkylation
+Ethylene oxide
+
+
+== References ==
+
+
+=== FC (Friedel-Crafts) reactions in organic syntheses ===
+Alkylations:
+Diphenylacetone, Organic Syntheses, Coll. Vol. 3, p. 343 (1955); Vol. 29, p. 38 (1949) Article link.
+Reaction of p-xylene with chloromethane to durene Organic Syntheses, Coll. Vol. 2, p. 248 (1943); Vol. 10, p. 32 (1930). Article link
+Synthesis of benzophenone from benzene and tetrachloromethane Organic Syntheses, Coll. Vol. 1, p. 95 (1941); Vol. 8, p. 26 (1928).Article link
+
+Acylations:
+Dibenzoylethylene Organic Syntheses, Coll. Vol. 3, p. 248 (1955); Vol. 20, p. 29 (1940) Article link.
+reaction of acenaphthene plus succinic acid Organic Syntheses, Coll. Vol. 3, p. 6 (1955); Vol. 20, p. 1 (1940).Article link
+Desoxybenzoin Organic Syntheses, Coll. Vol. 2, p. 156 (1943); Vol. 12, p. 16 (1932). Article link
+Acylation of a phenanthrene compound Organic Syntheses, Vol. 80, p. 227 Link
+Reaction of bromobenzene with acetic anhydride Organic Syntheses, Coll. Vol. 1, p. 109 (1941); Vol. 5, p. 17 (1925). Article link
+beta-methylanthraquinone, Organic Syntheses, Coll. Vol. 1, p. 353 (1941); Vol. 4, p. 43 (1925). Article link
+Benzoylation of ferrocene Organic Syntheses, Coll. Vol. 6, p. 625 (1988); Vol. 56, p. 28 (1977). Article link

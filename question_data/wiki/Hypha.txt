@@ -1,0 +1,63 @@
+A hypha (plural hyphae, from Greek uphe, huphe, "web") is a long, branching filamentous structure of a fungus, oomycete, or actinobacterium. In most fungi, hyphae are the main mode of vegetative growth, and are collectively called a mycelium. Yeasts are unicellular fungi that do not grow as hyphae.
+
+
+== Structure ==
+A hypha consists of one or more cells surrounded by a tubular cell wall. In most fungi, hyphae are divided into cells by internal cross-walls called "septa" (singular septum). Septa are usually perforated by pores large enough for ribosomes, mitochondria and sometimes nuclei to flow between cells. The major structural polymer in fungal cell walls is typically chitin, in contrast to plants that have cellulosic cell walls. Some fungi have aseptate hyphae, meaning their hyphae are not partitioned by septa.
+
+
+== Growth ==
+Hyphae grow at their tips. During tip growth, cell walls are extended by the external assembly and polymerization of cell wall components, and the internal production of new cell membrane. The spitzenkorper is an intracellular organelle associated with tip growth. It is composed of an aggregation of membrane-bound vesicles containing cell wall components. The spitzenkorper is part of the endomembrane system of fungi, holding and releasing vesicles it receives from the Golgi apparatus. These vesicles travel to the cell membrane via the cytoskeleton and release their contents outside the cell by the process of exocytosis, where it can then be transported to where it is needed. Vesicle membranes contribute to growth of the cell membrane while their contents form new cell wall. The spitzenkorper moves along the apex of the hyphal strand and generates apical growth and branching; the apical growth rate of the hyphal strand parallels and is regulated by the movement of the spitzenkorper.
+As a hypha extends, septa may be formed behind the growing tip to partition each hypha into individual cells. Hyphae can branch through the bifurcation of a growing tip, or by the emergence of a new tip from an established hypha.
+
+
+== Behavior ==
+The direction of hyphal growth can be controlled by environmental stimuli, such as the application of an electric field. Hyphae can sense reproductive units from some distance, and grow towards them. Hyphae can weave through a permeable surface to penetrate it.
+
+
+== Modifications ==
+Hyphae may be modified in many different ways to serve specific functions. Some parasitic fungi form haustoria that function in absorption within the host cells. The arbuscules of mutualistic mycorrhizal fungi serve a similar function in nutrient exchange, so are important in assisting nutrient and water absorption by plants. Ectomycorrhizal extramatrical mycelium greatly increases the soil area available for exploitation by plant hosts by funneling water and nutrients to ectomycorrhizas, complex fungal organs on the tips of plant roots. Hyphae are found enveloping the gonidia in lichens, making up a large part of their structure. In nematode-trapping fungi, hyphae may be modified into trapping structures such as constricting rings and adhesive nets. Mycelial cords can be formed to transfer nutrients over larger distances. Bulk fungal tissues, cords, and membranes, such as those of mushrooms and lichens, are mainly composed of felted and often anastomosed hyphae.
+
+
+== Types ==
+
+
+=== Classification based on cell division ===
+Septate (with septa)
+Aspergillus and many other species have septate hyphae.
+
+Aseptate or coenocytic (without septa)
+Non-septate hyphae are associated with Mucor, some zygomycetes, and other fungi.
+
+"Pseudohyphae" are distinguished from true hyphae by their method of growth, relative frailty and lack of cytoplasmic connection between the cells.
+Yeast can form pseudohyphae. They are the result of a sort of incomplete budding where the cells remain attached after division.
+
+
+=== Classification based on cell wall and overall form ===
+Characteristics of hyphae can be important in fungal classification. In basidiomycete taxonomy, hyphae that comprise the fruiting body can be identified as generative, skeletal, or binding hyphae.
+Generative hyphae are relatively undifferentiated and can develop reproductive structures. They are typically thin-walled, occasionally developing slightly thickened walls, usually have frequent septa, and may or may not have clamp connections. They may be embedded in mucilage or gelatinized materials.
+Skeletal hyphae are of two basic types. The classical form is thick-walled and very long in comparison to the frequently septate generative hyphae, which are unbranched or rarely branched, with little cell content. They have few septa and lack clamp connections. Fusiform skeletal hyphae are the second form of skeletal hyphae. Unlike typical skeletal hyphae these are swollen centrally and often exceedingly broad, hence giving the hypha a fusiform shape.
+Binding hyphae are thick-walled and frequent branched. Often they resemble deer antlers or defoliated trees because of the many tapering branches.
+Based on the generative, skeletal and binding hyphal types, in 1932 E. J. H. Corner applied the terms monomitic, dimitic, and trimitic to hyphal systems, in order to improve the classification of polypores.
+Every fungus must contain generative hyphae. A fungus which only contains this type, as do fleshy mushrooms such as agarics, is referred to as monomitic.
+Skeletal and binding hyphae give leathery and woody fungi such as polypores their tough consistency. If a fungus contains all three types (example: Trametes), it is called trimitic.
+If a fungus contains generative hyphae and just one of the other two types, it is called dimitic. In fact dimitic fungi almost always contain generative and skeletal hyphae; there is one exceptional genus, Laetiporus that includes only generative and binding hyphae.
+Fungi that form fusiform skeletal hyphae bound by generative hyphae are said to have sarcodimitic hyphal systems. A few fungi form fusiform skeletal hyphae, generative hyphae, and binding hyphae, and these are said to have sarcotrimitic hyphal systems. These terms were introduced as a later refinement by E. J. H. Corner in 1966.
+
+
+=== Classification based on refractive appearance ===
+Hyphae are described as "gloeoplerous" ("gloeohyphae") if their high refractive index gives them an oily or granular appearance under the microscope. These cells may be yellowish or clear (hyaline). They can sometimes selectively be coloured by sulphovanillin or other reagents. The specialized cells termed cystidia can also be gloeoplerous.
+
+
+== References ==
+
+
+== See also ==
+Ascocarp
+Hartig net
+
+
+== External links ==
+Close-up light micrograph of coenocytic hyphae
+MicrobiologyBytes: Introduction to Mycology
+Hyphal growth and branching movies by P.C. Hickey and N. Read, University of Edinburgh
+Fungi Online Fungi Online: An Introduction to the Biology of Fungi

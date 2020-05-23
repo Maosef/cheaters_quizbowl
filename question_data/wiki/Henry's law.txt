@@ -1,0 +1,108 @@
+In chemistry, Henry's law is one of the gas laws formulated by William Henry in 1803. It states:
+"At a constant temperature, the amount of a given gas that dissolves in a given type and volume of liquid is directly proportional to the partial pressure of that gas in equilibrium with that liquid."
+An equivalent way of stating the law is that the solubility of a gas in a liquid is directly proportional to the partial pressure of the gas above the liquid.
+An everyday example of Henry's law is given by carbonated soft drinks. Before the bottle or can of carbonated drink is opened, the gas above the drink is almost pure carbon dioxide at a pressure slightly higher than atmospheric pressure. The drink itself contains dissolved carbon dioxide. When the bottle or can is opened, this gas escapes, giving the characteristic hiss. Because the partial pressure of carbon dioxide above the liquid is now much lower, some of the dissolved carbon dioxide comes out of solution as bubbles. If a glass of the drink is left in the open, the concentration of carbon dioxide in solution will come into equilibrium with the carbon dioxide in the air, and the drink will go "flat".
+A slightly more exotic example of Henry's law is in the decompression and decompression sickness of underwater divers.
+
+
+== Formula and the Henry's law constant ==
+Henry's law can be put into mathematical terms (at constant temperature) as
+
+where p is the partial pressure of the gaseous solute above the solution, c is the concentration of the dissolved gas and kH is a constant with the dimensions of pressure divided by concentration. The constant, known as the Henry's law constant, depends on the solute, the solvent and the temperature.
+Some values for kH for gases dissolved in water at 298 K include:
+oxygen (O2) : 769.2 L*atm/mol
+carbon dioxide (CO2) : 29.41 L*atm/mol
+hydrogen (H2) : 1282.1 L*atm/mol
+There are various other forms of Henry's Law which define the constant kH differently and require different dimensional units. In particular, the "concentration" of the solute in solution may also be expressed as a mole fraction or as a molarity.
+
+
+=== Other forms of Henry's law ===
+The various other forms of Henry's law are discussed in the technical literature.
+As can be seen by comparing the equations in the above table, the Henry's law constant kH,pc is simply the inverse of the constant kH,cp. Since all kH may be referred to as Henry's law constants, readers of the technical literature must be quite careful to note which version of the equation is being used.
+It should also be noted, the Henry's law is a limiting law that only applies for 'sufficiently dilute' solutions. The range of concentrations in which it applies becomes narrower the more the system diverges from ideal behavior. Roughly speaking, that is the more chemically 'different' the solute is from the solvent. Typically, Henry's law is only applicable to gas solute mole fractions less than 0.03.
+It also only applies simply for solutions where the solvent does not react chemically with the gas being dissolved. A common example of a gas that does react with the solvent is carbon dioxide, which forms carbonic acid (H2CO3) to a certain degree with water.
+
+
+=== Temperature dependence of the Henry constant ===
+When the temperature of a system changes, the Henry constant will also change. This is why some people prefer to name it Henry coefficient. Multiple equations assess the effect of temperature on the constant. These forms of the van 't Hoff equation are examples:
+
+where
+kH for a given temperature is Henry's constant (as defined in this article's first section). Note that the sign of C depends on whether kH,pc or kH,cp is used.
+T is any given temperature, in K
+T o refers to the standard temperature (298 K).
+This equation is only an approximation, and should be used only when no better, experimentally derived formula is known for a given gas.
+The following table lists some values for constant C (in Kelvins) in the equation above:
+Because solubility of permanent gases usually decreases with increasing temperature at around room temperature, the partial pressure a given gas concentration has in liquid must increase. While heating water (saturated with nitrogen) from 25 to 95 degC, the solubility will decrease to about 43% of its initial value. This can be verified when heating water in a pot; small bubbles evolve and rise long before the water reaches boiling temperature. Similarly, carbon dioxide from a carbonated drink escapes much faster when the drink is not cooled because the required partial pressure of CO2 to achieve the same solubility increases in higher temperatures. Partial pressure of CO2 in the gas phase in equilibrium with seawater doubles with every 16 K increase in temperature.
+The constant C may be regarded as:
+
+where
+DsolvH is the enthalpy of solution
+R is the gas constant.
+The solubility of gases does not always decrease with increasing temperature. For aqueous solutions, the Henry's law constant usually goes through a maximum (i.e., the solubility goes through a minimum). For most permanent gases, the minimum is below 120 degC. Often, the smaller the gas molecule (and the lower the gas solubility in water), the lower the temperature of the maximum of the Henry's law constant. Thus, the maximum is about 30 degC for helium, 92 to 93 degC for argon, nitrogen and oxygen, and 114 degC for xenon.
+
+
+== Influence of electrolytes ==
+The influence of electrolytes on the solubility of gases is sometimes given by Sechenov (often spelled Setschenow) equation which accounts for the "salting out" (i.e., decreasing the solubility) or "salting in" (i.e., increasing the solubility) effect (see the article on activity coefficient). The Sechenov equation can be written as:
+
+where:
+*z1 is the solubility of gas 1 in pure solvent
+z1 is the solubility of gas 1 in an electrolyte solution
+y expresses the salt composition
+
+
+== In geochemistry ==
+In geochemistry, a version of Henry's law applies to the solubility of a noble gas in contact with silicate melt. One equation used is
+
+where:
+C = the number concentrations of the solute gas in the melt and gas phases
+b = 1/kBT, an inverse temperature scale: kB = the Boltzmann constant
+uE = the excess chemical potentials of the solute gas in the two phases.
+
+
+== Comparison to Raoult's law ==
+For a dilute solution, the concentration of the solute is approximately proportional to its mole fraction x, and Henry's law can be written as:
+
+This can be compared with Raoult's law:
+
+where p* is the vapor pressure of the pure component.
+At first sight, Raoult's law appears to be a special case of Henry's law where kH = p*. This is true for pairs of closely related substances, such as benzene and toluene, which obey Raoult's law over the entire composition range: such mixtures are called "ideal mixtures".
+The general case is that both laws are limit laws, and they apply at opposite ends of the composition range. The vapor pressure of the component in large excess, such as the solvent for a dilute solution, is proportional to its mole fraction, and the constant of proportionality is the vapor pressure of the pure substance (Raoult's law). The vapor pressure of the solute is also proportional to the solute's mole fraction, but the constant of proportionality is different and must be determined experimentally (Henry's law). In mathematical terms:
+Raoult's law: 
+Henry's law: 
+Raoult's law can also be related to non-gas solutes.
+
+
+== Standard chemical potential ==
+Henry's law has been shown to apply to a wide range of solutes in the limit of "infinite dilution" (x-0), including non-volatile substances such as sucrose. In these cases, it is necessary to state the law in terms of chemical potentials. For a solute in an ideal dilute solution, the chemical potential depends on the concentration:
+, where  for a volatile solute; co = 1 mol/L.
+For non-ideal solutions, the activity coefficient gc depends on the concentration and must be determined at the concentration of interest. The activity coefficient can also be obtained for non-volatile solutes, where the vapor pressure of the pure substance is negligible, by using the Gibbs-Duhem relation:
+
+By measuring the change in vapor pressure (and hence chemical potential) of the solvent, the chemical potential of the solute can be deduced.
+The standard state for a dilute solution is also defined in terms of infinite-dilution behavior. Although the standard concentration co is taken to be 1 mol/l by convention, the standard state is a hypothetical solution of 1 mol/l in which the solute has its limiting infinite-dilution properties. This has the effect that all non-ideal behavior is described by the activity coefficient: the activity coefficient at 1 mol/l is not necessarily unity (and is frequently quite different from unity).
+All the relations above can also be expressed in terms of molalities b rather than concentrations, e.g.:
+, where  for a volatile solute; bo = 1 mol/kg.
+The standard chemical potential mmo, the activity coefficient gm and the Henry's law constant kH,b all have different numerical values when molalities are used in place of concentrations.
+
+
+== See also ==
+Bunsen solubility coefficient
+Dalton's law
+Partial pressure
+Pervaporation
+Raoult's Law
+Sieverts' law
+Henry adsorption constant
+
+
+== References ==
+
+
+== Further reading ==
+Battino, Rubin; Clever, H. Lawrence (1966). "The Solubility of Gases in Liquids". Chemical Reviews 66 (4): 395-463. doi:10.1021/cr60242a003. 
+Clever, H. Lawrence (1983). "Setchenov salt-effect parameter". Journal of Chemical & Engineering Data 28 (3): 340-343. doi:10.1021/je00033a018. 
+Borgstedt, Hans Ulrich (2001). "IUPAC-NIST Solubility Data Series. 75. Nonmetals in Liquid Alkali Metals" (PDF). Journal of Physical and Chemical Reference Data 30 (4): 835-1158. Bibcode:2001JPCRD..30..835B. doi:10.1063/1.1391426. 
+Crovetto, Rosa; Fernandez-Prini, R.; Japas, Maria Laura (1982). "Solubilities of inert gases and methane in H2O and in D2O in the temperature range of 300 to 600 K". J. Chem. Phys. 76: 1077. Bibcode:1982JChPh..76.1077C. doi:10.1063/1.443074.  (An example of isotopic effect on solubility)
+
+
+== External links ==
+Ethanol solubility in EPDM, Solubility of chemicals in polymers using Henry's law

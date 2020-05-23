@@ -1,0 +1,133 @@
+Sunspots are temporary phenomena on the photosphere of the Sun that appear visibly as dark spots compared to surrounding regions. They correspond to concentrations of magnetic field that inhibit convection and result in reduced surface temperature compared to the surrounding photosphere. Sunspots usually appear as pairs, with each spot having the opposite magnetic polarity of the other.
+Although they are at temperatures of roughly 3,000-4,500 K (2,700-4,200 degC), the contrast with the surrounding material at about 5,780 K (5,500 degC) leaves them clearly visible as dark spots. This is because the luminance (which is essentially "brightness" in visible light) of a heated black body (closely approximated by the photosphere) at these temperatures varies extremely rapidly with temperature - considerably more rapidly than the (temperature to the fourth power) variation in the total black-body radiation at all wavelengths (see Stefan-Boltzmann law). If the sunspot were isolated from the surrounding photosphere it would be brighter than the Moon. Sunspots expand and contract as they move across the surface of the Sun and can be as small as 16 kilometers (10 mi) and as large as 160,000 kilometers (100,000 mi) in diameter, making the larger ones visible from Earth without the aid of a telescope. They may also travel at relative speeds ("proper motions") of a few hundred meters per second when they first emerge onto the solar photosphere.
+Manifesting intense magnetic activity, sunspots host secondary phenomena such as coronal loops (prominences) and reconnection events. Most solar flares and coronal mass ejections originate in magnetically active regions around visible sunspot groupings. Similar phenomena indirectly observed on stars other than the sun are commonly called starspots and both light and dark spots have been measured.
+
+
+== History ==
+
+
+=== Prehistoric evidence ===
+Studies of stratigraphic data have suggested that the solar cycles have been active for hundreds of millions of years, if not longer; measuring varves in precambrian sedimentary rock has revealed repeating peaks in layer thickness, with a pattern repeating approximately every eleven years. It is possible that the early atmosphere on Earth was more sensitive to changes in solar radiation than today, so that greater glacial melting (and thicker sediment deposits) could have occurred during years with greater sunspot activity. This would presume annual layering; however, alternative explanations (diurnal) have also been proposed.
+Analysis of tree rings has revealed a detailed picture of past solar cycles: Dendrochronologically dated radiocarbon concentrations have allowed for a reconstruction of sunspot activity dating back 11,400 years, far beyond the four centuries of available, reliable records from direct solar observation.
+
+
+=== Early observations ===
+
+The earliest surviving record of sunspot observation dates from 364 BC, based on comments by Chinese astronomer Gan De in a star catalogue. By 28 BC, Chinese astronomers were regularly recording sunspot observations in official imperial records.
+The first clear mention of a sunspot in Western literature, around 300 BC, was by the ancient Greek scholar Theophrastus, student of Plato and Aristotle and successor to the latter. A more recent sunspot observation was made on 17 March 807 AD by the Benedictine monk Adelmus, who observed a large sunspot that was visible for eight days; however, Adelmus incorrectly concluded he was observing a transit of Mercury. A large sunspot was also seen at the time of Charlemagne's death in 813 AD. Sunspot activity in 1129 was described by John of Worcester, and Averroes provided a description of sunspots later in the 12th century; however, these observations were also misinterpreted as planetary transits, until Galileo gave the correct explanation in 1612.
+
+
+=== 17th and 18th centuries ===
+
+Sunspots were first observed telescopically in late 1610 by the English astronomer Thomas Harriot and Frisian astronomers Johannes and David Fabricius, who published a description in June 1611. At the latter time, Galileo had been showing sunspots to astronomers in Rome, and Christoph Scheiner had probably been observing the spots for two or three months using an improved helioscope of his own design. The ensuing priority dispute between Galileo and Scheiner, neither of whom knew of the Fabricius' work, was thus as pointless as it was bitter.
+Sunspots had some importance in the debate over the nature of the Solar System. They showed that the Sun rotated, and their comings and goings showed that the Sun changed, contrary to Aristotle (who taught that all celestial bodies were perfect, unchanging spheres).
+Rudolf Wolf studied the historical record in an attempt to establish a database on past cyclic variations. His database extended only to 1700, although the technology and techniques for careful solar observations were first available in 1610. Gustav Sporer later suggested a 70-year period before 1716 in which sunspots were rarely observed as the reason for Wolf's inability to extend the cycles into the 17th century.
+Sunspots were rarely recorded during the second part of 17th century. Later analysis revealed the problem not to be a lack of observational data but included references to negative observations. Building upon Sporer's earlier work, Edward Maunder suggested that the Sun had changed from a period in which sunspots all but disappeared from the solar surface to a renewal of sunspot cycles starting in about 1700. Adding to this understanding of the absence of solar cycles were observations of aurorae, which were absent at the same time. Even the lack of a solar corona during solar eclipses was noted prior to 1715. The period of low sunspot activity from 1645 to 1717 is known as the "Maunder Minimum".
+
+
+=== 19th century ===
+The cyclic variation of the number of sunspots was first observed by Heinrich Schwabe between 1826 and 1843 and led Wolf to make systematic observations starting in 1848. The Wolf number is a measure of individual spots and spot groupings, which correlates to a number of solar observables. Also in 1848, Joseph Henry projected an image of the Sun onto a screen and determined that sunspots were cooler than the surrounding surface.
+After the resumption of sunspot activity, Heinrich Schwabe in 1844 in Astronomische Nachrichten (Astronomical News) reported a periodic change in the number of sunspots.
+The Sun emitted an extremely powerful flare on its visible hemisphere on 1 September 1859, leading to what is known as the Carrington Event. It interrupted electrical telegraph service and caused visible aurorae as far south as Havana, Hawaii, and Rome with similar activity in the southern hemisphere.
+
+
+=== 20th century ===
+The American solar astronomer George Ellery Hale, as an undergraduate at MIT, invented the spectroheliograph, with which he made the discovery of solar vortices. In 1908, Hale used a modified spectroheliograph to show that the spectra of hydrogen exhibited the Zeeman effect whenever the area of view passed over a sunspot on the solar disc. This was the first indication that sunspots were basically magnetic phenomena, which appeared in pairs that corresponded with two magnetic poles of opposite polarity. Subsequent work by Hale demonstrated a strong tendency for east-west alignment of magnetic polarities in sunspots, with mirror symmetry across the solar equator; and that the magnetic polarity for sunspots in each hemisphere switched orientation, from one sunspot cycle to the next. This systematic property of sunspot magnetic fields is now commonly referred to as the "Hale-Nicholson law", or in many cases simply "Hale's law".
+
+
+=== 21st century ===
+The most powerful flare observed by satellite instrumentation began on 4 November 2003 at 19:29 UTC, and saturated instruments for 11 minutes. Region 486 has been estimated to have produced an X-ray flux of X28. Holographic and visual observations indicate significant activity continued on the far side of the Sun.
+Measurements made in the latter part of the 2000s (decade) and based also on observation of infrared spectral lines, have suggested that sunspot activity may again be disappearing, possibly leading to a new minimum. From 2007 to 2009, sunspot levels were far below average. In 2008, the Sun was spot-free 73 percent of the time, extreme even for a solar minimum. Only 1913 was more pronounced, with 85 percent of that year clear. The Sun continued to languish through mid-December 2009, when the largest group of sunspots to emerge for several years appeared. Even then, sunspot levels remained well below normal.
+
+In 2006, NASA made a prediction for the next sunspot maximum, being between 150 and 200 around the year 2011 (30-50% stronger than cycle 23), followed by a weak maximum at around 2022. The prediction did not come true. Instead, the sunspot cycle in 2010 was still at its minimum, where it should have been near its maximum, which shows the Sun's unusually low current activity.
+Due to a missing jet stream, fading spots, and slower activity near the poles, independent scientists of the National Solar Observatory (NSO) and the Air Force Research Laboratory (AFRL) predicted in 2011 that the next 11-year solar sunspot cycle, Cycle 25, would be greatly reduced or might not happen at all.
+Cycle 24 is now well underway (as of March 2013). Measurements indicate that the minimum occurred around December 2008 and the next maximum was predicted to reach a sunspot number of 90 around May 2013. The monthly mean sunspot number in the northern solar hemisphere peaked in November 2011 but that in the southern hemisphere appears to have peaked in February 2014, giving a peak total monthly mean of 102 in that month. Subsequent months have seen a decline to around 70 by June 2014. In October of 2014, the sunspot known as AR 12192 was shown to be the largest observed since 1990. The flare that erupted from this sunspot was classified as an X3.1-class solar storm.
+
+
+== Physics ==
+
+Although the details of sunspot generation are still a matter of research, it appears that sunspots are the visible counterparts of magnetic flux tubes in the Sun's convective zone that get "wound up" by differential rotation. If the stress on the tubes reaches a certain limit, they curl up like a rubber band and puncture the Sun's surface. Convection is inhibited at the puncture points; the energy flux from the Sun's interior decreases; and with it surface temperature.
+The Wilson effect implies that sunspots are actually depressions on the Sun's surface. Observations using the Zeeman effect show that prototypical sunspots come in pairs with opposite magnetic polarity. From cycle to cycle, the polarities of leading and trailing (with respect to the solar rotation) sunspots change from north/south to south/north and back. Sunspots usually appear in groups.
+The sunspot itself can be divided into two parts:
+The central umbra, which is the darkest part, where the magnetic field is approximately vertical (normal to the Sun's surface).
+The surrounding penumbra, which is lighter, where the magnetic field is more inclined.
+Magnetic pressure should tend to remove field concentrations, causing the sunspots to disperse, but sunspot lifetimes are measured in days or even weeks. In 2001, observations from the Solar and Heliospheric Observatory (SOHO) using sound waves traveling below the Sun's photosphere (local helioseismology) were used to develop a three-dimensional image of the internal structure below sunspots; these observations show that there is a powerful downdraft underneath each sunspot, forming a rotating vortex that concentrates the magnetic field. Sunspots can thus be thought of as self-perpetuating storms, analogous in some ways to terrestrial hurricanes.
+
+Sunspot activity cycles about every eleven years. The point of highest sunspot activity during this cycle is known as Solar Maximum, and the point of lowest activity is Solar Minimum. Early in the cycle, sunspots appear in the higher latitudes and then move towards the equator as the cycle approaches maximum: this is called Sporer's law.
+Wolf number sunspot index displays various periods, the most prominent of which is at about 11 years in the mean. This period is also observed in most other expressions of solar activity and is deeply linked to a variation in the solar magnetic field that changes polarity with this period, too.
+The modern understanding of sunspots starts with George Ellery Hale, who first linked magnetic fields and sunspots in 1908. Hale suggested that the sunspot cycle period is 22 years, covering two polar reversals of the solar magnetic dipole field. Horace W. Babcock later proposed a qualitative model for the dynamics of the solar outer layers. The Babcock Model explains that magnetic fields cause the behavior described by Sporer's law, as well as other effects, which are twisted by the Sun's rotation.
+
+
+== Variation ==
+
+Sunspot populations quickly rise and more slowly fall on an irregular cycle of 11 years, although significant variations in the number of sunspots attending the 11-year period are known over longer spans of time. For example, from 1900 to the 1960s, the solar maxima trend of sunspot count has been upward; from the 1960s to the present, it has diminished somewhat. Over the last decades the Sun has had a markedly high average level of sunspot activity; it was last similarly active over 8,000 years ago.
+Sunspots are caused by solar magnetic fields in the photosphere and the associated centennial variations in magnetic fields in the corona and heliosphere have also been deduced using carbon-14 and beryllium-10 cosmogenic isotopes stored in terrestrial reservoirs such as ice sheets and tree rings and by using historic observations of geomagnetic storm activity, which bridge the time gap between the end of the usable cosmogenic isotope data and the start of modern spacecraft data. These variations have been successfully reproduced using models which employ magnetic flux continuity equations and observed sunspot numbers to quantify the emergence of magnetic flux from the top of the solar atmosphere and into the heliosphere, showing that sunspot observations, geomagnetic activity and cosmogenic isotopes are giving a coherent understanding of solar activity variations.
+The number of sunspots correlates with the intensity of solar radiation over the period since 1979, when satellite measurements of absolute radiative flux became available. Since sunspots are darker than the surrounding photosphere it might be expected that more sunspots would lead to less solar radiation and a decreased solar constant. However, the surrounding margins of sunspots are brighter than the average, and so are hotter; overall, more sunspots increase the Sun's solar constant or brightness. The variation caused by the sunspot cycle to solar output is relatively small, on the order of 0.1% of the solar constant (a peak-to-trough range of 1.3 W*m-2 compared to 1366 W*m-2 for the average solar constant). Sunspots were rarely observed during the Maunder Minimum in the second part of the 17th century (approximately from 1645 to 1715).
+The 11-year solar cycles are numbered sequentially, starting with the observations made in the 1750s.
+
+
+== Observation ==
+
+Sunspots are observed with land-based and Earth-orbiting solar telescopes. These telescopes use filtration and projection techniques for direct observation, in addition to various types of filtered cameras. Specialized tools such as spectroscopes and spectrohelioscopes are used to examine sunspots and sunspot areas. Artificial eclipses allow viewing of the circumference of the Sun as sunspots rotate through the horizon.
+Since looking directly at the Sun with the naked eye permanently damages vision, amateur observation of sunspots is generally conducted indirectly using projected images, or directly through protective filters. Small sections of very dark filter glass, such as a #14 welder's glass are effective. A telescope eyepiece can project the image, without filtration, onto a white screen where it can be viewed indirectly, and even traced, to follow sunspot evolution. Special purpose hydrogen-alpha narrow bandpass filters as well as aluminum coated glass attenuation filters (which have the appearance of mirrors due to their extremely high optical density) on the front of a telescope provide safe observation through the eyepiece.
+
+
+== Application ==
+
+Due to its link to other kinds of solar activity, sunspot occurrence can be used to help predict space weather, the state of the ionosphere, and hence the conditions of short-wave radio propagation or satellite communications. Solar activity (and the sunspot cycle) are frequently discussed in the context of global warming; Jack Eddy noted the apparent correlation between the Maunder Minimum of sunspot occurrence and the Little Ice Age in European winter climate. Sunspots themselves, in terms of the magnitude of their radiant-energy deficit, have only a weak effect on the terrestrial climate in a direct sense. On longer time scales, such as the solar cycle, other magnetic phenomena (faculae and the chromospheric network) do correlate with sunspot occurrence. It is these other features that make the solar constant increase slightly at sunspot maxima, when naively one might expect that sunspots would make it decrease.
+British economist William Stanley Jevons suggested in the 1870s that there is a relationship between sunspots and business cycle crises. Jevons reasoned that sunspots affect Earth's weather, which, in turn, influences crops and, therefore, the economy.
+
+
+== Spots on other stars ==
+In 1947, G. E. Kron proposed that starspots were the reason for periodic changes in brightness on red dwarfs. Since the mid-1990s, starspot observations have been made using increasingly powerful techniques yielding more and more detail: photometry showed starspot growth and decay and showed cyclic behavior similar to the Sun's; spectroscopy examined the structure of starspot regions by analyzing variations in spectral line splitting due to the Zeeman Effect; Doppler imaging showed differential rotation of spots for several stars and distributions different from the Sun's; spectral line analysis measured the temperature range of spots and the stellar surfaces. For example, in 1999, Strassmeier reported the largest cool starspot ever seen rotating the giant K0 star XX Triangulum (HD 12545) with a temperature of 3,500 K (3,230 degC), together with a warm spot of 4,800 K (4,530 degC).
+
+
+== Gallery ==
+
+
+== See also ==
+Wolf number -- a quantity that measures the number of sunspots
+Sporer's law -- predicts the variation of sunspot latitudes during a solar cycle
+Joy's Law
+List of solar cycles
+Solar cycle
+Solar rotation
+Space weather
+Radio propagation
+
+
+== References ==
+
+
+== External links ==
+Sunspot Database based on Terrestrial (GPR/DPD) and Satellite (SOHO/SDO) observations from 1872 to Nowadays with the newest data. ()
+Solar Cycle 24 and VHF Aurora Website (www.solarcycle24.com)
+Belgium World Data Center for the sunspot index
+High resolution sunspot image
+Sunspot images in high-res Impressive collection of sunspot images
+NOAA Solar Cycle Progression: Current solar cycle.
+Current conditions: Space weather
+
+Lockheed Martin Solar and Astrophysics Lab
+Sun|trek website An educational resource for teachers and students about the Sun and its effect on the Earth
+Tools to display the current sunspot number in a browser
+Propfire - displays current sunspot number in browser status bar
+HamLinks Toolbar - displays solar flux, A Index and K Index data in a toolbar
+
+The Sharpest View of the Sun
+Daily Sunspot Update and Picture of the Sun (www.spaceweather.com)
+Animated explanation of Sunspots in the Photosphere (University of South Wales)
+
+
+=== Sunspot data ===
+"11,000 Year Sunspot Number Reconstruction". Global Change Master Directory. Retrieved 11 March 2005. 
+"Unusual activity of the Sun during recent decades compared to the previous 11,000 years". WDC for Paleoclimatology. Retrieved 11 March 2005. 
+
+"Sunspot Numbers from Ancient Times to Present from NOAA/NGDC". Global Change Master Directory. Retrieved 11 March 2005. 
+"SUNSPOT NUMBERS". NOAA NGDC Solar Data Services. Retrieved 21 June 2010. 
+International Sunspot Number--sunspot maximum and minimum 1610-present; annual numbers 1700-present; monthly numbers 1749-present; daily values 1818-present; and sunspot numbers by north and south hemisphere. The McNish-Lincoln sunspot prediction is also included.
+American sunspot numbers 1945-present
+Ancient sunspot data 165 BC to 1684 AD
+Group Sunspot Numbers (Doug Hoyt re-evaluation) 1610-1995
+
+Wilson, Robert M. (April 2014). Comparison of the Variations of Sunspot Number, Number of Sunspot Groups, and Sunspot Area, 1875-2013. Huntsville, AL: National Aeronautics and Space Administration, Marshall Space Flight Center. Retrieved 13 March 2015.

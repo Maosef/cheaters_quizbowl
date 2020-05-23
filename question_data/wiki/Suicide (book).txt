@@ -1,0 +1,53 @@
+Suicide (French: Le Suicide) was a groundbreaking book in the field of sociology. Written by French sociologist Emile Durkheim and published in 1897 it was ostensibly a case study of suicide, a publication unique for its time that provided an example of what the sociological monograph should look like. Some argue that it is not a case study, which makes it unique among other scholarly work on the same subject.
+
+
+== Findings ==
+Durkheim explores the differing suicide rates among Protestants and Catholics, arguing that stronger social control among Catholics results in lower suicide rates. According to Durkheim, Catholic society has normal levels of integration while Protestant society has low levels. There are at least two problems with this interpretation. First, Durkheim took most of his data from earlier researchers, notably Adolph Wagner and Henry Morselli, who were much more careful in generalizing from their own data. Second, later researchers found that the Protestant-Catholic differences in suicide seemed to be limited to German-speaking Europe and thus may always have been the spurious reflection of other factors. Despite its limitations, Durkheim's work on suicide has influenced proponents of control theory, and is often mentioned as a classic sociological study.
+Durkheim concluded that:
+Suicide rates are higher in men than women (although married women who remained childless for a number of years ended up with a high suicide rate).
+Suicide rates are higher for those who are single than those who are married.
+Suicide rates are higher for people without children than people with children.
+Suicide rates are higher among Protestants than Catholics and Jews.
+Suicide rates are higher among soldiers than civilians.
+Suicide rates are higher in times of peace than in times of war (the suicide rate in France fell after the coup d'etat of Louis-Napoleon Bonaparte, for example. War also reduced the suicide rate: after war broke out in 1866 between Austria and Italy, the suicide rate fell by 14% in both countries.)
+Suicide rates are higher in Scandinavian countries.
+The higher the education level, the more likely it was that an individual would choose suicide. However, Durkheim established that there is more correlation between an individual's religion and suicide rate than an individual's education level. Jewish people were generally highly educated but had a low suicide rate.
+
+
+== Types of suicide ==
+Durkheim defines suicide as follows:
+
+...the term suicide is applied to all cases of death resulting directly or indirectly from a positive or negative act of the victim himself, which he knows will produce this result.
+
+He also distinguished between four subtypes of suicide:
+Egoistic suicide reflects a prolonged sense of not belonging, of not being integrated in a community, an experience, of not having a tether: an absence that can give rise to meaninglessness, apathy, melancholy, and depression. It is the result of a weakening of the bonds that normally integrate individuals into the collectivity: in other words a breakdown or decrease of social integration. Durkheim refers to this type of suicide as the result of "excessive individuation", meaning that the individual becomes increasingly detached from other members of his community. Those individuals who were not sufficiently bound to social groups (and therefore well-defined values, traditions, norms, and goals) were left with little social support or guidance, and therefore tended to commit suicide on an increased basis. An example Durkheim discovered was that of unmarried people, particularly males, who, with less to bind and connect them to stable social norms and goals, committed suicide at higher rates than married people.
+Altruistic suicide is characterized by a sense of being overwhelmed by a group's goals and beliefs. It occurs in societies with high integration, where individual needs are seen as less important than the society's needs as a whole. They thus occur on the opposite integration scale as egoistic suicide. As individual interest would not be considered important, Durkheim stated that in an altruistic society there would be little reason for people to commit suicide. He stated one exception, namely when the individual is expected to kill themselves on behalf of society - a primary example being the soldier in military service.
+Anomic suicide reflects an individual's moral confusion and lack of social direction, which is related to dramatic social and economic upheaval. It is the product of moral deregulation and a lack of definition of legitimate aspirations through a restraining social ethic, which could impose meaning and order on the individual conscience. This is symptomatic of a failure of economic development and division of labour to produce Durkheim's organic solidarity. People do not know where they fit in within their societies. Durkheim explains that this is a state of moral disorder where man does not know the limits on his desires, and is constantly in a state of disappointment. This can occur when man goes through extreme changes in wealth; while this includes economic ruin, it can also include windfall gains - in both cases, previous expectations from life are brushed aside and new expectations are needed before he can judge his new situation in relation to the new limits.
+Fatalistic suicide occurs when a person is excessively regulated, when their futures are pitilessly blocked and passions violently choked by oppressive discipline. It is the opposite of Anomic suicide, and appears in overly oppressive societies, causing people to prefer to die than to carry on living within their society. A good example would be within a prison; some people might prefer to die than live in a prison with constant abuse and excessive regulation that prohibits them from pursuing their desires.
+These four types of suicide are based on the degrees of imbalance of two social forces: social integration and moral regulation. Durkheim noted the effects of various crises on social aggregates - war, for example, leading to an increase in altruism, economic boom or disaster contributing to anomie.
+
+
+== Criticism ==
+Durkheim's study of suicide has been criticized as an example of the logical error termed the ecological fallacy. Indeed, Durkheim's conclusions about individual behaviour (e.g. suicide) are based on aggregate statistics (the suicide rate among Protestants and Catholics). This type of inference, explaining micro events in terms of macro properties, is often misleading, as is shown by examples of Simpson's paradox.
+However, diverging views have contested whether Durkheim's work really contained an ecological fallacy. Van Poppel and Day (1996) have advanced that differences in suicide rates between Catholics and Protestants were explicable entirely in terms of how deaths were categorized between the two social groups. For instance, while "sudden deaths" or "deaths from ill-defined or unspecified cause" would often be recorded as suicides among Protestants, this would not be the case for Catholics. Hence Durkheim would have committed an empirical rather than logical error. Some, such as Inkeles (1959), Johnson (1965) and Gibbs (1968), have claimed that Durkheim's only intent was to explain suicide sociologically within a holistic perspective, emphasizing that "he intended his theory to explain variation among social environments in the incidence of suicide, not the suicides of particular individuals."
+More recent authors such as Berk (2006) have also questioned the micro-macro relations underlying Durkheim's work. For instance, Berk notices that
+
+Durkheim speaks of a "collective current" that reflects the collective inclination flowing down the channels of social organization. The intensity of the current determines the volume of suicides (...) Introducing psychological [i.e. individual] variables such as depression, [which could be seen as] an independent [non-social] cause of suicide, overlooks Durkheim's conception that these variables are the ones most likely to be effected by the larger social forces and without these forces suicide may not occur within such individuals.
+
+
+== See also ==
+Antipositivism
+Positivism
+Social fact
+
+
+== References ==
+
+
+== Further reading ==
+Durkheim, Emile (1897) [1951]. Suicide : a study in sociology. The Free Press. ISBN 0-684-83632-7. 
+Pickering, W.S.F.; Walford, Geoffrey (2000). Durkheim's Suicide: A Century of Research and Debate. Routledge. ISBN 978-0415205825. 
+
+
+== External links ==
+(French) Full text

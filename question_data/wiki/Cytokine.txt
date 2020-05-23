@@ -1,0 +1,109 @@
+Cytokines (Greek:Cyto from Greek "kuttaro" kyttaro "cell" + Kines from Greek "kinese" kinisi "movement") are a broad and loose category of small proteins (~5-20 kDa) that are important in cell signaling. They are released by cells and affect the behavior of other cells. Cytokines can also be involved in autocrine signaling. Cytokines include chemokines, interferons, interleukins, lymphokines, tumour necrosis factor but generally not hormones or growth factors (despite some terminologic overlap). Cytokines are produced by a broad range of cells, including immune cells like macrophages, B lymphocytes, T lymphocytes and mast cells, as well as endothelial cells, fibroblasts, and various stromal cells; a given cytokine may be produced by more than one type of cell.
+They act through receptors, and are especially important in the immune system; cytokines modulate the balance between humoral and cell-based immune responses, and they regulate the maturation, growth, and responsiveness of particular cell populations. Some cytokines enhance or inhibit the action of other cytokines in complex ways.
+They are different from hormones, which are also important cell signaling molecules, in that hormones circulate in much lower concentrations and hormones tend to be made by specific kinds of cells.
+They are important in health and disease, specifically in host responses to infection, immune responses, inflammation, trauma, sepsis, cancer, and reproduction.
+
+
+== Discovery of cytokinesEdit ==
+Interferon-alpha, an interferon type I, was identified in 1957 as a protein that interfered with viral replication. The activity of interferon-gamma (the sole member of the interferon type II class) was described in 1965; this was the first identified lymphocyte-derived mediator. Macrophage migration inhibitory factor (MIF) was identified simultaneously in 1966 by John David and Barry Bloom.
+In 1969 Dudley Dumonde proposed the term "lymphokine" to describe proteins secreted from lymphocytes and later, proteins derived from macrophages and monocytes in culture were called "monokines". As scientists learned more, it was understood that these proteins and others were part of a broader class of proteins involved in self-defense, and should be called "cytokines".
+
+
+== Difference from hormonesEdit ==
+Classic hormones circulate in nanomolar (10-9 M) concentrations that usually vary by less than one order of magnitude. In contrast, some cytokines (such as IL-6) circulate in picomolar (10-12 M) concentrations that can increase up to 1,000-fold during trauma or infection. The widespread distribution of cellular sources for cytokines may be a feature that differentiates them from hormones. Virtually all nucleated cells, but especially endo/epithelial cells and resident macrophages (many near the interface with the external environment) are potent producers of IL-1, IL-6, and TNF-a. In contrast, classic hormones, such as insulin, are secreted from discrete glands (e.g., the pancreas). As of 2008, the current terminology refers to cytokines as immunomodulating agents. However, more research is needed in this area of defining cytokines and hormones.
+Part of the difficulty with distinguishing cytokines from hormones is that some of the immunomodulating effects of cytokines are systemic rather than local. For instance, to use hormone terminology, the action of cytokines may be autocrine or paracrine in chemotaxis or chemokinesis and endocrine as a pyrogen. Further, as molecules, cytokines are not limited to their immunomodulatory role.
+
+
+== NomenclatureEdit ==
+Cytokines have been classed as lymphokines, interleukins, and chemokines, based on their presumed function, cell of secretion, or target of action. Because cytokines are characterised by considerable redundancy and pleiotropism, such distinctions, allowing for exceptions, are obsolete.
+The term interleukin was initially used by researchers for those cytokines whose presumed targets are principally leukocytes. It is now used largely for designation of newer cytokine molecules and bears little relation to their presumed function. The vast majority of these are produced by T-helper cells.
+Lymphokines, produced by lymphocytes
+Monokines, produced exclusively by monocytes
+Interferons, involved in antiviral responses
+Colony stimulating factors, support the growth of cells in semisolid media
+Chemokines mediate chemoattraction (chemotaxis) between cells.
+
+
+== ClassificationEdit ==
+
+
+=== StructuralEdit ===
+Structural homogeneity has been able to partially distinguish between cytokines that do not demonstrate a considerable degree of redundancy so that they can be classified into four types:
+The four-a-helix bundle family: member cytokines have three-dimensional structures with four bundles of a-helices. This family, in turn, is divided into three sub-families:
+the IL-2 subfamily
+the interferon (IFN) subfamily
+the IL-10 subfamily.
+The first of these three, the IL-2 subfamily, is the largest. It contains several non-immunological cytokines including erythropoietin (EPO) and thrombopoietin (TPO). Furthermore, four-a-helix bundle cytokines can be grouped into long-chain and short-chain cytokines.
+
+the IL-1 family, which primarily includes IL-1 and IL-18
+the IL-17 family, which has yet to be completely characterized, though member cytokines have a specific effect in promoting proliferation of T-cells that cause cytotoxic effects.
+the cysteine-knot cytokines include members of the transforming growth factor beta superfamily, including TGF-b1, TGF-b2 and TGF-b3.
+
+
+=== FunctionalEdit ===
+A classification that proves more useful in clinical and experimental practice outside of structural biology divides immunological cytokines into those that enhance cellular immune responses, type 1 (IFN-g, TNFa, etc.), and type 2 (TGF-b, IL-4, IL-10, IL-13, etc.), which favor antibody responses.
+A key focus of interest has been that cytokines in one of these two sub-sets tend to inhibit the effects of those in the other. Dysregulation of this tendency is under intensive study for its possible role in the pathogenesis of autoimmune disorders.
+Several inflammatory cytokines are induced by oxidative stress. The fact that cytokines themselves trigger the release of other cytokines and also lead to increased oxidative stress makes them important in chronic inflammation, as well as other immunoresponses, such as fever and acute phase proteins of the liver (IL-1,6,12, IFN-a).
+
+
+== ReceptorsEdit ==
+
+In recent years, the cytokine receptors have come to demand the attention of more investigators than cytokines themselves, partly because of their remarkable characteristics, and partly because a deficiency of cytokine receptors has now been directly linked to certain debilitating immunodeficiency states. In this regard, and also because the redundancy and pleiomorphism of cytokines are, in fact, a consequence of their homologous receptors, many authorities think that a classification of cytokine receptors would be more clinically and experimentally useful.
+A classification of cytokine receptors based on their three-dimensional structure has, therefore, been attempted. Such a classification, though seemingly cumbersome, provides several unique perspectives for attractive pharmacotherapeutic targets.
+Immunoglobulin (Ig) superfamily, which are ubiquitously present throughout several cells and tissues of the vertebrate body, and share structural homology with immunoglobulins (antibodies), cell adhesion molecules, and even some cytokines. Examples: IL-1 receptor types.
+Hemopoietic Growth Factor (type 1) family, whose members have certain conserved motifs in their extracellular amino-acid domain. The IL-2 receptor belongs to this chain, whose g-chain (common to several other cytokines) deficiency is directly responsible for the x-linked form of Severe Combined Immunodeficiency (X-SCID).
+Interferon (type 2) family, whose members are receptors for IFN b and g.
+Tumor necrosis factors (TNF) (type 3) family, whose members share a cysteine-rich common extracellular binding domain, and includes several other non-cytokine ligands like CD40, CD27 and CD30, besides the ligands on which the family is named (TNF).
+Seven transmembrane helix family, the ubiquitous receptor type of the animal kingdom. All G protein-coupled receptors (for hormones and neurotransmitters) belong to this family. Chemokine receptors, two of which act as binding proteins for HIV (CD4 and CCR5), also belong to this family.
+Interleukin-17 receptor (IL-17R) family, which shows little homology with any other cytokine receptor family. Structural motifs conserved between members of this family include: an extracellular fibronectin III-like domain, a transmembrane domain and a cytoplasmic SERIF domain. The known members of this family are as follows: IL-17RA, IL-17RB, IL-17RC, IL17RD and IL-17RE.
+
+
+== Cellular effectsEdit ==
+Each cytokine has a matching cell-surface receptor. Subsequent cascades of intracellular signalling then alter cell functions. This may include the upregulation and/or downregulation of several genes and their transcription factors, resulting in the production of other cytokines, an increase in the number of surface receptors for other molecules, or the suppression of their own effect by feedback inhibition.
+The effect of a particular cytokine on a given cell depends on the cytokine, its extracellular abundance, the presence and abundance of the complementary receptor on the cell surface, and downstream signals activated by receptor binding; these last two factors can vary by cell type. Cytokines are characterized by considerable "redundancy", in that many cytokines appear to share similar functions.
+It seems to be a paradox that cytokines binding to antibodies have a stronger immune effect than the cytokine alone. This may lead to lower therapeutic doses.
+Said et al. showed that inflammatory cytokines cause an IL-10-dependent inhibition of T-cell expansion and function by up-regulating PD-1 levels on monocytes which leads to IL-10 production by monocytes after binding of PD-1 by PD-L.
+Adverse reactions to cytokines are characterized by local inflammation and/or ulceration at the injection sites. Occasionally such reactions are seen with more widespread papular eruptions.
+
+
+== Roles of endogenous cytokines in health and diseaseEdit ==
+Cytokines are often involved in several developmental processes during embryogenesis.
+Cytokines are crucial for fighting off infections and in other immune responses. However, they can become dysregulated and pathological in inflammation, trauma, and sepsis.
+Adverse effects of cytokines have been linked to many disease states and conditions ranging from schizophrenia, major depression and Alzheimer's disease to cancer. Normal tissue integrity is preserved by feedback interactions between diverse cell types mediated by adhesion molecules and secreted cytokines; disruption of normal feedback mechanisms in cancer, threatens tissue integrity. Over-secretion of cytokines can trigger a dangerous syndrome known as a cytokine storm; this may have been the cause of severe adverse events during a clinical trial of TGN1412. Cytokine storms also were the main cause of death in the 1918 "Spanish Flu" pandemic. Deaths were weighted more heavily towards people with healthy immune systems, due to its ability to produce stronger immune responses, likely increasing cytokine levels. Another important example of cytokine storm is seen in acute pancreatitis. Cytokines are integral and implicated in all angles of the cascade resulting in the systemic inflammatory response syndrome and multi organ failure associated with this intra-abdominal catastrophe.
+
+
+== Medical use as drugsEdit ==
+Some cytokines have been developed into protein therapeutics using recombinant DNA technology. Recombinant cytokines being used as drugs as of 2014 include:
+Bone morphogenetic protein (BMP), used to treat bone-related conditions
+Erythropoietin (EPO), used to treat anemia
+Granulocyte colony-stimulating factor (G-CSF), used to treat neutropenia in cancer patients
+Granulocyte macrophage colony-stimulating factor (GM-CSF), used to treat neutropenia and fungal infections in cancer patients
+Interferon alfa, used to treat hepatitis C and multiple scelerosis
+Interferon beta, used to treat multiple scelerosis
+Interleukin 2 (IL-2), used to treat cancer.
+Interleukin 11 (IL-11), used to treat thrombocytopenia in cancer patients.
+Interferon gamma is used to treat chronic granulomatous disease and osteopetrosis
+
+
+== Research into diagnostic use of measured levelsEdit ==
+Plasma levels of various cytokines may give information on the presence, or even predictive value of inflammatory processes involved in autoimmune diseases such as rheumatoid arthritis, as well as immunomodulatory effects of foods or drugs. In addition, elevated levels of IL-7, an important cytokine involved in T cell homeostasis, have been detected in the plasma of HIV-infected patients.
+
+
+== See alsoEdit ==
+
+
+== NotesEdit ==
+^ Saito explains "much evidence has suggested that cytokines and chemokines play a very important role in the reproduction, i.e. embryo implantation, endometrial development, and trophoblast growth and differentiation by modulating the immune and endocrine systems."(15)
+^ Chen explains the regulatory activity of LIF in human and murine embryos: "In conclusion, human preimplantation embryos express LIF and LIF-R mRNA. The expression of these transcripts indicates that preimplantation embryos may be responsive to LIF originating either from the surrounding environment or from the embryos themselves and exerting its function in a paracrine or autocrine manner."(719)
+
+
+== ReferencesEdit ==
+
+
+== External linksEdit ==
+Cytokine Signalling Forum
+Cytokine Gene Summary, Ontology, Pathways and More: Immunology Database and Analysis Portal (ImmPort)
+Cytokine Tutorial. dead link.
+Cell Interactions: Cytokines. inactive link
+Reperfusion Injury in Stroke.
+CopeWithCytoKines Cytokines Online Pathfinder Encyclopaedia

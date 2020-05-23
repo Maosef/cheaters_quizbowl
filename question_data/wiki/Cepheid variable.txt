@@ -1,0 +1,60 @@
+Cepheids redirects here. For the fictional species, see "Blind Alley".
+
+A Cepheid variable (/'sefi:Id/ or /'si:fi:Id/) is a star that pulsates radially, varying in both temperature and diameter to produce brightness changes with a well-defined stable period and amplitude.
+A strong direct relationship between a Cepheid variable's luminosity and pulsation period secures for Cepheids their status as important distance indicators for establishing the galactic and extragalactic distance scales.
+The term Cepheid originates from Delta Cephei in the constellation Cepheus, the first star of this type identified, by John Goodricke in 1784.
+
+
+== Classes ==
+Cepheid variables are divided into several subclasses which exhibit markedly different masses, ages, and evolutionary histories: classical Cepheids, type II Cepheids, and anomalous Cepheids. Delta Scuti variables are A class stars on or near the main sequence at the lower end of the instability strip and were originally referred to as dwarf Cepheids. RR Lyrae variables have short periods and lie on the instability strip where it crosses the horizontal branch. Delta Scuti variables and RR Lyrae variables are not generally treated with Cepheid variables although their pulsations originate with the same helium ionisation kappa mechanism.
+
+
+=== Classical Cepheids ===
+
+Classical Cepheids (also known as Population I Cepheids, type I Cepheids, or Delta Cepheid variables) undergo pulsations with very regular periods on the order of days to months. Classical Cepheids are Population I variable stars which are 4-20 times more massive than the Sun, and up to 100,000 times more luminous. These Cepheids are yellow supergiants of spectral class F6 - K2 and their radii change by (~25% for the longer-period I Carinae) millions of kilometers during a pulsation cycle.
+Classical Cepheids are used to determine distances to galaxies within the Local Group and beyond, and are a means by which the Hubble constant can be established. Classical Cepheids have also been used to clarify many characteristics of our galaxy, such as the Sun's height above the galactic plane and the Galaxy's local spiral structure.
+
+
+=== Type II Cepheids ===
+
+Type II Cepheids (also termed Population II Cepheids) are population II variable stars which pulsate with periods typically between 1 and 50 days. Type II Cepheids are typically metal-poor, old (~10 Gyr), low mass objects (~half the mass of the Sun). Type II Cepheids are divided into several subgroups by period. Stars with periods between 1 and 4 days are of the BL Her subclass, 10-20 days belong to the W Virginis subclass, and stars with periods greater than 20 days belong to the RV Tauri subclass.
+Type II Cepheids are used to establish the distance to the Galactic Center, globular clusters, and galaxies.
+
+
+=== Anomalous Cepheids ===
+A group of pulsating stars on the instability strip have periods of less than 2 days, similar to RR Lyrae variables but with higher luminosities. Anomalous Cepheid variables have masses higher than type II Cepheids, RR Lyrae variables, and our sun. It is unclear whether they are young stars on a "turned-back" horizontal branch, blue stragglers formed through mass transfer in binary systems, or a mix of both.
+
+
+== History ==
+On September 10, 1784, Edward Pigott detected the variability of Eta Aquilae, the first known representative of the class of classical Cepheid variables. However, the eponymous star for classical Cepheids is Delta Cephei, discovered to be variable by John Goodricke a few months later.
+A relationship between the period and luminosity for classical Cepheids was discovered in 1908 by Henrietta Swan Leavitt in an investigation of thousands of variable stars in the Magellanic Clouds. She published it in 1912 with further evidence.
+In 1913, Ejnar Hertzsprung conducted research on Cepheids. His research would later require revision, however. In 1915, Harlow Shapley used Cepheids to place initial constraints on the size and shape of the Milky Way, and of the placement of our Sun within it. In 1924, Edwin Hubble established the distance to classical Cepheid variables in the Andromeda Galaxy, until then known as the Andromeda Nebula, and showed that the variables were not members of the Milky Way. Hubble's finding settled the question of whether the Milky Way represented the entire Universe, or was merely one of numerous galaxies in the Universe [see Great Debate (astronomy)].
+In 1929, Hubble and Milton L. Humason formulated what is now known as Hubble's Law by combining Cepheid distances to several galaxies with Vesto Slipher's measurements of the speed at which those galaxies recede from us. They discovered that the Universe is expanding (see the expansion of the Universe). However, the expansion of the Universe was posited several years before by Georges Lemaitre.
+In the mid 20th century, significant problems with the astronomical distance scale were resolved by dividing the Cepheids into different classes with very different properties. In the 1940s, Walter Baade recognized two separate populations of Cepheids (classical and type II). Classical Cepheids are younger and more massive population I stars, whereas type II Cepheids are older fainter Population II stars. Classical Cepheids and type II Cepheids follow different period-luminosity relationships. The luminosity of type II Cepheids is, on average, less than classical Cepheids by about 1.5 magnitudes (but still brighter than RR Lyrae stars). Baade's seminal discovery led to a fourfold increase in the distance to M31, and the extragalactic distance scale. RR Lyrae stars, then known as Cluster Variables, were recognized fairly early as being a separate class of variable, due in part to their short periods.
+
+
+== Uncertainties in Cepheid determined distances ==
+Chief among the uncertainties tied to the classical and type II Cepheid distance scale are: the nature of the period-luminosity relation in various passbands, the impact of metallicity on both the zero-point and slope of those relations, and the effects of photometric contamination (blending) and a changing (typically unknown) extinction law on Cepheid distances. All these topics are actively debated in the literature.
+These unresolved matters have resulted in cited values for the Hubble constant (established from Classical Cepheids) ranging between 60 km/s/Mpc and 80 km/s/Mpc. Resolving this discrepancy is one of the foremost problems in astronomy since the cosmological parameters of the Universe may be constrained by supplying a precise value of the Hubble constant. Uncertainties have diminished over the years, due in part to discoveries such as RS Puppis.
+Delta Cephei is also of particular importance as a calibrator of the Cepheid period-luminosity relation since its distance is among the most precisely established for a Cepheid, thanks in part to its membership in a star cluster and the availability of precise Hubble Space Telescope/Hipparcos parallaxes. The accuracy of the distance measurements to Cepheid variables and other bodies within 7,500 lightyears is vastly improved by combining images from Hubble taken six months apart when the Earth and Hubble are on opposite sides of the Sun.
+
+
+== Dynamics of the pulsation ==
+The accepted explanation for the pulsation of Cepheids is called the Eddington valve, or k-mechanism, where the Greek letter k (kappa) denotes gas opacity. Helium is the gas thought to be most active in the process. Doubly ionized helium (helium whose atoms are missing both electrons) is more opaque than singly ionized helium. The more helium is heated, the more ionized it becomes. At the dimmest part of a Cepheid's cycle, the ionized gas in the outer layers of the star is opaque, and so is heated by the star's radiation, and due to the increased temperature, begins to expand. As it expands, it cools, and so becomes less ionized and therefore more transparent, allowing the radiation to escape. Then the expansion stops, and reverses due to the star's gravitational attraction. The process then repeats.
+The mechanics of the pulsation as a heat-engine was proposed in 1917 by Arthur Stanley Eddington (who wrote at length on the dynamics of Cepheids), but it was not until 1953 that S. A. Zhevakin identified ionized helium as a likely valve for the engine.
+
+
+== Examples ==
+Classical Cepheids include: Eta Aquilae, Zeta Geminorum, Beta Doradus, RT Aurigae, Polaris, as well as Delta Cephei.
+Type II Cepheids include: W Virginis and BL Herculis.
+Anomalous Cepheids include: XZ Ceti and BL Bootes.
+
+
+== References ==
+
+
+== External links ==
+McMaster Cepheid Photometry and Radial Velocity Data Archive
+American Association of Variable Star Observers
+Stellar pulsation theory - Regular versus irregular variability
+OGLE Atlas of Variable Star Light Curves

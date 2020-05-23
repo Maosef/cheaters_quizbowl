@@ -1,0 +1,117 @@
+A transposable element (TE or transposon) is a DNA sequence that can change its position within the genome, sometimes creating or reversing mutations and altering the cell's genome size. Transposition often results in duplication of the TE. Barbara McClintock's discovery of these jumping genes earned her a Nobel prize in 1983.
+TEs make up a large fraction of the C-value of eukaryotic cells. They are generally considered non-coding DNA, although it has been shown that TEs are important in genome function and evolution. In Oxytricha, which has a unique genetic system, they play a critical role in development. They are also very useful to researchers as a means to alter DNA inside a living organism.
+
+
+== Discovery ==
+Barbara McClintock discovered the first TEs in maize, Zea mays, at the Cold Spring Harbor Laboratory. McClintock was experimenting with maize plants that had broken chromosomes. In the winter of 1944-1945 McClintock planted corn kernels that were self-pollinated, meaning that the flowers were pollinated by the silk of their own plant. These kernels came from a long line of plants that had been self-pollinated, causing broken arms on the end of their ninth chromosome. As the maize plants began to grow, McClintock noted unusual color patterns on the leaves. For example, one leaf had two albino patches of almost identical size, located side by side on the leaf. McClintock hypothesized that during cell division certain cells lost genetic material, while others gained what they had lost. However, when comparing the chromosomes of the current generation of plants and their parent generation, she found certain parts of the chromosomes had switched positions on the chromosome. She disproved the popular genetic theory of the time that genes were fixed in their position on a chromosome. McClintock found that genes could not only move, but they could also be turned on or off due to certain environmental conditions or during different stages of cell development. McClintock also showed that gene mutations could be reversed. McClintock presented her report on her findings in 1951, and published an article on her discoveries in Genetics in November 1953 entitled, ''Induction of Instability at Selected Loci in Maize.'' Her work would be largely dismissed and ignored until the late 1960s-1970s when it would be rediscovered after TEs were found in bacteria. She was awarded a Nobel Prize in Medicine or Physiology in 1983 for her discovery of TEs, more than thirty years after her research and initial discovery.
+TEs are more common than usually thought. Approximately 90% of maize genome is made up of TEs, and 50% in the human genome.
+
+
+== Classification ==
+Transposable elements (TEs) represent one of several types of mobile genetic elements. TEs are assigned to one of two classes according to their mechanism of transposition, which can be described as either copy and paste (class I TEs) or cut and paste (class II TEs).
+
+
+=== Class I (retrotransposons) ===
+
+Class I TEs are copied in two stages: first they are transcribed from DNA to RNA, and the RNA produced is then reverse transcribed to DNA. This copied DNA is then inserted at a new position into the genome. The reverse transcription step is catalyzed by a reverse transcriptase, which is often encoded by the TE itself. The characteristics of retrotransposons are similar to retroviruses, such as HIV.
+Retrotransposons are commonly grouped into three main orders:
+TEs with long terminal repeats (LTRs): encode reverse transcriptase, similar to retroviruses
+LINEs (LINE-1s or L1s): encode reverse transcriptase, lack LTRs, and are transcribed by RNA polymerase II
+SINEs: do not encode reverse transcriptase and are transcribed by RNA polymerase III.
+Retroviruses can also be considered TEs. For example, after entering a host cell and conversion of the retroviral RNA into DNA, the newly produced retroviral DNA is integrated into the genome of the host cell. These integrated DNAs represent a provirus of the retrovirus. The provirus is a specialized form of eukaryotic retrotransposon, which can produce RNA intermediates that may leave the host cell and infect other cells. The transposition cycle of retroviruses has similarities to that of prokaryotic TEs, suggesting a distant relationship between these two TEs types.
+
+
+=== Class II (DNA transposons) ===
+The cut-and-paste transposition mechanism of class II TEs does not involve an RNA intermediate. The transpositions are catalyzed by several transposase enzymes. Some transposases non-specifically bind to any target site in DNA, whereas others bind to specific DNA sequence targets. The transposase makes a staggered cut at the target site resulting in single-strand 5' or 3' DNA overhangs (sticky ends). This step cuts out the DNA transposon, which is then ligated into a new target site; this process involves activity of a DNA polymerase that fills in gaps and of a DNA ligase that closes the sugar-phosphate backbone. This results in duplication of the target site. The insertion sites of DNA transposons may be identified by short direct repeats (created by the staggered cut in the target DNA and filling in by DNA polymerase) followed by a series of inverted repeats important for the TE excision by transposase. Cut-and-paste TEs may be duplicated if their transposition takes place during S phase of the cell cycle when a donor site has already been replicated, but a target site has not yet been replicated. Such duplications at the target site can result in gene duplication, which plays an important role in evolution. Not all DNA transposons transpose through the cut-and-paste mechanism. In some cases, a replicative transposition is observed in which a transposon replicates itself to a new target site (e.g. Helitron (biology)).
+Class II TEs make less than 2% of the human genome, making the rest Class I.
+
+
+=== Autonomous and non-autonomous TEs ===
+Transposition can be classified as either "autonomous" or "non-autonomous" in both Class I and Class II TEs. Autonomous TEs can move by themselves while non-autonomous TEs require the presence of another TE to move. This is often because non-autonomous TEs lack transposase (for class II) or reverse transcriptase (for class I).
+Activator element (Ac) is an example of an autonomous TE, and dissociation element (Ds) is an example of non-autonomous TE. Without Ac, Ds is not able to transpose.
+
+
+== Examples ==
+The first TEs were discovered in maize (Zea mays), by Barbara McClintock in 1948, for which she was awarded a Nobel Prize in 1983. She noticed insertions, deletions, and translocations, caused by these elements. These changes in the genome could, for example, lead to a change in the color of corn kernels. About 85% of the genome of maize consists in TEs. The Ac/Ds system described by McClintock are class II TEs. Transposition of Ac in tobacco has been demonstrated by B. Baker (Plant Transposable Elements, pp 161-174, 1988, Plenum Publishing Corp., ed. Nelson).
+One family of TEs in the fruit fly Drosophila melanogaster are called P elements. They seem to have first appeared in the species only in the middle of the twentieth century. Within 50 years, they have spread through every population of the species. Gerald M. Rubin and Allan C. Spradling pioneered technology to use artificial P elements to insert genes into Drosophila by injecting the embryo.
+Transposons in bacteria usually carry an additional gene for function other than transposition---often for antibiotic resistance. In bacteria, transposons can jump from chromosomal DNA to plasmid DNA and back, allowing for the transfer and permanent addition of genes such as those encoding antibiotic resistance (multi-antibiotic resistant bacterial strains can be generated in this way). Bacterial transposons of this type belong to the Tn family. When the transposable elements lack additional genes, they are known as insertion sequences.
+The most common form of transposable element in humans is the Alu sequence. It is approximately 300 bases long and can be found between 300,000 and a million times in the human genome. Alu is estimated to make up 15-17% of the human genome.
+Mariner-like elements are another prominent class of transposons found in multiple species including humans. The Mariner transposon was first discovered by Jacobson and Hartl in Drosophila. This Class II transposable element is known for its uncanny ability to be transmitted horizontally in many species. There are an estimated 14 thousand copies of Mariner in the human genome comprising 2.6 million base pairs. The first mariner-element transposons outside of animals were found in Trichomonas vaginalis. These characteristics of the Mariner transposon have inspired the science fiction novel titled, "The Mariner Project".
+Mu phage transposition is the best known example of replicative transposition. Its transposition mechanism is somewhat similar to a homologous recombination.
+The five distinct yeast (Saccharomyces cerevisiae) retrotransposon families: Ty1, Ty2, Ty3, Ty4 and Ty5 
+A helitron is a TE found in eukaryotes that are thought to replicate by a rolling-circle mechanism.
+
+
+== In disease ==
+TEs are mutagens. They can damage the genome of their host cell in different ways:
+a transposon or a retroposon that inserts itself into a functional gene will most likely disable that gene;
+after a DNA transposon leaves a gene, the resulting gap will probably not be repaired correctly;
+multiple copies of the same sequence, such as Alu sequences can hinder precise chromosomal pairing during mitosis and meiosis, resulting in unequal crossovers, one of the main reasons for chromosome duplication.
+Diseases that are often caused by TEs include hemophilia A and B, severe combined immunodeficiency, porphyria, predisposition to cancer, and Duchenne muscular dystrophy. LINE1 (L1) TEs that land on the human Factor VIII caused haemophilia and insertion of L1 into APC gene caused colon cancer and this confirms that the TEs play an important role for disease development.
+Additionally, many TEs contain promoters which drive transcription of their own transposase. These promoters can cause aberrant expression of linked genes, causing disease or mutant phenotypes.
+
+
+== Silencing of TEs ==
+If an organism is composed of mostly TEs, doesn't it affect their genetics? Surprisingly, in most cases TEs are silenced through epigenetics mechanism like methylation, chromatin remodeling and piRNAs. So no phenotypic effects nor the movement of TEs are occurring as in the wild type plant TEs are silenced. Certain mutated plants were found to have defects in the methylation related enzymes (methyl transferase) that cause the transcription of TEs thus affect the phenotype.
+Hypothesis suggest that about only 100 LINE1 related sequenced are actually active out of 17% of its exisence in the human genome. In human cells, silencing of LINE1 sequence are triggered by RNAi mechanism. Surprisingly, the RNAi sequenced are derived from the 5' untranslated region (UTR) of the LINE1 long terminal repeats itself. Supposedly the 5' LINE1 UTR codes for sense promoter for LINE1 transcription also encodes antisense promoter for the miRNA that become the substrate for the siRNA production. An inhibition of RNAi silencing mechanism at this region showed an increase in LINE1 transcript as the study showed.
+
+
+== Rate of transposition, induction and defense ==
+One study estimated the rate of transposition of a particular retrotransposon, the Ty1 element in Saccharomyces cerevisiae. Using several assumptions, the rate of successful transposition event per single Ty1 element came out to be about once every few months to once every few years.
+Cells defend against the proliferation of TEs in a number of ways. These include piRNAs and siRNAs which silence TEs after they have been transcribed.
+Some TEs contain heat-shock like promoters and their rate of transposition increases if the cell is subjected to stress, thus increasing the mutation rate under these conditions, which might be beneficial to the cell.
+
+
+== Evolution ==
+The scientific community is still exploring the evolution of TEs and their effect on genome evolution.
+TEs are found in most life forms. They may have originated in the last universal common ancestor, arisen independently multiple times, or arisen once and then spread to other kingdoms by horizontal gene transfer. While some TEs confer benefits on their hosts, most are regarded as selfish DNA parasites. In this way, they are similar to viruses. Various viruses and TEs also share features in their genome structures and biochemical abilities, leading to speculation that they share a common ancestor.
+Because excessive TE activity can damage exons, many organisms have developed mechanisms to inhibit their activity. Bacteria may undergo high rates of gene deletion as part of a mechanism to remove TEs and viruses from their genomes while eukaryotic organisms use RNA interference (RNAi) to inhibit TE activity. Nevertheless, some TEs generated large families often associated with speciation events.
+Evolution often deactivates DNA transposons, leaving them as introns (inactive gene sequences). In vertebrate animal cells nearly all >100,000 DNA transposons per genome have genes that encode inactive transposase polypeptides. In humans, all Tc1-like transposons are inactive. The first synthetic transposon designed for use in vertebrate cells, the Sleeping Beauty transposon system, is a Tc1/mariner-like transposon. It exists in the human genome as an intron and was activated through reconstruction.
+Interspersed Repeats within genomes are created by transposition events accumulating over evolutionary time. Because interspersed repeats block gene conversion, they protect novel gene sequences from being overwritten by similar gene sequences and thereby facilitate the development of new genes.
+TEs may have been co-opted by the vertebrate immune system as a means of producing antibody diversity. The V(D)J recombination system operates by a mechanism similar to that of some TEs.
+TEs contain many type of genes, including those conferring antibiotic resistance and ability to transpose to conjugative plasmids. Some TEs also contain integrons (genetic elements that can capture and express genes from other sources). These contain integrase, which can integrate gene cassettes. There are over 40 antibiotic resistance genes identified on cassettes, as well as virulence genes.
+Transposons do not always excise their elements precisely, sometimes removing up the adjacent base pairs. This phenomenon is called exon shuffling. Shuffling two unrelated exons create a novel gene product or, more likely, an intron.
+
+
+== Applications ==
+
+The first TE was discovered in the plant maize (Zea mays, corn species), and is named dissociator (Ds). Likewise, the first TE to be molecularly isolated was from a plant (Snapdragon). Appropriately, TEs have been an especially useful tool in plant molecular biology. Researchers use them as a means of mutagenesis. In this context, a TE jumps into a gene and produces a mutation. The presence of such a TE provides a straightforward means of identifying the mutant allele, relative to chemical mutagenesis methods.
+Sometimes the insertion of a TE into a gene can disrupt that gene's function in a reversible manner, in a process called insertional mutagenesis; transposase-mediated excision of the DNA transposon restores gene function. This produces plants in which neighboring cells have different genotypes. This feature allows researchers to distinguish between genes that must be present inside of a cell in order to function (cell-autonomous) and genes that produce observable effects in cells other than those where the gene is expressed.
+TEs are also a widely used tool for mutagenesis of most experimentally tractable organisms. The Sleeping Beauty transposon system has been used extensively as an insertional tag for identifying cancer genes 
+The Tc1/mariner-class of TEs Sleeping Beauty transposon system, awarded as the Molecule of the Year 2009 is active in mammalian cells and are being investigated for use in human gene therapy.
+
+
+== De novo repeat identification ==
+De novo repeat identification is an initial scan of sequence data that seeks to find the repetitive regions of the genome, and to classify these repeats. Many computer programs exist to perform de novo repeat identification, all operating under the same general principles. As short tandem repeats are generally 1-6 base pairs in length and are often consecutive, their identification is relatively simple. Dispersed repetitive elements, on the other hand, are more challenging to identify, due to the fact that they are longer and have often acquired mutations. However, it is important to identify these repeats as they are often found to be transposable elements (TEs).
+De novo identification of transposons involves three steps: 1) find all repeats within the genome, 2) build a consensus of each family of sequences, and 3) classify these repeats. There are three groups of algorithms for the first step. One group is referred to as the k-mer approach, where a k-mer is a sequence of length k. In this approach, the genome is scanned for overrepresented k-mers; that is, k-mers that occur more often than is likely based on probability alone. The length k is determined by the type of transposon being searched for. The k-mer approach also allows mismatches, the number of which is determined by the analyst. Some k-mer approach programs use the k-mer as a base, and extend both ends of each repeated k-mer until there is no more similarity between them, indicating the ends of the repeats. Another group of algorithms employs a method called sequence self-comparison. Sequence self-comparison programs use databases such as AB-BLAST to conduct an initial sequence alignment. As these programs find groups of elements that partially overlap, they are useful for finding highly diverged transposons, or transposons with only a small region copied into other parts of the genome. Another group of algorithms follows the periodicity approach. These algorithms perform a Fourier transformation on the sequence data, identifying periodicities, regions that are repeated periodically, and are able to use peaks in the resultant spectrum to find candidate repetitive elements. This method works best for tandem repeats, but can be used for dispersed repeats as well. However, it is a slow process, making it an unlikely choice for genome scale analysis.
+The second step of de novo repeat identification involves building a consensus of each family of sequences. A consensus sequence is a sequence that is created based on the repeats that comprise a TE family. A base pair in a consensus is the one that occurred most often in the sequences being compared to make the consensus. For example, in a family of 50 repeats where 42 have a T base pair in the same position, the consensus sequence would have a T at this position as well, as the base pair is representative of the family as a whole at that particular position, and is most likely the base pair found in the family's ancestor at that position. Once a consensus sequence has been made for each family, it is then possible to move on to further analysis, such as TE classification and genome masking in order to quantify the overall TE content of the genome.
+
+
+== See also ==
+Insertion sequence
+Intragenomic conflict
+P element
+Tn3 Transposon
+Tn10
+Transposon tagging
+Signature tagged mutagenesis
+Evolution of sexual reproduction
+
+
+== Notes ==
+Kidwell, M.G. (2005). "Transposable elements". In ed. T.R. Gregory. The Evolution of the Genome. San Diego: Elsevier. pp. 165-221. ISBN 0-123-01463-8. 
+Craig NL, Craigie R, Gellert M, and Lambowitz AM (ed.) (2002). Mobile DNA II. Washington, DC: ASM Press. ISBN 978-1-555-81209-6. 
+Lewin B (2000). Genes VII. Oxford University Press. ISBN 978-0-198-79276-5. 
+
+
+=== References ===
+
+
+== External links ==
+Kimball's Biology Pages: Transposons
+"An immune system so versatile it might kill you". New Scientist (2556). 21 June 2006.  -- A possible connection between aberrant reinsertions and lymphoma.
+GMO Safety: Transposons - research projects and basic infos
+A wiki specially dedicated to transposable elements and their classification
+Repbase -- a database of transposable element sequences
+RepeatMasker -- a computer program used by computational biologists to annotate transposons in DNA sequences
+Use of the Sleeping Beauty Transposon System for Stable Gene Expression in Mouse Embryonic Stem Cells

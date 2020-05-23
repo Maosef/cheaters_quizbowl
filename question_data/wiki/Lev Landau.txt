@@ -1,0 +1,115 @@
+Lev Davidovich Landau (Russian: Lev Davidovich Landau; IPA: [ljev da'vid@vjitc lan'daU]; January 22 [O.S. January 9] 1908 - April 1, 1968) was a prominent Soviet physicist who made fundamental contributions to many areas of theoretical physics. His accomplishments include the independent co-discovery of the density matrix method in quantum mechanics (alongside John von Neumann), the quantum mechanical theory of diamagnetism, the theory of superfluidity, the theory of second-order phase transitions, the Ginzburg-Landau theory of superconductivity, the theory of Fermi liquid, the explanation of Landau damping in plasma physics, the Landau pole in quantum electrodynamics, the two-component theory of neutrinos, and Landau's equations for S matrix singularities. He received the 1962 Nobel Prize in Physics for his development of a mathematical theory of superfluidity that accounts for the properties of liquid helium II at a temperature below 70002170000000000002.17 K (7000216999999999995-270.98 degC).
+
+
+== Life ==
+
+
+=== Early years ===
+Landau was born on January 22, 1908 to Jewish parents in Baku, in what was then the Russian Empire. Landau's father was an engineer with the local oil industry and his mother was a doctor. Recognized very early as a child prodigy in mathematics, Landau was quoted as saying in later life that he scarcely remembered a time when he was not familiar with calculus. He learned to differentiate at 12 and to integrate at 13. Landau graduated at 13 from gymnasium. His parents considered him too young to attend university, so for a year he attended the Baku Economical Technicum. In 1922, at age 14, he matriculated at Baku State University, studying in two departments simultaneously: the Departments of Physics and Mathematics, and the Department of Chemistry. Subsequently he ceased studying chemistry, but remained interested in the field throughout his life.
+
+
+=== Leningrad and Europe ===
+In 1924, he moved to the main centre of Soviet physics at the time: the Physics Department of Leningrad State University. In Leningrad, he first made the acquaintance of genuine theoretical physics and dedicated himself fully to its study, graduating in 1927. Landau subsequently enrolled for post-graduate study at the Leningrad Physico-Technical Institute, and at 21, received a doctorate. Landau got his first chance to travel abroad in 1929, on a Soviet government travelling fellowship supplemented by a Rockefeller Foundation fellowship.
+After brief stays in Gottingen and Leipzig, he went to Copenhagen to work at Niels Bohr's Institute for Theoretical Physics. After the visit, Landau always considered himself a pupil of Niels Bohr and Landau's approach to physics was greatly influenced by Bohr. After his stay in Copenhagen, he visited Cambridge and Zurich before returning to the Soviet Union.
+
+
+=== National Scientific Center Kharkiv Institute of Physics and Technology, Kharkiv ===
+Between 1932 and 1937 he headed the Department of Theoretical Physics at the National Scientific Center Kharkiv Institute of Physics and Technology  and lectured at University of Kharkiv, Kharkiv Polytechnical Institute. Apart from his theoretical accomplishments, Landau was the principal founder of a great tradition of theoretical physics in Kharkiv, Soviet Union, sometimes referred to as the "Landau school". In Kharkiv, he and his friend and former student, Evgeny Lifshitz, began writing the Course of Theoretical Physics, ten volumes that together span the whole of the subject and are still widely used as graduate-level physics texts. During the Great Purge, Landau was investigated within the UPTI Affair in Kharkiv, but he managed to leave for Moscow to take up a new post.
+Landau developed a comprehensive exam called the "Theoretical Minimum" which students were expected to pass before admission to the school. In 1932, he also computed Chandrashekhar Limit, however, he did not apply it to white dwarfs. The exam covered all aspects of theoretical physics, and between 1934 and 1961 only 43 candidates passed.
+The information on the Ginzburg-Landau theory and the photographs of the Landau office at the National Scientific Center Kharkiv Institute of Physics and Technology in Kharkiv in Ukraine are presented in the book: "Nonlinearities in Microwave Superconductivity," co-authored by Dimitri O. Ledenyov and Viktor O. Ledenyov.
+
+
+=== Institute for Physical Problems, Moscow ===
+Landau was the head of the Theoretical Division at the Institute for Physical Problems from 1937 until 1962. Landau was arrested on April 27, 1938, because he had compared the Stalinist dictatorship with that of Hitler, and was held in the NKVD's Lubyanka prison until his release on April 29, 1939, after the head of the institute Pyotr Kapitsa, an experimental low-temperature physicist, wrote a letter to Joseph Stalin, personally vouching for Landau's behavior, and threatening to quit the institute if Landau were not released. After his release Landau discovered how to explain Kapitsa's superfluidity using sound waves, or phonons, and a new excitation called a roton.
+Landau led a team of mathematicians supporting Soviet atomic and hydrogen bomb development. Landau calculated the dynamics of the first Soviet thermonuclear bomb, including predicting the yield. For this work he received the Stalin Prize in 1949 and 1953, and was awarded the title "Hero of Socialist Labour" in 1954.
+His students included Lev Pitaevskii, Alexei Abrikosov, Arkady Levanyuk, Evgeny Lifshitz, Lev Gor'kov, Isaak Khalatnikov, Boris L. Ioffe, Roald Sagdeev and Isaak Pomeranchuk.
+
+
+== Personal life and views ==
+
+In 1937 Landau married a girl from Kharkov, Kora T. Drobanzeva; their son Igor was born in 1946. Landau believed in "free love" rather than monogamy, and encouraged his wife and his students to practice "free love"; his wife was not enthusiastic. During his life, Landau was admitted involuntarily six times to the Kashchenko psychiatric hospital.
+He was an atheist.
+
+
+== Last years ==
+On January 7, 1962, Landau's car collided with an oncoming truck. He was severely injured and spent two months in a coma. Although Landau recovered in many ways, his scientific creativity was destroyed, and he never returned fully to scientific work. His injuries prevented him from accepting the 1962 Nobel Prize for physics in person.
+In 1965 former students and co-workers of Landau founded the Landau Institute for Theoretical Physics, located in the town of Chernogolovka near Moscow, and led for the following three decades by Isaak Markovich Khalatnikov.
+In June 1965, Lev Landau and Yevsei Liberman published a letter in the New York Times, stating that as Soviet Jews they opposed US intervention on behalf of the Student Struggle for Soviet Jewry.
+
+
+=== Death ===
+Landau died on April 1, 1968, aged 60, from complications of the injuries sustained in the car accident he was involved in six years earlier. He was buried at Novodevichy cemetery.
+
+
+== Legacy ==
+Two celestial objects are named in his honour:
+the minor planet 2142 Landau.
+the lunar crater Landau.
+
+
+== Landau's List ==
+Landau kept a list of names of physicists which he ranked on a logarithmic scale of productivity ranging from 0 to 5. The highest ranking, 0, was assigned to Isaac Newton. Albert Einstein was ranked 0.5. A rank of 1 was awarded to the founding fathers of quantum mechanics, Niels Bohr, Werner Heisenberg, Paul Dirac and Erwin Schrodinger, and others. Landau ranked himself as a 2.5 but later promoted himself to a 2. David Mermin, writing about Landau, referred to the scale, and ranked himself in the fourth division, in the article My Life with Landau: Homage of a 4.5 to a 2.
+
+
+== Works ==
+
+
+=== Landau and Lifshitz Course of Theoretical Physics ===
+
+L.D. Landau, E.M. Lifshitz (1976). Mechanics. Vol. 1 (3rd ed.). Butterworth-Heinemann. ISBN 978-0-7506-2896-9. 
+L.D. Landau, E.M. Lifshitz (1975). The Classical Theory of Fields. Vol. 2 (4th ed.). Butterworth-Heinemann. ISBN 978-0-7506-2768-9. 
+L.D. Landau, E.M. Lifshitz (1977). Quantum Mechanics: Non-Relativistic Theory. Vol. 3 (3rd ed.). Pergamon Press. ISBN 978-0-08-020940-1.  -- 2nd ed. (1965) at archive.org
+V.B. Berestetskii, E.M. Lifshitz, L.P. Pitaevskii (1982). Quantum Electrodynamics. Vol. 4 (2nd ed.). Butterworth-Heinemann. ISBN 978-0-7506-3371-0. 
+L.D. Landau, E.M. Lifshitz (1980). Statistical Physics, Part 1. Vol. 5 (3rd ed.). Butterworth-Heinemann. ISBN 978-0-7506-3372-7. 
+L.D. Landau, E.M. Lifshitz (1987). Fluid Mechanics. Vol. 6 (2nd ed.). Butterworth-Heinemann. ISBN 978-0-08-033933-7. 
+L.D. Landau, E.M. Lifshitz (1986). Theory of Elasticity. Vol. 7 (3rd ed.). Butterworth-Heinemann. ISBN 978-0-7506-2633-0. 
+L.D. Landau, E.M. Lifshitz, L.P. Pitaevskii (1984). Electrodynamics of Continuous Media. Vol. 8 (1st ed.). Butterworth-Heinemann. ISBN 978-0-7506-2634-7. 
+L.P. Pitaevskii, E.M. Lifshitz (1980). Statistical Physics, Part 2. Vol. 9 (1st ed.). Butterworth-Heinemann. ISBN 978-0-7506-2636-1. 
+L.P. Pitaevskii, E.M. Lifshitz (1981). Physical Kinetics. Vol. 10 (1st ed.). Pergamon Press. ISBN 978-0-7506-2635-4. 
+
+
+=== Other ===
+L.D. Landau, A.J. Akhiezer, E.M. Lifshitz (1967). General Physics, Mechanics and Molecular Physics. Pergamon Press. ISBN 978-0-08-009106-8. 
+L.D. Landau, A.I. Kitaigorodsky (1978). Physics for Everyone. Mir Publishers Moscow. 
+L.D. Landau, Ya. Smorodinsky (2011). Lectures on Nuclear Theory. Dover Publications. 
+A complete list of Landau's works appeared in 1998 in the Russian journal Physics-Uspekhi.
+
+
+== Books about Landau ==
+Dorozynski, Alexander (1965). The Man They Wouldn't Let Die. Secker and Warburg. ASIN B0006DC8BA.  (After Landau's 1962 car accident, the physics community around him rallied to attempt to save his life. They managed to prolong his life until 1968.)
+Janouch, Frantisek (1979). Lev D. Landau: His life and work. CERN. ASIN B0007AUCL0. 
+Khalatnikov, I.M., ed. (1989). Landau. The physicist and the man. Recollections of L.D. Landau. Sykes, J.B. (trans.). Pergamon Press. ISBN 0-08-036383-0. 
+Kojevnikov, Alexei B. (2004). Stalin's Great Science: The Times and Adventures of Soviet Physicists. History of Modern Physical Sciences. Imperial College Press. ISBN 1-86094-420-5. 
+Landau-Drobantseva, Kora (1999). Professor Landau: How We Lived (in Russian). AST. ISBN 5-8159-0019-2. 
+Shifman, M., ed. (2013). Under the Spell of Landau: When Theoretical Physics was Shaping Destinies. World Scientific. ISBN 978-981-4436-56-4. 
+
+
+== In popular culture ==
+The Russian television film My Husband - the Genius (unofficial translation of the Russian title Moi muzh - genii) released in 2008 tells the biography of Landau (played by Daniil Spivakovsky), mostly focusing on his private life. It was generally panned by critics. People who had personally met Landau, including famous Russian scientist Vitaly Ginzburg, said that the film was not only terrible but also false in historical facts.
+Another film about Landau, Dau, is directed by Ilya Khrzhanovsky with non-professional actor Teodor Currentzis (an orchestra conductor) as Landau.
+
+
+== See also ==
+Landau-Hopf theory of turbulence
+Landau-Lifshitz-Gilbert equation
+Landau-Lifshitz model
+Landau (crater)
+Landau theory of second order phase transitions
+Ginzburg-Landau theory of superconductivity
+Landau quantization, Landau levels
+Landau damping
+List of Jewish Nobel laureates
+
+
+== References ==
+
+
+== Further reading ==
+Karl Hufbauer, "Landau's youthful sallies into stellar theory: Their origins, claims, and receptions", Historical Studies in the Physical and Biological Sciences, 37 (2007), 337-354.
+"As a student, Landau dared to correct Einstein in a lecture". Global Talent News.
+O'Connor, John J.; Robertson, Edmund F., "Lev Landau", MacTutor History of Mathematics archive, University of St Andrews .
+Lev Davidovich Landau. Nobel-Winners.
+Landau's Theoretical Minimum, Landau's Seminar, ITEP in the Beginning of the 1950s by Boris L. Ioffe, Concluding talk at the workshop QCD at the Threshold of the Fourth Decade/Ioeffest.
+EJTP Landau Issue 2008.
+Ammar Sakaji and Ignazio Licata (eds),Lev Davidovich Landau and his Impact on Contemporary Theoretical Physics, Nova Science Publishers, New York, 2009, ISBN 978-1-60692-908-7.
+Gennady Gorelik, "The Top Secret Life of Lev Landau", Scientific American, Aug. 1997, vol.277(2), 53-57.

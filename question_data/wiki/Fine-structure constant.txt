@@ -1,0 +1,130 @@
+In physics, the fine-structure constant, also known as Sommerfeld's constant, commonly denoted a (the Greek letter a), is a fundamental physical constant characterizing the strength of the electromagnetic interaction between elementary charged particles. It is related to the elementary charge (the electromagnetic coupling constant) e, which characterizes the strength of the coupling of an elementary charged particle with the electromagnetic field, by the formula 4pe0hca = e2. Being a dimensionless quantity, it has the same numerical value in all systems of units. Arnold Sommerfeld introduced the fine-structure constant in 1916.
+The currently accepted value of a is 69977297352569800007.2973525698(24)x10-3.
+
+
+== Definition ==
+Some equivalent definitions of a in terms of other fundamental physical constants are:
+
+where:
+e is the elementary charge;
+h = h/2p is the reduced Planck constant;
+c is the speed of light in vacuum;
+e0 is the electric constant or permittivity of free space;
+u0 is the magnetic constant or permeability of free space;
+ke is the Coulomb constant;
+RK is the von Klitzing constant.
+The definition reflects the relationship between a and the electromagnetic coupling constant e, which equals [?]4pae0hc.
+
+
+=== In non-SI units ===
+In electrostatic cgs units, the unit of electric charge, the statcoulomb, is defined so that the Coulomb constant, ke, or the permittivity factor, 4pe0, is 1 and dimensionless. Then the expression of the fine-structure constant, as commonly found in older physics literature, becomes
+
+In natural units, commonly used in high energy physics, where e0 = c = h = 1, the value of the fine-structure constant is
+
+As such, the fine-structure constant is just another, albeit dimensionless, quantity determining (or determined by) the elementary charge: e = [?]4pa [?] 0.30282212 in terms of such a natural unit of charge.
+
+
+== Measurement ==
+
+The 2010 CODATA recommended value of a is
+
+This has a relative standard uncertainty of 0.32 parts per billion. For reasons of convenience, historically the value of the reciprocal of the fine-structure constant is often specified. The 2010 CODATA recommended value is given by
+
+While the value of a can be estimated from the values of the constants appearing in any of its definitions, the theory of quantum electrodynamics (QED) provides a way to measure a directly using the quantum Hall effect or the anomalous magnetic moment of the electron. The theory of QED predicts a relationship between the dimensionless magnetic moment of the electron and the fine-structure constant a (the magnetic moment of the electron is also referred to as "Lande g-factor" and symbolized as g). The most precise value of a obtained experimentally (as of 2012) is based on a measurement of g using a one-electron so-called "quantum cyclotron" apparatus, together with a calculation via the theory of QED that involved 12,672 tenth-order Feynman diagrams:
+
+This measurement of a has a precision of 0.25 parts per billion. This value and uncertainty are about the same as the latest experimental results.
+
+
+== Physical interpretations ==
+The fine-structure constant, a, has several physical interpretations. a is:
+The square of the ratio of the elementary charge to the Planck charge
+
+The ratio of two energies: (i) the energy needed to overcome the electrostatic repulsion between two electrons a distance of d apart, and (ii) the energy of a single photon of wavelength  (or of angular wavelength d ; see Planck relation):
+
+The ratio of the velocity of the electron in the first circular orbit of the Bohr model of the atom to the speed of light in vacuum. This is Sommerfeld's original physical interpretation. Then the square of a is the ratio between the Hartree energy (27.2 eV = twice the Rydberg energy = approximately twice its ionization energy) and the electron rest mass (511 keV).
+The two ratios of three characteristic lengths: the classical electron radius , the Compton wavelength of the electron , and the Bohr radius :
+
+In quantum electrodynamics, a is directly related to the coupling constant determining the strength of the interaction between electrons and photons. The theory does not predict its value. Therefore a must be determined experimentally. In fact, a is one of the about 20 empirical parameters in the Standard Model of particle physics, whose value is not determined within the Standard Model.
+In the electroweak theory unifying the weak interaction with electromagnetism, a is absorbed into two other coupling constants associated with the electroweak gauge fields. In this theory, the electromagnetic interaction is treated as a mixture of interactions associated with the electroweak fields. The strength of the electromagnetic interaction varies with the strength of the energy field.
+Given two hypothetical point particles each of Planck mass and elementary charge, separated by any distance, a is the ratio of their electrostatic repulsive force to their gravitational attractive force.
+In the fields of electrical engineering and solid-state physics, the fine-structure constant is one fourth the product of the characteristic impedance of free space, Z0 = u0c, and the conductance quantum, G0 = 2e2/h:
+
+.
+
+When perturbation theory is applied to quantum electrodynamics, the resulting perturbative expansions for physical results are expressed as sets of power series in a. Because a is much less than one, higher powers of a are soon unimportant, making the perturbation theory practical in this case. On the other hand, the large value of the corresponding factors in quantum chromodynamics makes calculations involving the strong nuclear force extremely difficult.
+
+
+=== Variation with energy scale ===
+According to the theory of the renormalization group, the value of the fine-structure constant (the strength of the electromagnetic interaction) grows logarithmically as the energy scale is increased. The observed value of a is associated with the energy scale of the electron mass; the electron is a lower bound for this energy scale because it (and the positron) is the lightest charged object whose quantum loops can contribute to the running. Therefore 1/137.036 is the value of the fine-structure constant at zero energy. Moreover, as the energy scale increases, the strength of the electromagnetic interaction approaches that of the other two fundamental interactions, a fact important for grand unification theories. If quantum electrodynamics were an exact theory, the fine-structure constant would actually diverge at an energy known as the Landau pole. This fact makes quantum electrodynamics inconsistent beyond the perturbative expansions.
+
+
+== History ==
+Arnold Sommerfeld introduced the fine-structure constant in 1916, as part of his theory of the relativistic deviations of atomic spectral lines from the predictions of the Bohr model. The first physical interpretation of the fine-structure constant a was as the ratio of the velocity of the electron in the first circular orbit of the relativistic Bohr atom to the speed of light in the vacuum. Equivalently, it was the quotient between the minimum angular momentum allowed by relativity for a closed orbit, and the minimum angular momentum allowed for it by quantum mechanics. It appears naturally in Sommerfeld's analysis, and determines the size of the splitting or fine-structure of the hydrogenic spectral lines.
+
+
+== Is the fine-structure constant actually constant? ==
+Physicists have pondered whether the fine-structure constant is in fact constant, or whether its value differs by location and over time. A varying a has been proposed as a way of solving problems in cosmology and astrophysics. String theory and other proposals for going beyond the Standard Model of particle physics have led to theoretical interest in whether the accepted physical constants (not just a) actually vary.
+
+
+=== Past rate of change ===
+The first experimenters to test whether the fine-structure constant might actually vary examined the spectral lines of distant astronomical objects and the products of radioactive decay in the Oklo natural nuclear fission reactor. Their findings were consistent with no variation in the fine-structure constant between these two vastly separated locations and times.
+More recently, improved technology has made it possible to probe the value of a at much larger distances and to a much greater accuracy. In 1999, a team led by John K. Webb of the University of New South Wales claimed the first detection of a variation in a. Using the Keck telescopes and a data set of 128 quasars at redshifts 0.5 < z < 3, Webb et al. found that their spectra were consistent with a slight increase in a over the last 10-12 billion years. Specifically, they found that
+
+In 2004, a smaller study of 23 absorption systems by Chand et al., using the Very Large Telescope, found no measureable variation:
+
+However, in 2007 simple flaws were identified in the analysis method of Chand et al., discrediting those results.
+King et al. have used Markov Chain Monte Carlo methods to investigate the algorithm used by the UNSW group to determine  from the quasar spectra, and have found that the algorithm appears to produce correct uncertainties and maximum likelihood estimates for  for particular models. This suggests that the statistical uncertainties and best estimate for  stated by Webb et al. and Murphy et al. are robust.
+Lamoreaux and Torgerson analyzed data from the Oklo natural nuclear fission reactor in 2004, and concluded that a has changed in the past 2 billion years by 4.5 parts in 7008100000000000000108. They claimed that this finding was "probably accurate to within 20%." Accuracy is dependent on estimates of impurities and temperature in the natural reactor. These conclusions have to be verified.
+In 2007, Khatri and Wandelt of the University of Illinois at Urbana-Champaign realized that the 21 cm hyperfine transition in neutral hydrogen of the early Universe leaves a unique absorption line imprint in the cosmic microwave background radiation. They proposed using this effect to measure the value of a during the epoch before the formation of the first stars. In principle, this technique provides enough information to measure a variation of 1 part in 7009100000000000000109 (4 orders of magnitude better than the current quasar constraints). However, the constraint which can be placed on a is strongly dependent upon effective integration time, going as t-1/2. The European LOFAR radio telescope would only be able to constrain Da/a to about 0.3%. The collecting area required to constrain Da/a to the current level of quasar constraints is on the order of 100 square kilometers, which is economically impracticable at the present time.
+
+
+=== Present rate of change ===
+In 2008, Rosenband et al. used the frequency ratio of Al+ and Hg+ in single-ion optical atomic clocks to place a very stringent constraint on the present time variation of a, namely Da/a = 3016839999999999999(-1.6+-2.3)x10-17 per year. Note that any present day null constraint on the time variation of alpha does not necessarily rule out time variation in the past. Indeed, some theories that predict a variable fine-structure constant also predict that the value of the fine-structure constant should become practically fixed in its value once the universe enters its current dark energy-dominated epoch.
+
+
+=== Spatial variation - Australian dipole ===
+In September 2010 researchers from Australia said they had identified a dipole-like structure in the variation of the fine-structure constant across the observable universe. They used data on quasars obtained by the Very Large Telescope, combined with the previous data obtained by Webb at the Keck telescopes. The fine-structure constant appears to have been larger by one part in 100,000 in the direction of the southern hemisphere constellation Ara, 10 billion years ago. Similarly, the constant appeared to have been smaller by a similar fraction in the northern direction, 10 billion years ago.
+In September and October 2010, after Webb's released research, physicists Chad Orzel and Sean M. Carroll suggested various approaches of how Webb's observations may be wrong. Orzel argues that the study may contain wrong data due to subtle differences in the two telescopes, in which one of the telescopes the data set was slightly high and on the other slightly low, so that they cancel each other out when they overlapped. He finds it suspicious that the triangles in the plotted graph of the quasars are so well-aligned (triangles representing sources examined with both telescopes). Carroll suggested a totally different approach; he looks at the fine-structure constant as a scalar field and claims that if the telescopes are correct and the fine-structure constant varies smoothly over the universe, then the scalar field must have a very small mass. However, previous research has shown that the mass is not likely to be extremely small. Both of these scientists' early criticisms point to the fact that different techniques are needed to confirm or contradict the results, as Webb, et al., also concluded in their study.
+In October 2011, Webb et al. reported a variation in a dependent on both redshift and spatial direction. They report "the combined data set fits a spatial dipole" with an increase in a with redshift in one direction and a decrease in the other. "[I]ndependent VLT and Keck samples give consistent dipole directions and amplitudes...."
+
+
+== Anthropic explanation ==
+The anthropic principle is a controversial argument of why the fine-structure constant has the value it does: stable matter, and therefore life and intelligent beings, could not exist if its value were much different. For instance, were a to change by 4%, stellar fusion would not produce carbon, so that carbon-based life would be impossible. If a were > 0.1, stellar fusion would be impossible and no place in the universe would be warm enough for life as we know it.
+
+
+== Numerological explanations ==
+As a dimensionless constant which does not seem to be directly related to any mathematical constant, the fine-structure constant has long fascinated physicists.
+Arthur Eddington argued that the value could be "obtained by pure deduction" and he related it to the Eddington number, his estimate of the number of protons in the Universe. This led him in 1929 to conjecture that its reciprocal was precisely the integer 137. Other physicists neither adopted this conjecture nor accepted his arguments but by the 1940s experimental values for 1/a deviated sufficiently from 137 to refute Eddington's argument.
+The fine-structure constant so intrigued physicist Wolfgang Pauli that he collaborated with psychiatrist Carl Jung in a quest to understand its significance. Similarly, Max Born believed if the value of alpha were any different, the universe would be degenerate, and thus that 1/137 was a law of nature.
+Richard Feynman, one of the originators and early developers of the theory of quantum electrodynamics (QED), referred to the fine-structure constant in these terms:
+
+There is a most profound and beautiful question associated with the observed coupling constant, e - the amplitude for a real electron to emit or absorb a real photon. It is a simple number that has been experimentally determined to be close to 0.08542455. (My physicist friends won't recognize this number, because they like to remember it as the inverse of its square: about 137.03597 with about an uncertainty of about 2 in the last decimal place. It has been a mystery ever since it was discovered more than fifty years ago, and all good theoretical physicists put this number up on their wall and worry about it.) Immediately you would like to know where this number for a coupling comes from: is it related to pi or perhaps to the base of natural logarithms? Nobody knows. It's one of the greatest damn mysteries of physics: a magic number that comes to us with no understanding by man. You might say the "hand of God" wrote that number, and "we don't know how He pushed his pencil." We know what kind of a dance to do experimentally to measure this number very accurately, but we don't know what kind of dance to do on the computer to make this number come out, without putting it in secretly!
+
+Conversely, statistician I. J. Good argued that a numerological explanation would only be acceptable if it came from a more fundamental theory that also provided a Platonic explanation of the value.
+Attempts to find a mathematical basis for this dimensionless constant have continued up to the present time. However, no numerological explanation has ever been accepted by the community.
+
+
+== Quotes ==
+
+The mystery about a is actually a double mystery. The first mystery - the origin of its numerical value a [?] 1/137 has been recognized and discussed for decades. The second mystery - the range of its domain - is generally unrecognized.
+
+
+== See also ==
+Hyperfine structure
+Electric constant
+Gravitational coupling constant
+Dimensionless physical constant
+Planck's constant
+Speed of light
+
+
+== References ==
+
+
+== External links ==
+Stephen L. Adler, "Theories of the Fine Structure Constant a" FERMILAB-PUB-72/059-T
+"Introduction to the constants for nonexperts", adapted from the Encyclopaedia Britannica, 15th ed. Disseminated by the NIST web page.
+CODATA recommended value of a, as of 2006.
+"Fine Structure Constant", Eric Weisstein's World of Physics website.
+John D. Barrow, and John K. Webb, "Inconstant Constants", Scientific American, June 2005.
+Eaves, Laurence (2009). "The Fine Structure Constant". Sixty Symbols. Brady Haran for the University of Nottingham.

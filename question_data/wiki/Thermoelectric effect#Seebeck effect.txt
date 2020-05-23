@@ -1,0 +1,17 @@
+A thermopile is an electronic device that converts thermal energy into electrical energy. It is composed of several thermocouples connected usually in series or, less commonly, in parallel.
+Thermopiles do not respond to absolute temperature, but generate an output voltage proportional to a local temperature difference or temperature gradient.
+Thermopiles are used to provide an output in response to temperature as part of a temperature measuring device, such as the infrared thermometers widely used by medical professionals to measure body temperature. They are also used widely in heat flux sensors (such as the Moll thermopile and Eppley pyrheliometer) and gas burner safety controls. The output of a thermopile is usually in the range of tens or hundreds of millivolts. As well as increasing the signal level, the device may be used to provide spatial temperature averaging.
+Thermopiles are also used to generate electrical energy from, for instance, heat from electrical components, solar wind, radioactive materials, or combustion. The process is also an example of the Peltier Effect (electric current transferring heat energy) as the process transfers heat from the hot to the cold junctions.
+
+
+== See also ==
+Seebeck effect--the physical effect responsible for the generation of voltage in a thermopile.
+Thermoelectric materials--high-performance materials that can be used to construct a compact thermopile that delivers high power.
+
+
+== External links ==
+The Museum of Retro Technology: Thermo-Electric Generators
+TPA81 Thermopile detector Array Technical Specification
+
+
+== References ==

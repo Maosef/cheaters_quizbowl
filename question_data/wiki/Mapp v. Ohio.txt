@@ -1,0 +1,37 @@
+Mapp v. Ohio, 367 U.S. 643 (1961), was a landmark case in criminal procedure, in which the United States Supreme Court decided that evidence obtained in violation of the Fourth Amendment, which protects against "unreasonable searches and seizures," may not be used in state law criminal prosecutions in state courts, as well, as had previously been the law, as in federal criminal law prosecutions in federal courts. The Supreme Court accomplished this by use of a principle known as selective incorporation; in Mapp this involved the incorporation of the provisions, as interpreted by the Court, of the Fourth Amendment which are applicable only to actions of the federal government into the Fourteenth Amendment due process clause which is applicable to actions of the states.
+
+
+== Background of the case ==
+In the period from 1961 to 1969, the Warren Court examined almost every aspect of the criminal justice system in the United States, using the 14th Amendment to extend many constitutional protections to all courts in every State. This process became known as the incorporation of the Bill of Rights. During those years, cases concerning the right to legal counsel, confessions, searches, and the treatment of juvenile criminals all appeared on the Court's docket.
+The Warren Court's revolution in the criminal justice system began with the case of Mapp v. Ohio, the first of several significant cases in which it re-evaluated the role of the 4th Amendment as it applied to State judicial review.
+
+
+== Circumstances of the case ==
+Dollree (pronounced doll ray, also known as Dolly or Doll Rae) Mapp (1923/24-2014), the divorced ex-wife of boxer Jimmy Bivins and ex-girlfriend of light heavyweight champion Archie Moore, was an employee in the illegal gambling rackets dominated by Cleveland rackets kingpin Shon Birns. On May 23rd, 1957, police officers in Cleveland, Ohio, received an anonymous tip by phone that Virgil Ogletree, a numbers operator who was wanted for questioning in the bombing of rival numbers racketeer and future boxing promoter Don King's home three days earlier, might be found at Mapp's house, as well as illegal betting slips and equipment employed in the "California Gold" numbers operation set up by Mapp's boyfriend Edward Keeling. Three officers went to the home and asked for permission to enter, but Mapp, after consulting her lawyer by telephone, refused to admit them without a search warrant. Two officers left, and one remained, watching the house from across the street.
+Three hours later, several squad cars full of police arrived and stormed the house. Brandishing a piece of paper, they broke in the door. Mapp asked to see the "warrant" and took it from an officer, putting it in her dress. The officers struggled with Mapp and took away the alleged warrant, which neither she nor her lawyer, who just had arrived and was watching and attempting to take photographs from the yard, were permitted to read. The warrant was never seen again, and was not introduced as evidence in any of the ensuing court proceedings; when asked about it during oral argument at the Supreme Court, the Cleveland prosecutor arguing the case cautiously deflected the question, which the court did not press.
+As the search of Mapp's second-floor, 2-bedroom apartment began, police handcuffed her for being "belligerent." The police searched the house thoroughly, and discovered Ogletree, who was subsequently cleared on the bombing charge, hiding in the apartment of the downstairs tenant, Minerva Tate. In the search of Mapp's apartment and in a footlocker in the basement of the house police found a quantity of "California Gold" betting slips and paraphernalia. They also found a couple of pornographic books, either in Mapp's bedroom dresser (according to the police) or in the basement (according to Mapp), which Mapp stated a previous tenant named Morris Jones had left behind.
+Mapp was arrested, charged, and cleared on a misdemeanor charge of possessing numbers paraphernalia; but several months later, after refusing to testify against Shon Birns, Edward Keeling and their associates at their trial that October for the attempted shakedown of Don King, she was prosecuted for possession of the books, found guilty at a 1958 trial of "knowingly having had in her possession and under her control certain lewd and lascivious books, pictures, and photographs in violation of 2905.34 of Ohio's Revised Code", and sentenced to one to seven years in prison. She immediately filed an appeal while out on bail and never served a day of the sentence.
+
+
+== Decision ==
+The U.S. Supreme Court voted 6-3 in favor of Mapp. The Court overturned the conviction, and five justices found that the States were bound to exclude evidence seized in violation of the 4th Amendment.
+
+
+== See also ==
+United States Bill of Rights
+Fruit of the poisonous tree
+Exclusionary rule
+
+
+== References ==
+
+
+== Further reading ==
+Long, Carolyn (2006). Mapp v. Ohio: Guarding Against Unreasonable Searches and Seizures. University Press of Kansas. ISBN 0-7006-1441-9. 
+Stewart, Potter (1983). "The Road to Mapp v. Ohio and beyond: The Origins, Development and Future of the Exclusionary Rule in Search-and-Seizure Cases". Columbia Law Review 83 (6): 1365-1404. doi:10.2307/1122492. JSTOR 1122492. 
+Zotti, Priscilla H. Machado (2005). Injustice for All: Mapp vs. Ohio and the Fourth Amendment. New York: Peter Lang. ISBN 0-8204-7267-0. 
+
+
+== External links ==
+Archival source documents relating to the Mapp case at Cleveland Memory
+Dollree Mapp, Who Defied Police Search in Landmark Case, Is Dead - New York Times

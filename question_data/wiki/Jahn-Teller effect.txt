@@ -1,0 +1,35 @@
+The Jahn-Teller effect, sometimes also known as Jahn-Teller distortion, describes the geometrical distortion of molecules and ions that is associated with certain electron configurations. This electronic effect is named after Hermann Arthur Jahn and Edward Teller, who proved, using group theory, that orbital nonlinear spatially degenerate molecules cannot be stable. The Jahn-Teller theorem essentially states that any nonlinear molecule with a spatially degenerate electronic ground state will undergo a geometrical distortion that removes that degeneracy, because the distortion lowers the overall energy of the species. For a description of another type of geometrical distortion that occurs in crystals with substitutional impurities see article off-center ions.
+
+
+== Transition metal chemistry ==
+
+The Jahn-Teller effect is most often encountered in octahedral complexes of the transition metals. The phenomenon is very common in six-coordinate copper(II) complexes. The d9 electronic configuration of this ion gives three electrons in the two degenerate eg orbitals, leading to a doubly degenerate electronic ground state. Such complexes distort along one of the molecular fourfold axes (always labelled the z axis), which has the effect of removing the orbital and electronic degeneracies and lowering the overall energy. The distortion normally takes the form of elongating the bonds to the ligands lying along the z axis, but occasionally occurs as a shortening of these bonds instead (the Jahn-Teller theorem does not predict the direction of the distortion, only the presence of an unstable geometry). When such an elongation occurs, the effect is to lower the electrostatic repulsion between the electron-pair on the Lewis basic ligand and any electrons in orbitals with a z component, thus lowering the energy of the complex. If the undistorted complex would be expected to have an inversion centre, this is preserved after the distortion.
+In octahedral complexes, the Jahn-Teller effect is most pronounced when an odd number of electrons occupy the eg orbitals. This situation arises in complexes with the configurations d9, low-spin d7 or high-spin d4 complexes, all of which have doubly degenerate ground states. In such compounds the eg orbitals involved in the degeneracy point directly at the ligands, so distortion can result in a large energetic stabilisation. Strictly speaking, the effect also occurs when there is a degeneracy due to the electrons in the t2g orbitals (i.e. configurations such as d1 or d2, both of which are triply degenerate). In such cases, however, the effect is much less noticeable, because there is a much smaller lowering of repulsion on taking ligands further away from the t2g orbitals, which do not point directly at the ligands (see the table below). The same is true in tetrahedral complexes (e.g. manganate: distortion is very subtle because there is less stabilisation to be gained because the ligands are not pointing directly at the orbitals.
+The expected effects for octahedral coordination are given in the following table:
+
+w: weak Jahn-Teller effect (t2g orbitals unevenly occupied)
+s: strong Jahn-Teller effect expected (eg orbitals unevenly occupied)
+blank: no Jahn-Teller effect expected.
+The Jahn-Teller effect is manifested in the UV-VIS absorbance spectra of some compounds, where it often causes splitting of bands. It is readily apparent in the structures of many copper(II) complexes. Additional, detailed information about the anisotropy of such complexes and the nature of the ligand binding can be however obtained from the fine structure of the low-temperature electron spin resonance spectra.
+
+
+== Related effects ==
+The underlying cause of the Jahn-Teller effect is the presence of molecular orbitals which are both degenerate and open shell. This situation is not unique to coordination complexes and can be encountered in other areas of chemistry. In organic chemistry the phenomenon of antiaromaticity has the same cause and also often sees molecules distorting; as in the case of cyclobutadiene and cyclooctatetraene (COT).
+
+
+== See also ==
+Crystal field theory
+Potential energy surface
+Diabatic
+Conical intersection
+Avoided crossing
+Vibronic coupling
+Renner-Teller effect
+
+
+== References ==
+
+
+== External links ==
+Pavarini, Eva (2012). "Crystal-field Theory, Tight-binding Method, and Jahn-Teller Effect" (PDF). In Pavarini, E.; Koch, E.; Anders, F.; Jarrell, M. Correlated Electrons: From Models to Materials. Julich: Forschungszentrum Julich. ISBN 978-3-89336-796-2. 
+"Jahn-Teller effect". Citizendium. (under development)

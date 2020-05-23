@@ -1,0 +1,20 @@
+Clemmensen reduction is a chemical reaction described as a reduction of ketones (or aldehydes) to alkanes using zinc amalgam and hydrochloric acid. This reaction is named after Erik Christian Clemmensen, a Danish chemist.
+
+The Clemmensen reduction is particularly effective at reducing aryl-alkyl ketones, such as those formed in a Friedel-Crafts acylation. With aliphatic or cyclic ketones, zinc metal reduction is much more effective.
+The substrate must be unreactive to the strongly acidic conditions of the Clemmensen reduction. Acid sensitive substrates should be reacted in the Wolff-Kishner reduction, which utilizes strongly basic conditions; a further, milder method is the Mozingo reduction. The oxygen atom is lost in the form of one molecule of water.
+
+
+== References ==
+
+
+== Reviews ==
+Martin, E. L. (1942). Org. React. 1: 155.  
+Buchanan, J. G. St. C.; Woodgate, P. D. (1969). "The Clemmensen reduction of difunctional ketones". Quart. Rev. 23: 522. doi:10.1039/QR9692300522. 
+Vedejs, E. (1975). Org. React. 22: 40.  
+Yamamura, S.; Nishiyama, S. (1991). Comp. Org. Syn. 8: 309-313.  
+
+
+== See also ==
+Haworth phenanthrene synthesis
+Wolff-Kishner reduction
+Mozingo reduction
