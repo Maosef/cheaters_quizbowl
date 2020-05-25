@@ -2,9 +2,11 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
 from fastapi.middleware.cors import CORSMiddleware
+import wikipedia
 
 app = FastAPI()
 
+# CORS stuff
 origins = [
     "http://localhost.tiangolo.com",
     "https://localhost.tiangolo.com",
@@ -33,6 +35,13 @@ def read_item(question_id: int):
     row = db.iloc[question_id]
     # print(row)
     return {"question": row['Text'], "answer": row['Answer'], "category":row['Category']}
+
+# search wikipedia
+@app.get("/search_wiki")
+def search_wikipedia(query: str = "Barack"):
+    results = wikipedia.search(query, results = 3)
+    summaries = [wikipedia.summary(title) for title in results]
+    return {'titles': results, 'summaries': summaries}
 
 # store data
 # @app.put("/items/{item_id}")
