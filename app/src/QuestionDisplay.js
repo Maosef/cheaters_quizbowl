@@ -3,6 +3,7 @@ import Paper from '@material-ui/core/Paper';
 import useStyles from './Styles';
 
 // question card: reads a question word by word. can be interrupted by buzzer
+// option: pause after each sentence, until continue button is clicked
 
 class QuestionDisplay extends React.Component {
     
@@ -10,6 +11,9 @@ class QuestionDisplay extends React.Component {
         super(props);
         // this.classes = useStyles();
         this.state = {wordIndex: 0, text: "" };
+        // this.sentences = props.text.match(/[^.?!]+[.!?]+[\])'"`’”]*/g); //extract sentences via matching
+        // console.log(this.sentences);
+        // display the previous K sentences, then the next N words
         this.words = props.text.split(" ");
 
         // this.handleClick = this.handleClick.bind(this);

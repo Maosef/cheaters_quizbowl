@@ -6,7 +6,9 @@ import Button from '@material-ui/core/Button';
 
 import AnswerForm from './AnswerForm';
 import Buzzer from './Buzzer';
-import QuestionDisplay from './QuestionDisplay';
+import ContinueButton from './ContinueButton';
+
+import QuestionDisplay from './QuestionDisplayUntimed';
 import Searcher from './Searcher';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -65,11 +67,15 @@ class Dashboard extends React.Component {
     // }
 
     handleBuzz() {
-        console.log(this.state);
+        console.log(this.state.interrupted);
         this.setState({
             interrupted: !this.state.interrupted
         });
     }
+
+    // handleContinue() {
+
+    // }
 
     // fetch data from server
     fetchData() {
@@ -152,11 +158,8 @@ class Dashboard extends React.Component {
                     </Grid>
                     <Grid item xs={6}>
                         <div className="flex-container" style={{"display": "flex","justify-content": "center"}}>
-                        {/* <div className="flex-container" > */}
-                                    {/* <button onClick={() => this.handleBuzz}>
-                            {this.state.interrupted ? 'Buzzed' : 'Not Buzzed'}
-                            </button> */}
-                            <Buzzer onClick={this.handleBuzz} onTimeout={this.finishQuestion} style={{flex: 1}} />
+                            {/* <Buzzer onClick={this.handleBuzz} onTimeout={this.finishQuestion} style={{flex: 1}} /> */}
+                            <ContinueButton onClick={this.handleBuzz} style={{flex: 1}}/>
                             <AnswerForm onSubmit={this.finishQuestion} label="Answer"/>
                         </div>
 
