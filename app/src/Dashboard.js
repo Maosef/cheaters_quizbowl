@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Redirect } from "react-router-dom";
+
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -20,7 +22,7 @@ import './App.css';
 // main Dashboard. Load question, handle interrupt, load next question
 
 let server_url = "http://127.0.0.1:8000";
-// let server_url = "";
+// let server_url = "http://127.0.0.1:8000/api/qanta/v1/random"
 
 let num_questions = 20408;
 
@@ -34,10 +36,6 @@ following the War of the Three Henrys.`;
 let answerText = "Henry IV of France";
 
 
-// export default function Dashboard() {
-//     const classes = useStyles();
-//     const [interrupted, setInterrupted] = useState(false);
-
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
@@ -48,6 +46,7 @@ class Dashboard extends React.Component {
         this.cleanText = this.cleanText.bind(this);
 
         this.state = {
+            sessionToken: "",
             question: "",
             answer: "",
             category: "",
@@ -58,8 +57,12 @@ class Dashboard extends React.Component {
             isLoaded: false,
         }
     }
-    // initial fetch
+    // authenticate, grab the user data, fetch first question
     componentDidMount() {
+        if (window.sessionStorage.getItem("token") == null) {
+            return <Redirect to="/login" />;
+        }
+        
         this.fetchData();
     }
     // componentWillUnmount() {
@@ -79,15 +82,18 @@ class Dashboard extends React.Component {
 
     // fetch data from server
     fetchData() {
-        let id = Math.floor(Math.random() * num_questions);
-        fetch(server_url + "/get_question/" + id)
+        // let id = Math.floor(Math.random() * num_questions);
+        
+        // fetch(server_url + "/get_question/")
+        fetch(server_url + "/api/qanta/v1/random")
             .then(res => res.json())
             .then(
                 (result) => {
                     // console.log('Result: ', result.question);
                     this.setState({
                         isLoaded: true,
-                        question: result.question.replace(/\|\|\|/g,""),
+                        // question: result.question.replace(/\|\|\|/g,""),
+                        question: result.text,
                         answer: result.answer,
                         category: result.category
                     });
@@ -110,7 +116,8 @@ class Dashboard extends React.Component {
         // alert(cleanText)
         return cleanText;
     }
-    // check if question answered correctly
+
+    // check answer, record data
     finishQuestion(playerAnswer) {
         this.setState({
             interrupted: false, numSeen: this.state.numSeen + 1, question: ""
@@ -127,14 +134,19 @@ class Dashboard extends React.Component {
             alert("Incorrect");
             // console.log('incorrect');
         }
+        // log data
+        
+
         //display the correct answer
-        setTimeout(this.fetchData, 2000); //wait a little
+        setTimeout(this.fetchData, 2000); //wait a little before starting next question
 
         // restart
     }
 
 
     render() {
+        
+
         const { classes } = this.props;
         // console.log('rendering...')
         return (

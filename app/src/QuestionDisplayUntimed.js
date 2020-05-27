@@ -32,8 +32,9 @@ class QuestionDisplay extends React.Component {
         this.read();
     }
     componentDidUpdate(prevProps) {
-        if (prevProps.interrupted !== this.props.interrupted && this.state.sentenceIndex+1 < this.sentences.length){
-            alert(this.state.sentenceIndex + " " + this.sentences.length);
+        // console.log(this.state.sentenceIndex + " " + this.sentences.length);
+        if (prevProps.interrupted !== this.props.interrupted && this.state.sentenceIndex+1 <= this.sentences.length){
+            // console.log(this.state.sentenceIndex + " " + this.sentences.length);
             // alert(this.state.sentenceIndex);
             // console.log(prevProps.interrupted,this.props.interrupted);
             this.read();
