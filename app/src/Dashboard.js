@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import AnswerForm from './AnswerForm';
+import AnswerForm from './AnswerForm_multi';
 import Buzzer from './Buzzer';
 import ContinueButton from './ContinueButton';
 
@@ -26,15 +26,6 @@ let server_url = "http://127.0.0.1:8000";
 
 let num_questions = 20408;
 
-let questionText = `With the assistence of his chief minister, the Duc de Sully, 
-he lowered taxes on peasantry, promoted economic recovery, and instituted a tax on the Paulette. ||| 
-Victor at Ivry and Arquet, he was excluded from succession by the Treaty of Nemours, but won a great 
-victory at Coutras. ||| His excommunication was lifted by Clement VIII, but that pope later claimed 
-to be crucified when this monarch promulgated the Edict of Nantes. ||| For 10 points, name this 
-French king, the first Bourbon who admitted that ""Paris is worth a mass"" when he converted 
-following the War of the Three Henrys.`;
-let answerText = "Henry IV of France";
-
 
 class Dashboard extends React.Component {
     constructor(props) {
@@ -43,25 +34,28 @@ class Dashboard extends React.Component {
 
         this.fetchData = this.fetchData.bind(this);
         this.finishQuestion = this.finishQuestion.bind(this);
+        this.finishQuestion_multi = this.finishQuestion_multi.bind(this);
         this.cleanText = this.cleanText.bind(this);
+        
 
         this.state = {
             sessionToken: "",
+            question_id: -1,
             question: "",
-            answer: "",
             category: "",
+
+
             interrupted: false,
             finished: false,
             numSeen: 0,
             score: 0,
             isLoaded: false,
+            sentenceIndex: 0,
         }
     }
-    // authenticate, grab the user data, fetch first question
+    
+    // on init: authenticate, grab the user data, fetch first question
     componentDidMount() {
-        if (window.sessionStorage.getItem("token") == null) {
-            return <Redirect to="/login" />;
-        }
         
         this.fetchData();
     }
@@ -93,6 +87,7 @@ class Dashboard extends React.Component {
                     this.setState({
                         isLoaded: true,
                         // question: result.question.replace(/\|\|\|/g,""),
+                        question_id: result.qanta_id,
                         question: result.text,
                         answer: result.answer,
                         category: result.category
@@ -117,6 +112,47 @@ class Dashboard extends React.Component {
         return cleanText;
     }
 
+    finishQuestion_multi(query,evidence,playerAnswer){
+        this.setState({
+            interrupted: false, numSeen: this.state.numSeen + 1, question: ""
+        });
+        if (this.cleanText(playerAnswer) == this.cleanText(this.state.answer)) {
+            alert("Correct");
+            // console.log('correct');
+            this.setState({
+                score: this.state.score + 1
+            });
+        } else {
+            alert("Incorrect");
+            // console.log('incorrect');
+        }
+        let answer_data = {
+            session_id: window.sessionStorage.getItem("token"),
+            question_id: this.state.question_id,
+            answer: playerAnswer,
+            query: query,
+            evidence: evidence,
+            stop_position: this.state.sentenceIndex,
+        };
+        console.log(answer_data);
+        // log data: session, email, questionID, answer, query, evidence
+        fetch('/api/qanta/v1/post_data', {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(answer_data),
+            })
+            .then(response => response.json())
+            .then(data => {
+            console.log('Success:', data);
+            })
+            .catch((error) => {
+            console.error('Error:', error);
+            });
+
+        setTimeout(this.fetchData, 2000);
+    }
     // check answer, record data
     finishQuestion(playerAnswer) {
         this.setState({
@@ -134,8 +170,6 @@ class Dashboard extends React.Component {
             alert("Incorrect");
             // console.log('incorrect');
         }
-        // log data
-        
 
         //display the correct answer
         setTimeout(this.fetchData, 2000); //wait a little before starting next question
@@ -143,10 +177,11 @@ class Dashboard extends React.Component {
         // restart
     }
 
-
     render() {
         
-
+        if (window.sessionStorage.getItem("token") == null) {
+            return <Redirect to="/login" />;
+        }
         const { classes } = this.props;
         // console.log('rendering...')
         return (
@@ -156,9 +191,12 @@ class Dashboard extends React.Component {
 
                         <Paper className={classes.paper}>
                             {this.state.question.length ?
-                                <QuestionDisplay text={this.state.question} interrupted={this.state.interrupted} />
+                                // <QuestionDisplay text={this.state.question} interrupted={this.state.interrupted} />
+                                <QuestionDisplay text={this.state.question} 
+                                updateSentencePosition={(index)=>this.setState({sentenceIndex: index})}/>
                                 : "Waiting"
                             }
+                            {/* {console.log(this.state.sentenceIndex)} */}
                         </Paper>
                     </Grid>
                     <Grid item xs={6}>
@@ -169,11 +207,12 @@ class Dashboard extends React.Component {
                         
                     </Grid>
                     <Grid item xs={6}>
-                        <div className="flex-container" style={{"display": "flex","justify-content": "center"}}>
+                        {/* <div className="flex-container" style={{"display": "flex","justify-content": "center"}}> */}
                             {/* <Buzzer onClick={this.handleBuzz} onTimeout={this.finishQuestion} style={{flex: 1}} /> */}
-                            <ContinueButton onClick={this.handleBuzz} style={{flex: 1}}/>
-                            <AnswerForm onSubmit={this.finishQuestion} label="Answer"/>
-                        </div>
+                            {/* <ContinueButton onClick={this.handleBuzz} style={{flex: 1}}/> */}
+                            {/* <AnswerForm onSubmit={this.finishQuestion} label="Answer"/> */}
+                            <AnswerForm onSubmit={this.finishQuestion_multi} label="Answer_multi"/>
+                        {/* </div> */}
 
 
                     </Grid>

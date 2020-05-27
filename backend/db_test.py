@@ -11,22 +11,32 @@ path = "backend/data/qanta.2018.04.18.sqlite3"
 
 
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
-engine = create_engine('sqlite:///' + path, echo = True)
-meta = MetaData()
+from database import Database, Question, User, Record
 
-users = Table(
-   'users', meta, 
-   Column('email', String, primary_key = True), 
-   Column('password', String), 
-#    Column('lastname', String),
-)
 
-# class User(Base):
-#     __tablename__ = "users"
-#     email = Column(String, primary_key=True)
-#     password = Column(String)
+db = Database()
+from database import Question, User, Record
 
-#     def __str__(self):
-#         return self.email
+db.create_all()
 
-meta.create_all(engine)
+
+# engine = create_engine('sqlite:///' + path, echo = True)
+# meta = MetaData()
+
+
+# users = Table(
+#    'users', meta, 
+#    Column('email', String, primary_key = True), 
+#    Column('password', String), 
+# )
+
+# # class User(Base):
+# #     __tablename__ = "users"
+# #     email = Column(String, primary_key=True)
+# #     password = Column(String)
+
+# #     def __str__(self):
+# #         return self.email
+
+
+# meta.create_all(engine)

@@ -1,6 +1,7 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import useStyles from './Styles';
+import ContinueButton from './ContinueButton';
 
 // question card: reads a question word by word. can be interrupted by buzzer
 // option: pause after each sentence, until continue button is clicked
@@ -45,26 +46,26 @@ class QuestionDisplay extends React.Component {
         //     this.read();
         // }
     }
-
+    
     read() {
 
         // read a sentence, then pause
             
-            this.setState({
-                wordIndex: 0
-            });
-            // this.words = props.text.split(" ");
-            // alert(this.sentences[this.state.sentenceIndex]);
-            this.readerID = setInterval(
-                () => this.readWords(this.state.sentenceIndex),
-                100
-            );
-            
-            //only update sentenceIndex after reading is finished
-            
+        this.setState({
+            wordIndex: 0
+        });
+        // this.words = props.text.split(" ");
+        // alert(this.sentences[this.state.sentenceIndex]);
 
-            //enable continue button
-
+        this.readerID = setInterval(
+            () => this.readWords(this.state.sentenceIndex),
+            100
+        );
+        
+        //only update sentenceIndex after reading is finished
+        
+        //enable continue button
+        
         
     }
 
@@ -76,6 +77,8 @@ class QuestionDisplay extends React.Component {
             this.setState({
                 sentenceIndex: this.state.sentenceIndex + 1
             });
+            // send index of last sentence read to Dashboard
+            this.props.updateSentencePosition(this.state.sentenceIndex);
         } else {
             this.setState({
                 text: this.state.text + " " + words[this.state.wordIndex],
@@ -89,8 +92,11 @@ class QuestionDisplay extends React.Component {
         
         return (
             // <Paper className={this.classes.paper}>
-            <p>{this.state.text}</p>
-                
+            <div>
+                <p>{this.state.text}</p>
+                <ContinueButton onClick={this.read} style={{flex: 1}}/>
+            </div>
+            
             // </Paper>
         );
     }

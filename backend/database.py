@@ -19,10 +19,11 @@ from sqlalchemy import (
     ForeignKey,
 )
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker, scoped_session, relationship
 from sqlalchemy.orm.scoping import ScopedSession
 
 from backend.log import get_logger
+# from log import get_logger
 
 
 log = get_logger(__name__)
@@ -39,6 +40,7 @@ class Database:
         )  # pylint: disable=invalid-name
         Base.metadata.bind = self._engine
 
+        # gets ids, lets us get random question
         if find_questions:
             with self._session_scope as session:
                 self._all_qanta_ids = [
@@ -82,21 +84,6 @@ class Database:
             question = session.query(Question).filter_by(qanta_id=qanta_id).first()
             return question.to_dict()
 
-    # def get_autocorrect(self, text: str):
-    #     with self._session_scope as session:
-    #         start = time.time()
-    #         lower_bound = text.lower()
-    #         upper_bound = text + chr(255)
-    #         results = (
-    #             session.query(Entity)
-    #             .filter(and_(Entity.name >= lower_bound, Entity.name <= upper_bound))
-    #             .order_by(Entity.name)
-    #             .limit(5)
-    #         )
-
-    #         l = [str(i) for i in results]
-    #         log.info("Took %s time to autocorrect", time.time() - start)
-    #         return l
 
     # def write_questions(self, questions: Dict[str, Any]):
     #     start = time.time()
@@ -110,147 +97,15 @@ class Database:
     #         session.bulk_insert_mappings(Question, question_list)
     #     log.info("Took %s time to write questions", time.time() - start)
 
-    # def write_entities(self, entities):
-    #     start = time.time()
-
-    #     with self._session_scope as session:
-    #         entity_list = []
-
-    #         for i in entities:
-    #             name = html.unescape(i.replace("_", " "))
-    #             name = name.lower()
-    #             entity_list.append({"name": name, "link": i})
-    #         session.bulk_insert_mappings(Entity, entity_list)
-    #     log.info("Took %s time to write entities", time.time() - start)
-
-    # def write_mentions(self, mentions, source_name):
-    #     start_time = time.time()
-
-    #     self.insert_email_password(source_name, "")
-
-    #     with self._session_scope as session:
-    #         mention_list = []
-    #         for mention in mentions:
-    #             question_id = mention["qanta_id"]
-
-    #             sentence_starts = mention["tokenizations"]
-    #             sentence_starts = [k[0] for k in sentence_starts]
-
-    #             for j, sentence in enumerate(mention["mentions"]):
-    #                 for entity in sentence:
-    #                     start = entity["span"][0] + sentence_starts[j]
-    #                     end = entity["span"][1] + sentence_starts[j]
-    #                     score = entity["score"]
-    #                     name = entity["entity"].replace("_", " ").lower()
-    #                     mention_list.append(
-    #                         {
-    #                             "start": start,
-    #                             "end": end,
-    #                             "score": score,
-    #                             "entity": name,
-    #                             "question_id": question_id,
-    #                             "deleted": 0,
-    #                             "user_id": source_name,
-    #                             "machine_tagged": 1,
-    #                         }
-    #                     )
-    #         session.bulk_insert_mappings(Mention, mention_list)
-    #     log.info("Took %s time to write mentions", time.time() - start_time)
-
-    # def get_questions_with_entity(self, entity):
-    #     entity = entity.lower()
-    #     with self._session_scope as session:
-    #         results = session.query(Mention).filter(Mention.entity == entity)
-    #         results = results.all()
-
-    #         question_ids = [i.question_id for i in results[:5]]
-    #         texts = [self.get_question_by_id(i)["text"] for i in question_ids]
-    #         return texts
-
-    # def get_entities(self, question_id):
-    #     with self._session_scope as session:
-
-    #         results = (
-    #             session.query(Mention)
-    #             .filter(Mention.question_id == question_id)
-    #             .filter(Mention.deleted != 1)
-    #         )
-
-    #         CUTOFF = 0.2
-
-    #         question_dict = self.get_question_by_id(question_id)
-    #         tokens = question_dict["tokens"]
-
-    #         t = time.time()
-    #         results = results.all()
-    #         print("Took {} time to run the query".format(time.time() - t))
-    #         results = [
-    #             {
-    #                 "start": i.start,
-    #                 "end": i.end,
-    #                 "entity": i.entity,
-    #                 "id": i.mention_id,
-    #                 "score": i.score,
-    #                 "machine_tagged": i.machine_tagged,
-    #             }
-    #             for i in results
-    #         ]
-    #         results = sorted(results, key=lambda x: x["start"])
-    #         results = [
-    #             i for i in results if i["machine_tagged"] != 1 or i["score"] > CUTOFF
-    #         ]
-
-    #         entity_list = []
-    #         entity_locations = []
-    #         entity_ids = []
-    #         entity_pointer = 0
-    #         i = 0
-    #         while i < len(tokens) and entity_pointer < len(results):
-
-    #             while (
-    #                 entity_pointer < len(results)
-    #                 and results[entity_pointer]["start"] < tokens[i]["char_start"]
-    #             ):
-    #                 entity_pointer += 1
-    #             if entity_pointer == len(results):
-    #                 break
-    #             if results[entity_pointer]["start"] == tokens[i]["char_start"]:
-    #                 start = i
-    #                 while results[entity_pointer]["end"] > tokens[i]["char_end"]:
-    #                     i += 1
-    #                 end = i
-
-    #                 entity_list.append(results[entity_pointer]["entity"])
-    #                 entity_locations.append([start, end])
-    #                 entity_ids.append(results[entity_pointer]["id"])
-
-    #                 entity_pointer += 1
-    #                 i += 1
-    #             else:
-    #                 i += 1
-    #         return entity_list, entity_locations, entity_ids
-
-    # def delete_mentions(self, mention_ids):
-    #     with self._session_scope as session:
-    #         for i in mention_ids:
-    #             session.query(Mention).filter(Mention.mention_id == i).update(
-    #                 {"deleted": 1}
-    #             )
-
-    # def write_new_mentions(self, mentions, question_id, user_id):
-    #     with self._session_scope as session:
-    #         mention_list = []
-    #         for ment in mentions:
-    #             ment = ment.copy()
-    #             ment["entity"] = ment["entity"].lower()
-    #             ment["score"] = 0
-    #             ment["question_id"] = question_id
-    #             ment["deleted"] = 0
-    #             ment["machine_tagged"] = 0
-    #             ment["user_id"] = user_id
-    #             mention_list.append(ment)
-    #         session.bulk_insert_mappings(Mention, mention_list)
-
+    def write_answer_data(self, answer_data):
+        print(answer_data)
+        # print(answer_data['session_id'])
+        with self._session_scope as session:
+            session.bulk_insert_mappings(
+                Record, [answer_data]
+            )
+            return True
+        
     def get_password(self, email):
         with self._session_scope as session:
             results = session.query(User).filter(User.email == email).first()
@@ -291,6 +146,7 @@ class Question(Base):
     qdb_id = Column(Integer)
     dataset = Column(String)
     # tokens = Column(String)
+    
 
     def from_dict(self, d):
         for k in d:
@@ -316,34 +172,32 @@ class Question(Base):
             # "tokens": json.loads(self.tokens),
         }
 
-
-class Entity(Base):
-    __tablename__ = "entities"
-    entity_id = Column(Integer, primary_key=True)
-    name = Column(String, index=True)
-    link = Column(String)
-
-    def __str__(self):
-        return self.name
-
-
-class Mention(Base):
-    __tablename__ = "mentions"
-    mention_id = Column(Integer, primary_key=True)
-    entity = Column(String, ForeignKey("entities.name"), index=True)
-    question_id = Column(Integer, ForeignKey("questions.qanta_id"), index=True)
-    start = Column(Integer)
-    end = Column(Integer)
-    score = Column(Float)
-    machine_tagged = Column(Integer)
-    user_id = Column(String, ForeignKey("users.email"))
-    deleted = Column(Integer)
-
-
 class User(Base):
     __tablename__ = "users"
     email = Column(String, primary_key=True)
     password = Column(String)
+    # records = relationship('Record')
 
     def __str__(self):
         return self.email
+
+# record_question_table = Table('record_question_table', Base.metadata,
+#     Column('record_id', String, ForeignKey('questions.qanta_id')),
+#     Column('question_id', Integer, ForeignKey('records.record_id'))
+# )
+
+class Record(Base): # a single question attempt during a session
+    __tablename__ = "records"
+    
+    record_id = Column(Integer, primary_key=True)
+    # email = Column(Integer,ForeignKey('users.email'))
+    session_id = Column(String)
+    # question_id = relationship('Question', secondary=record_question_table)
+    question_id = Column(Integer, ForeignKey('questions.qanta_id'))
+    answer = Column(String)
+    query = Column(String)
+    evidence = Column(String)
+    stop_position = Column(Integer)
+
+    
+

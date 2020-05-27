@@ -2,7 +2,18 @@ import json
 from fastapi import APIRouter
 from backend.database import Database
 # import backend.security as security
-import time
+# import time
+from pydantic import BaseModel
+
+
+class Answer(BaseModel):
+    session_id: str
+    # email: str = None
+    question_id: int
+    answer: str
+    query: str
+    evidence: str
+    stop_position: int
 
 db = Database()
 router = APIRouter()
@@ -27,6 +38,11 @@ def get_question(qanta_id: int):
     return question_dict
 
 
-@router.get("/api/qanta/autocorrect/{text}")
-def autocorrect(text: str):
-    return db.get_autocorrect(text)
+# @router.get("/api/qanta/autocorrect/{text}")
+# def autocorrect(text: str):
+#     return db.get_autocorrect(text)
+
+@router.post("/api/qanta/v1/post_data")
+def post_data(answer_data: Answer):
+    db.write_answer_data(answer_data.dict())
+    return

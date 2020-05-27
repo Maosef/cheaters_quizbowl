@@ -25,12 +25,7 @@ class AnswerForm extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-            // <form onSubmit={this.handleSubmit}>
-            //     <label>
-            //         <input type="text" value={this.state.answer} onChange={this.handleChange} />
-            //     </label>
-            //     <input type="submit" value="Submit" />
-            // </form>
+
             <form onSubmit={this.handleSubmit} className={classes.root} noValidate autoComplete="off">
                 <TextField 
                     value={this.state.answer} 

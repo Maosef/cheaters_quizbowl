@@ -63,13 +63,13 @@ async def read_users_me(current_user: str = Depends(get_current_user)):
 
 # @router.get("/token")
 def get_access_token(form_data):
-    user = authenticate_user(form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=401,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    # user = authenticate_user(form_data.username, form_data.password)
+    # if not user:
+    #     raise HTTPException(
+    #         status_code=401,
+    #         detail="Incorrect username or password",
+    #         headers={"WWW-Authenticate": "Bearer"},
+    #     )
     access_token_expires = timedelta(
         minutes=security_config.ACCESS_TOKEN_EXPIRE_MINUTES
     )
