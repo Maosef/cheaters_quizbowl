@@ -37,7 +37,7 @@ class AnswerForm extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-            <form className={classes.root} noValidate autoComplete="off">
+            <form className={classes.root} noValidate autoComplete="off" >
                 <div>
 
                 <TextField 
@@ -46,7 +46,7 @@ class AnswerForm extends React.Component {
                     onChange={this.handleChange} 
                     label="write query here"
                     variant="outlined" 
-                    style={{display:"block"}}
+                    style={{display:"block",margin: 10,}}
                 />
                 <TextField 
                     name="evidence" 
@@ -54,7 +54,7 @@ class AnswerForm extends React.Component {
                     onChange={this.handleChange} 
                     label="write helpful results here"
                     variant="outlined" 
-                    style={{display:"block"}}
+                    style={{display:"block",margin: 10,}}
                 />
                 <TextField 
                     name="answer" 
@@ -62,7 +62,7 @@ class AnswerForm extends React.Component {
                     onChange={this.handleChange} 
                     label="write answer here"
                     variant="outlined" 
-                    style={{display:"block"}}
+                    style={{display:"block",margin: 10,}}
                 />
                 <Button variant="contained" color="secondary" onClick={this.handleSubmit}>
                     Submit

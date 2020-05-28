@@ -11,11 +11,12 @@ class QuestionDisplay extends React.Component {
     constructor(props) {
         super(props);
         // this.classes = useStyles();
-        this.state = {wordIndex: 0, sentenceIndex: 0, words: [], text: "" };
-        var Tokenizer = require('sentence-tokenizer');
-        var tokenizer = new Tokenizer('Chuck');
-        tokenizer.setEntry(props.text);
-        this.sentences = tokenizer.getSentences();
+        this.state = {wordIndex: 0, sentenceIndex: 0, words: [], text: "", isReading: false };
+        // var Tokenizer = require('sentence-tokenizer');
+        // var tokenizer = new Tokenizer('Chuck');
+        // tokenizer.setEntry(props.text);
+        // this.sentences = tokenizer.getSentences();
+        this.sentences = props.tokenizations.map(span => props.text.slice(...span));
         // this.sentences = props.text.match(/[^.?!]+[.!?]+[\])'"`’”]*/g); //extract sentences via matching
         console.log(this.sentences);
         
@@ -52,7 +53,7 @@ class QuestionDisplay extends React.Component {
         // read a sentence, then pause
             
         this.setState({
-            wordIndex: 0
+            wordIndex: 0, isReading: true
         });
         // this.words = props.text.split(" ");
         // alert(this.sentences[this.state.sentenceIndex]);
@@ -74,9 +75,15 @@ class QuestionDisplay extends React.Component {
         // alert(words);
         if (this.state.wordIndex >= words.length) { //finished reading
             clearInterval(this.readerID);
+            
             this.setState({
                 sentenceIndex: this.state.sentenceIndex + 1
             });
+            if (this.state.sentenceIndex < this.sentences.length){ //finished all clues, dont display continue
+                this.setState({
+                    isReading: false
+                });
+            }
             // send index of last sentence read to Dashboard
             this.props.updateSentencePosition(this.state.sentenceIndex);
         } else {
@@ -89,15 +96,14 @@ class QuestionDisplay extends React.Component {
     }
 
     render() {
-        
+        if (!this.state.isReading) {
+            var button = <ContinueButton onClick={this.read} style={{flex: 1}}/>
+        }
         return (
-            // <Paper className={this.classes.paper}>
             <div>
                 <p>{this.state.text}</p>
-                <ContinueButton onClick={this.read} style={{flex: 1}}/>
+                {button}
             </div>
-            
-            // </Paper>
         );
     }
 }

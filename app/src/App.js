@@ -25,7 +25,8 @@
 import * as React from "react";
 import * as s from "./App.css";
 import Dashboard from './Dashboard';
-import Login from "./Login";
+import FlexWrap from './flex_test';
+import Login from "./Login_dummy";
 import Register from "./Register";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
@@ -42,6 +43,7 @@ function App() {
         </Route>
         <Route path="/">
           <Dashboard />
+          {/* <FlexWrap /> */}
         </Route>
       </Switch>
     </Router>
