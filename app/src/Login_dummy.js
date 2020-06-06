@@ -43,7 +43,7 @@ export default class Login extends React.Component<Props, State> {
       encodeURIComponent(this.state.username) +
       "&password=" +
       encodeURIComponent(this.state.password);
-    fetch("/token", {
+    fetch("/token/register_easy", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -58,7 +58,7 @@ export default class Login extends React.Component<Props, State> {
           window.sessionStorage.setItem("token", token);
           this.setState({ username: this.state.username });
         } else {
-          this.setState({ username: "", password: "", username_helper:"Invalid email or password", password_helper:"" });
+          this.setState({ username: "", password: "", username_helper:"Username already used", password_helper:"" });
         }
       });
     event.preventDefault();
@@ -69,7 +69,7 @@ export default class Login extends React.Component<Props, State> {
       return <Redirect to="/" />;
     }
 
-    console.log("Login style "+login_css);
+    // console.log("Login style "+login_css);
 
     return (
       <Container maxWidth="xs">

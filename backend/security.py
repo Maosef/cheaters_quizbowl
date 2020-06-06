@@ -61,7 +61,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 async def read_users_me(current_user: str = Depends(get_current_user)):
     return current_user
 
-# @router.get("/token")
 def get_access_token(form_data):
     # user = authenticate_user(form_data.username, form_data.password)
     # if not user:
@@ -77,10 +76,12 @@ def get_access_token(form_data):
         data={"sub": form_data.username}, expires_delta=access_token_expires
     )
 
-    print("Authenticated!")
+    if db.insert_session(form_data.username, access_token):
+        print("Authenticated!")
 
-    return {"access_token": access_token, "token_type": "bearer"}
-
+        return {"access_token": access_token, "token_type": "bearer"}
+    else:
+        print("error storing session")
 
 @router.post("/register")
 async def register(form_data: OAuth2PasswordRequestForm = Depends()):
@@ -96,6 +97,20 @@ async def register(form_data: OAuth2PasswordRequestForm = Depends()):
         return get_access_token(form_data)
     print("User already exists")
     return {}
+
+@router.post("/register_easy")
+async def register_easy(form_data: OAuth2PasswordRequestForm = Depends()):
+    print(
+        "adding {} {} to database".format(
+            form_data.username, pwd_context.hash(form_data.password)
+        )
+    )
+
+    db.insert_user_password(
+        form_data.username, pwd_context.hash(form_data.password)
+    )
+    return get_access_token(form_data)
+
 
 
 @router.post("/")

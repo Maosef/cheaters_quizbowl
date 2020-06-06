@@ -19,6 +19,7 @@ class AnswerForm extends React.Component {
     handleSubmit(event) {
         // alert('You submitted: ' + this.state.answer);
         event.preventDefault();
+        this.setState({answer: ''});
         this.props.onSubmit(this.state.answer);
     }
 
@@ -33,6 +34,8 @@ class AnswerForm extends React.Component {
                     id="answer_box" 
                     label={this.props.label} 
                     variant="outlined" 
+                    // width={1}
+                    // style={{flexGrow: 1}}
                 />
             </form>
 

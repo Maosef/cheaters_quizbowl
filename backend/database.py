@@ -113,6 +113,7 @@ class Database:
                 return results.password
             return None
 
+    # registration
     def insert_email_password(self, email, password):
         with self._session_scope as session:
             if not session.query(User).filter(User.email == email).first():
@@ -121,6 +122,24 @@ class Database:
                 )
                 return True
             return False
+
+    # easy registration
+    def insert_user_password(self, user_id, password):
+        with self._session_scope as session:
+            if not session.query(User).filter(User.user_id == user_id).first():
+                session.bulk_insert_mappings(
+                    User, [{"user_id": user_id, "password": password}]
+                )
+                return True
+            return False
+
+    def insert_session(self, user_id, session_id):
+        with self._session_scope as session:
+            # if not session.query(User).filter(User.user_id == user_id).first():
+            session.bulk_insert_mappings(
+                Session, [{"user_id": user_id, "session_id": session_id}]
+            )
+            return True
 
     def reset_users(self):
         with self._session_scope as session:
@@ -174,24 +193,31 @@ class Question(Base):
 
 class User(Base):
     __tablename__ = "users"
-    email = Column(String, primary_key=True)
+    user_id = Column(String, primary_key=True)
     password = Column(String)
-    # records = relationship('Record')
+    sessions = relationship('Session')
 
     def __str__(self):
-        return self.email
+        return self.user_id
 
 # record_question_table = Table('record_question_table', Base.metadata,
 #     Column('record_id', String, ForeignKey('questions.qanta_id')),
 #     Column('question_id', Integer, ForeignKey('records.record_id'))
 # )
 
+class Session(Base): # data on a single session
+    __tablename__ = "sessions"
+
+    session_id = Column(String, primary_key=True)
+    user_id = Column(String,ForeignKey('users.user_id'))
+    records = relationship('Record')
+
 class Record(Base): # a single question attempt during a session
     __tablename__ = "records"
     
     record_id = Column(Integer, primary_key=True)
-    # email = Column(Integer,ForeignKey('users.email'))
-    session_id = Column(String)
+    # user_id = Column(Integer,ForeignKey('users.user_id'))
+    session_id = Column(String, ForeignKey('sessions.session_id'))
     # question_id = relationship('Question', secondary=record_question_table)
     question_id = Column(Integer, ForeignKey('questions.qanta_id'))
     answer = Column(String)

@@ -24,7 +24,9 @@
 
 import * as React from "react";
 import * as s from "./App.css";
-import Dashboard from './Dashboard';
+import Dashboard from './Dashboard_preloaded';
+// import Dashboard from './Dashboard';
+
 import FlexWrap from './flex_test';
 import Login from "./Login_dummy";
 import Register from "./Register";

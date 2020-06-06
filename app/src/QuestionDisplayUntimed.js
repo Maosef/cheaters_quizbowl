@@ -18,7 +18,7 @@ class QuestionDisplay extends React.Component {
         // this.sentences = tokenizer.getSentences();
         this.sentences = props.tokenizations.map(span => props.text.slice(...span));
         // this.sentences = props.text.match(/[^.?!]+[.!?]+[\])'"`’”]*/g); //extract sentences via matching
-        console.log(this.sentences);
+        // console.log(this.sentences);
         
 
         // this.handleContinue = this.handleContinue.bind(this);
@@ -60,7 +60,7 @@ class QuestionDisplay extends React.Component {
 
         this.readerID = setInterval(
             () => this.readWords(this.state.sentenceIndex),
-            100
+            70
         );
         
         //only update sentenceIndex after reading is finished

@@ -29,6 +29,8 @@ class AnswerForm extends React.Component {
 
     handleSubmit(event) {
         const state = this.state;
+        // clear output
+        this.setState({query: '', evidence: '', answer: ''});
         // alert('You submitted: ' + state.query + state.evidence + state.answer);
         event.preventDefault();
         this.props.onSubmit(state.query, state.evidence, state.answer);

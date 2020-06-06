@@ -91,7 +91,7 @@ class Dashboard extends React.Component {
             .then(res => res.json())
             .then(
                 (result) => {
-                    // console.log('Result: ', result.question);
+                    console.log('question ID: ', result.qanta_id);
                     this.setState({
                         isLoaded: true,
                         // question: result.question.replace(/\|\|\|/g,""),
