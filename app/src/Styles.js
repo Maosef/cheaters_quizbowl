@@ -43,7 +43,7 @@ const useStyles = ((theme) => ({
     paperBig: {
         padding: 20,
         height: 300,
-        // maxWidth: 800,
+        // maxWidth: 600,
         padding: theme.spacing(2),
         textAlign: 'center',
         // color: theme.palette.text.secondary,

@@ -27,14 +27,15 @@ import useStyles from './Styles';
 
 import './App.css';
 
+import KeywordSearch from './KeywordSearch';
+
+
 // main Dashboard. Load question, handle interrupt, load next question
 // preloaded questions for experiment setting
 
 // let server_url = "http://127.0.0.1:8000";
 // let server_url = "http://127.0.0.1:8000/api/qanta/v1/random"
 let server_url = "";
-
-
 let num_questions = 20408;
 
 
@@ -63,7 +64,6 @@ class Dashboard extends React.Component {
             year: -1,
             tournament: "",
 
-
             interrupted: false,
             finished: false,
             numSeen: 0,
@@ -90,10 +90,6 @@ class Dashboard extends React.Component {
             interrupted: !this.state.interrupted
         });
     }
-
-    // handleContinue() {
-
-    // }
 
     // fetch data from server
     fetchData(question_id) {
@@ -286,16 +282,11 @@ class Dashboard extends React.Component {
                 </AppBar> */}
                 <Navbar />
                 <div className={classes.body}>
-
                     <Grid container spacing={3}
-                        // display="flex"
-                        // flexDirection="row"
-                        // flexWrap="wrap"
-
                         bgcolor="background.paper"
                     >
+                        {/* question display */}
                         <Grid item xs={12}>
-
                             <Paper className={classes.paperBig} style={{ "textAlign": "left" }}>
                                 {this.state.question.length ?
                                     // <QuestionDisplay text={this.state.question} interrupted={this.state.interrupted} />
@@ -308,10 +299,13 @@ class Dashboard extends React.Component {
                                 {/* {console.log(this.state.sentenceIndex)} */}
                             </Paper>
                         </Grid>
+
+                        {/* article search */}
                         <Grid item xs={12}>
 
                             {/* <Paper className={classes.paperBig}> */}
                             <Searcher sendData={this.logQueryData} />
+                            {/* <KeywordSearch text="TEXT"/> */}
                             {/* </Paper> */}
 
                         </Grid>

@@ -34,8 +34,6 @@ class AnswerForm extends React.Component {
                     id="answer_box" 
                     label={this.props.label} 
                     variant="outlined" 
-                    // width={1}
-                    // style={{flexGrow: 1}}
                 />
             </form>
 
