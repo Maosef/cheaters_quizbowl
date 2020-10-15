@@ -11,24 +11,15 @@ class QuestionDisplay extends React.Component {
     constructor(props) {
         super(props);
         // this.classes = useStyles();
+        this.READ_DELAY_MS = 120;
         this.state = {wordIndex: 0, sentenceIndex: 0, words: [], text: "", isReading: false };
-        // var Tokenizer = require('sentence-tokenizer');
-        // var tokenizer = new Tokenizer('Chuck');
-        // tokenizer.setEntry(props.text);
-        // this.sentences = tokenizer.getSentences();
-        this.sentences = props.tokenizations.map(span => props.text.slice(...span));
-        // this.sentences = props.text.match(/[^.?!]+[.!?]+[\])'"`’”]*/g); //extract sentences via matching
-        // console.log(this.sentences);
         
+        this.sentences = props.tokenizations.map(span => props.text.slice(...span));
+        // console.log(this.sentences);
 
-        // this.handleContinue = this.handleContinue.bind(this);
         this.read = this.read.bind(this);
         this.readWords = this.readWords.bind(this);
     }
-
-    // handleContinue() { // when continue button is clicked
-
-    // }
 
     componentDidMount() {
         this.read();
@@ -60,14 +51,12 @@ class QuestionDisplay extends React.Component {
 
         this.readerID = setInterval(
             () => this.readWords(this.state.sentenceIndex),
-            70
+            this.READ_DELAY_MS
         );
         
         //only update sentenceIndex after reading is finished
-        
         //enable continue button
-        
-        
+
     }
 
     readWords(sentenceIndex) { //add word to text, display

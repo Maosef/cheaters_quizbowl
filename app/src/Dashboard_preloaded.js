@@ -53,6 +53,10 @@ class Dashboard extends React.Component {
         //preloaded questions
         this.question_ids = [53873, 181475, 115844, 6449, 26626, 16848, 15469, 102066, 151976, 90037].reverse();
 
+        this.maxAttempts = 3;
+        this.queryData = new Map();
+
+        // mutable state
         this.state = {
             sessionToken: "",
             question_id: -1,
@@ -70,9 +74,10 @@ class Dashboard extends React.Component {
             score: 0,
             isLoaded: false,
             sentenceIndex: 0,
+            numAttempts: 1, // number of attempts on current question
 
         }
-        this.queryData = new Map()
+        
     }
 
     // on init: authenticate, grab the user data, fetch first question
@@ -189,15 +194,13 @@ class Dashboard extends React.Component {
     //     }
 
     // }
-    // record data from answerform_multi, get score
+
+    // parse answer form, record data, get score
     finishQuestion(playerAnswer) {
         let state = this.state;
         let question_idx = this.state.question_idx + 1; //state won't update immediately
-        this.setState({
-            interrupted: false, numSeen: this.state.numSeen + 1, question: "", question_idx: this.state.question_idx + 1
-        });
-        console.log(question_idx)
-        console.log("data: ", this.queryData);
+        
+        // parse answer for correctness
         if (this.cleanText(playerAnswer) == this.cleanText(this.state.page)) {
             let points = state.tokenizations.length - state.sentenceIndex;
             alert("Correct. Answer is " + this.state.page + ". Points added: " + points);
@@ -205,10 +208,23 @@ class Dashboard extends React.Component {
             this.setState({
                 score: this.state.score + points
             });
-        } else {
-            alert("Incorrect. Answer is " + this.state.page);
-            // console.log('incorrect');
+        } else { // wrong answer
+            console.log("Attempts", this.state.numAttempts, this.maxAttempts)
+            if (this.state.numAttempts < this.maxAttempts) {
+                alert(`Incorrect. Tries left: ${this.maxAttempts-this.state.numAttempts}`);
+                this.setState({numAttempts: this.state.numAttempts + 1});
+                return;
+            } else {
+                alert("Incorrect. Answer is " + this.state.page);
+            }
         }
+
+        this.setState({
+            numAttempts: 1, interrupted: false, numSeen: this.state.numSeen + 1, question: "", question_idx: this.state.question_idx + 1
+        });
+        console.log(question_idx)
+        console.log("data: ", this.queryData);
+
         let answer_data = {
             session_id: window.sessionStorage.getItem("token"),
             question_id: this.state.question_id,
@@ -234,6 +250,7 @@ class Dashboard extends React.Component {
         //     console.error('Error:', error);
         //     });
 
+        //load the next question (on a time delay)
         if (question_idx < this.question_ids.length) {
             console.log("Question " + question_idx);
             let question_id = this.question_ids[question_idx];
@@ -280,54 +297,51 @@ class Dashboard extends React.Component {
                         <Button color="inherit">Logout</Button>
                     </Toolbar>
                 </AppBar> */}
+                
                 <Navbar />
-                <div className={classes.body}>
+
+                <div className={classes.body} style={{maxWidth: 1200, margin: "auto"}}>
                     <Grid container spacing={3}
                         bgcolor="background.paper"
-                    >
+                    >   
+                        {/* answer form */}
+                        <Grid item xs={8}>
+                            {/* <Buzzer onClick={this.handleBuzz} onTimeout={this.finishQuestion} style={{flex: 1}} /> */}
+                            
+                            <div className="flex-container" style={{"display": "flex", "align-items": "center"}}>
+                                <div style={{padding: 10}}>
+                                    <AnswerForm onSubmit={this.finishQuestion} label="Answer" />
+                                    {/* <AnswerForm onSubmit={this.finishQuestion_multi} label="Answer_multi" /> */}
+                                </div>
+                                <div style={{padding: 10}}>
+                                    <Button variant="contained" color="secondary" onClick={this.skipQuestion}>
+                                        Skip
+                                    </Button>
+                                </div>
+                            </div>
+                                                        
+                        </Grid>
+
                         {/* question display */}
                         <Grid item xs={12}>
                             <Paper className={classes.paperBig} style={{ "textAlign": "left" }}>
                                 {this.state.question.length ?
-                                    // <QuestionDisplay text={this.state.question} interrupted={this.state.interrupted} />
                                     <QuestionDisplay
                                         text={this.state.question}
                                         tokenizations={this.state.tokenizations}
                                         updateSentencePosition={(index) => this.setState({ sentenceIndex: index })} />
                                     : "Waiting"
                                 }
-                                {/* {console.log(this.state.sentenceIndex)} */}
                             </Paper>
                         </Grid>
-
-                        {/* article search */}
+                        
+                        {/* document search */}
                         <Grid item xs={12}>
-
                             {/* <Paper className={classes.paperBig}> */}
                             <Searcher sendData={this.logQueryData} />
-                            {/* <KeywordSearch text="TEXT"/> */}
                             {/* </Paper> */}
-
                         </Grid>
-
-                        <Grid item xs={4}>
-                            {/* <div className="flex-container" style={{"display": "flex","justify-content": "center"}}> */}
-                            {/* <Buzzer onClick={this.handleBuzz} onTimeout={this.finishQuestion} style={{flex: 1}} /> */}
-                            {/* <ContinueButton onClick={this.handleBuzz} style={{flex: 1}}/> */}
-                            <div style={{padding: 10}}>
-                                <AnswerForm onSubmit={this.finishQuestion} label="Answer" />
-                            </div>
-                            <div style={{padding: 10}}>
-                                <Button variant="contained" color="secondary" onClick={this.skipQuestion}>
-                                    Skip
-                                </Button>
-                            </div>
-                            {/* <AnswerForm onSubmit={this.finishQuestion_multi} label="Answer_multi" /> */}
-                            {/* </div> */}
-                            
-                            {/* <Button onClick={this.skipQuestion} /> */}
-
-                        </Grid>
+                        
 
                         <Grid item xs={4}>
                             <Paper className={classes.paper}>
@@ -345,18 +359,20 @@ class Dashboard extends React.Component {
                                 Instructions <br /><br />
                             Try to answer the quizbowl question using as few clues as possible. Fewer clues = higher score. <br />
                             You may use the internal search engine to search Wikipedia articles.
-                            Highlight helpful text (if any). <br />
+                            Using the keyword search is encouraged! <br />
+                            {/* Highlight helpful text (if any). <br /> */}
                             Hit <code>Continue</code> to reveal the next clue. <br />
                             Type <code>Enter</code> to submit your answer. You get one attempt.
 
-                        </Paper>
+                            </Paper>
                         </Grid>
-                        {/* <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid> */}
+                        {/* <Grid item xs={4}>
+                            <Paper className={classes.paper}>
+                                Settings <br /><br />
+                                Reading speed: {this.state.category} <br />
+
+                            </Paper>
+                        </Grid> */}
                     </Grid>
                 </div>
             </div>

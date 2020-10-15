@@ -9,15 +9,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import AnswerForm from './AnswerForm';
+import DocumentSearchBox from './DocumentSearchBox';
 import Buzzer from './Buzzer';
-// import SelectionHighlighter from "react-highlight-selection";
 import HighLighter from './Highlighter';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -54,6 +49,9 @@ class Searcher extends React.Component {
 
     // fetch data and log query
     fetchWikiData(query) {
+        if (!query){
+            return
+        }
         this.setState({
             curQuery: query,
             isLoading: true
@@ -114,72 +112,48 @@ class Searcher extends React.Component {
                 <ListItemText primary={title} />
             </ListItem>
         );
+
+        // loading icon
         let loadingIcon;
         if (this.state.isLoading) {
             loadingIcon = <CircularProgress style={{margin: 20}}/>;
         }
         return (
-
             // <div className={classes.root}>
-            <ExpansionPanel>
-                <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <Typography className={classes.heading}>Search Engine</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                    {/* <Paper className={classes.paperBig} style={{ height: 500 }}> */}
-                        <Grid container spacing={3}
-                            // height={500}
-                            // display="flex"
-                            // flexDirection="row"
-                            // flexWrap="wrap"
-                            // p={1}
-                            // m={1}
-                            bgcolor="background.paper"
-                        >
-                            {/* document search */}
-                            <Grid item xs={4}>
-                                <AnswerForm onSubmit={(query) => this.fetchWikiData(query)} label="Search..." />
-                                {loadingIcon}
-                                <List component="nav" aria-label="search results">
-                                    {listItems}
-                                </List>
-                            </Grid>
-                            <Divider orientation="vertical" flexItem />
 
-                            {/* highlight text */}
-                            {/* <Grid item xs={7} >
-                                <div style={{ maxHeight: 500, overflow: "scroll", whiteSpace: "pre-wrap", textAlign: "left" }}>
-                                    <HighLighter
-                                        text={this.state.selectedDoc}
-                                        selectionHandler={this.handleHighlight}
-                                        customClass="highlight-class"
-                                    />
-                                </div>
-                            </Grid> */}
-
-                            {/* keyword search */}
-                            <Grid item xs={7} >
-                                <KeywordSearch text={this.state.selectedDoc}/>
-                                {/* <div style={{ maxHeight: 500, maxWidth: 600, overflow: "scroll", whiteSpace: "pre-wrap", textAlign: "left" }}> */}
-                                    {/* {console.log(this.state.selectedDoc)} */}
-                                    {/* {this.state.selectedDoc} */}
-                                    {/* <HighLighter
-                                        text={this.state.selectedDoc}
-                                        selectionHandler={this.handleHighlight}
-                                        customClass="highlight-class"
-                                    /> */}
-                                    {/* <KeywordSearch text={this.state.selectedDoc}/>
-                                </div> */}
-                            </Grid>
-
+                <Paper className={classes.paperBig} style={{ height: 600 }}>
+                    <Grid container spacing={3}
+                        // height={500}
+                        bgcolor="background.paper"
+                    >
+                        {/* document search */}
+                        <Grid item xs={4}>
+                            <DocumentSearchBox onSubmit={(query) => this.fetchWikiData(query)} label="Search..." />
+                            {loadingIcon}
+                            <List component="nav" aria-label="search results">
+                                {listItems}
+                            </List>
                         </Grid>
-                    {/* </Paper> */}
-                </ExpansionPanelDetails>
-            </ExpansionPanel>
+                        <Divider orientation="vertical" flexItem />
+
+                        {/* highlight text */}
+                        {/* <Grid item xs={7} >
+                            <div style={{ maxHeight: 500, overflow: "scroll", whiteSpace: "pre-wrap", textAlign: "left" }}>
+                                <HighLighter
+                                    text={this.state.selectedDoc}
+                                    selectionHandler={this.handleHighlight}
+                                    customClass="highlight-class"
+                                />
+                            </div>
+                        </Grid> */}
+
+                        {/* text display, keyword search */}
+                        <Grid item xs={7} >
+                            <KeywordSearch text={this.state.selectedDoc}/>
+                        </Grid>
+
+                    </Grid>
+                </Paper>
 
             // </div>
         );

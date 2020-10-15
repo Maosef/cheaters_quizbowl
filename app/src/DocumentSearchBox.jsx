@@ -4,12 +4,13 @@ import useStyles from './Styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-class AnswerForm extends React.Component {
+class DocumentSearchBox extends React.Component {
     constructor(props) {
         super(props);
         this.state = { answer: '' };
 
         this.textInput = React.createRef();
+        this.shortcutKeyCode = 191;
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -30,7 +31,7 @@ class AnswerForm extends React.Component {
 
     // keyboard shortcut to focus
     handleShortcut(e) {
-        if (e.keyCode === 32 && this.textInput.current) {
+        if (e.keyCode === this.shortcutKeyCode && this.textInput.current) {
           e.preventDefault();
         //   console.log(this.textInput);
           this.textInput.current.focus();
@@ -63,4 +64,4 @@ class AnswerForm extends React.Component {
 
 
 
-export default withStyles(useStyles)(AnswerForm);
+export default withStyles(useStyles)(DocumentSearchBox);

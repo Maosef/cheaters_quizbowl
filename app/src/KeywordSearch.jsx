@@ -13,6 +13,17 @@ class KeywordSearch extends React.Component {
     // this.$el.on('change', this.handleChange);
 
     this.MIN_KEYWORD_LENGTH = 4;
+    this.captureSearch = this.captureSearch.bind(this);
+    this.display = this.display.bind(this);
+    this.search_mode = true;
+    this.characters = [];
+    this.words = [];
+    // this.state = {
+    //   search_mode: false,
+    //   characters: [],
+    // };
+
+    window.addEventListener("keydown", this.captureSearch);
     this.display();
   }
 
@@ -24,10 +35,36 @@ class KeywordSearch extends React.Component {
 
   componentWillUnmount() {
     this.$el.off('change', this.handleChange);
+    window.removeEventListener('keydown', this.captureSearch);
   }
 
   handleChange(e) {
     this.props.onChange(e.target.value);
+  }
+
+  // listen for F3 or ctrl F or command F
+  captureSearch(e) {
+    if (e.keyCode === 114 || ((e.ctrlKey || e.metaKey) && e.keyCode === 70)) {
+      e.preventDefault();
+      this.searchBar.focus();
+    }
+    // } else if (this.search_mode) {
+    //   if (e.keyCode === 13) {
+    //     console.log("finished search");
+    //     console.log(this.characters, this.characters.join(''));
+        
+    //     this.words.push(this.characters.join(''));
+    //     // let indices = search_text(doc, query);
+    //     console.log("words: ", this.words);
+
+    //     this.characters = [];
+    //     this.search_mode = false;
+                
+    //   } else {
+    //     // console.log(e.key);
+    //     this.characters.push(e.key);
+    //   }
+    // }
   }
 
   display() {
@@ -53,7 +90,7 @@ class KeywordSearch extends React.Component {
       currentIndex = 0;
 
 
-    console.log($content.parent());
+    // console.log($content.parent());
     /**
      * Jumps to the element matching the currentIndex
      */
@@ -65,7 +102,7 @@ class KeywordSearch extends React.Component {
         if ($current.length) {
           $current.addClass(currentClass);
           position = $current.offset().top - offsetTop;
-          console.log(position, $content.parent());
+          // console.log(position, $content.parent());
           $current[0].scrollIntoView({block: 'nearest'});
           // $content.parent()[0].scrollTo(0, position);
         }
@@ -78,7 +115,8 @@ class KeywordSearch extends React.Component {
      */
     $input.on("input", function () {
       var searchVal = this.value;
-      if (searchVal.length >= 4){
+      if (searchVal.length >= 3){
+        // this.words.push(searchVal); 
         $content.unmark({
           done: function () {
             $content.mark(searchVal, {
@@ -92,7 +130,6 @@ class KeywordSearch extends React.Component {
           }
         });
       }
-      
     });
 
     /**
@@ -123,25 +160,29 @@ class KeywordSearch extends React.Component {
   render() {
     return (
       <div className="keyword-search" ref={el => this.el = el} style={{maxWidth: 600}}>
-
+        
+        {/* search bar */}
         <div class="keyword-search-navbar">
           Search:
-            <input type="search" placeholder="Lorem" />
+            <input type="search"  
+              placeholder="Search keywords" 
+              ref={(input) => { this.searchBar = input; }} />
             <button data-search="next">&darr;</button>
             <button data-search="prev">&uarr;</button>
             <button data-search="clear">✖</button>
         </div>
 
-          <div class="content bordered" style={{ 
-            maxHeight: 500, 
-            overflow: "scroll", 
-            whiteSpace: "pre-wrap", 
-            textAlign: "left", 
-            }}>
-            {this.props.text}
+        {/* content display */}
+        <div class="content bordered" style={{ 
+          maxHeight: 500, 
+          overflow: "scroll", 
+          whiteSpace: "pre-wrap", 
+          textAlign: "left", 
+          }}>
+          {this.props.text}
 
-          </div>
         </div>
+      </div>
       );
     }
   }
