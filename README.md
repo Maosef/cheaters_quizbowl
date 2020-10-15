@@ -3,7 +3,7 @@
  
  Frontend is written in React, backend is written in Python (FastAPI).
 
-![user interface](image.png)
+![user interface](cheaters_bowl.png)
 
 ## Features
 
