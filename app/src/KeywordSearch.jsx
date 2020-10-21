@@ -173,13 +173,15 @@ class KeywordSearch extends React.Component {
         </div>
 
         {/* content display */}
-        <div class="content bordered" style={{ 
+        <div class="content bordered" 
+          dangerouslySetInnerHTML={{ __html: this.props.text }}
+          style={{ 
           maxHeight: 500, 
           overflow: "scroll", 
           whiteSpace: "pre-wrap", 
           textAlign: "left", 
           }}>
-          {this.props.text}
+          {/* {this.props.text} */}
 
         </div>
       </div>

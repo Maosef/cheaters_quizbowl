@@ -74,3 +74,10 @@ mark.current {
   border-width: "2";
   border-color: "gray";
 }
+
+/* .scroll_container { 
+  maxHeight: 500, 
+  overflow: "scroll", 
+  whiteSpace: "pre-wrap", 
+  textAlign: "left", 
+  } */

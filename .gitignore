@@ -1,3 +1,4 @@
+*.ipynb
 app/node_modules/
 backend/data/
-backend/pycache/
+backend/__pycache__/
