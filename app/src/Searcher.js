@@ -71,11 +71,7 @@ class Searcher extends React.Component {
                     let pages = result.pages;
                     this.setState({
                         pages: pages,
-                        // titles: result.titles,
-                        // summaries: result.summaries,
                         isLoading: false,
-                        // titles: pages.map(x => x['title']),
-                        // html: pages.map(x => x['html']),
                     });
                 },
                 (error) => {

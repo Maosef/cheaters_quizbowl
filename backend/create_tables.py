@@ -11,11 +11,11 @@ path = "backend/data/qanta.2018.04.18.sqlite3"
 
 
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
-from database import Database, Question, User, Record
+from backend.database import Database, Question, User, Record
 
 
 db = Database()
-from database import Question, User, Record
+from backend.database import Question, User, Record
 
 db.create_all()
 
