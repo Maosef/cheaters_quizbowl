@@ -1,5 +1,5 @@
 caddy run &
-uvicorn backend.web:app &
+uvicorn backend.server:app &
 
 cd app
 yarn start &
