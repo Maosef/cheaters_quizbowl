@@ -28,6 +28,7 @@ class Searcher extends React.Component {
         // this.handleBuzz = this.handleBuzz.bind(this);
 
         this.fetchWikiData = this.fetchWikiData.bind(this);
+        this.processQuery = this.processQuery.bind(this);
         this.handleHighlight = this.handleHighlight.bind(this);
 
         this.state = {
@@ -51,7 +52,7 @@ class Searcher extends React.Component {
     }
 
     // fetch data and log query
-    fetchWikiData(query) {
+    processQuery(query) {
         if (!query){
             return
         }
@@ -60,6 +61,12 @@ class Searcher extends React.Component {
             isLoading: true
         })
         this.queryData.set(query, new Map());
+
+        this.fetchWikiData(query);
+    }
+
+    // fetch wikipedia data
+    fetchWikiData(query) {
 
         console.log("query: ", query);
         fetch(`/search_wiki?query=${query}&limit=${this.state.pageLimit}`)
@@ -107,13 +114,14 @@ class Searcher extends React.Component {
 
     scrollToSection(section_title) {
         let section_element = document.getElementById(section_title);
-        section_element.scrollIntoView({block: 'nearest'});
+        section_element.parentNode.scrollTop = section_element.offsetTop - section_element.parentNode.offsetTop;
     }
     
 
     render() {
         const { classes } = this.props;
 
+        // articles, sections
         const listItems = this.state.pages.map((page) =>
             <ListItem button onClick={(e) => this.displayText(e, page)} key={page['title'].toString()}>
                 <ListItemText primary={page['title']} />
@@ -125,10 +133,8 @@ class Searcher extends React.Component {
             <ListItem button onClick={(e) => this.scrollToSection(section['title'])} 
                 key={section['title'].toString()}>
                 <ListItemText primary={section['title']} />
-                {/* <a href={"#" + section['title'] }>{section['title']}</a> */}
             </ListItem>
         )
-
 
         // loading icon
         let loadingIcon;
@@ -145,7 +151,8 @@ class Searcher extends React.Component {
                     {/* document search */}
                     <Grid item xs={4}>
                         <Grid container spacing={3}>
-                            <DocumentSearchBox onSubmit={(query) => this.fetchWikiData(query)} label="Search..." />
+                            <DocumentSearchBox onSubmit={(query) => this.processQuery(query)} label="Search..." />
+                            {/* article, section display */}
                             <Grid item xs={6}>
                                 {loadingIcon}
                                 {/* document titles */}
@@ -179,7 +186,7 @@ class Searcher extends React.Component {
 
                     {/* text display, keyword search */}
                     <Grid item xs={7} >
-                        <KeywordSearch text={this.state.selectedDoc}/>
+                        <KeywordSearch text={this.state.selectedDoc} searchTerms={this.state.curQuery}/>
                     </Grid>
 
                     {/* highlight text */}

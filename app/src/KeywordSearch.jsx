@@ -4,42 +4,64 @@ import $ from 'jquery';
 import "mark.js"
 import "mark.js/src/jquery.js"
 
+import TextField from '@material-ui/core/TextField';
+
 
 class KeywordSearch extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.MIN_KEYWORD_LENGTH = 4;
+
+    // not following good code practice
+
+    // this.search_mode = true;
+    // this.characters = [];
+    // this.words = [];
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.captureSearch = this.captureSearch.bind(this);
+    this.display = this.display.bind(this);
+    
+    this.state = {
+      searchTerms: "",
+      // search_mode: false,
+      // characters: [],
+    };
+  }
+
   componentDidMount() {
     this.$el = $(this.el);
 
-    // this.handleChange = this.handleChange.bind(this);
-    // this.$el.on('change', this.handleChange);
-
-    this.MIN_KEYWORD_LENGTH = 4;
-    this.captureSearch = this.captureSearch.bind(this);
-    this.display = this.display.bind(this);
-    this.search_mode = true;
-    this.characters = [];
-    this.words = [];
-    // this.state = {
-    //   search_mode: false,
-    //   characters: [],
-    // };
+    // this.$el.on('change', this.handleInputChange);
 
     window.addEventListener("keydown", this.captureSearch);
     this.display();
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.children !== this.props.children) {
-      this.$el.trigger("chosen:updated");
+    // if (prevProps.children !== this.props.children) {
+    //   this.$el.trigger("chosen:updated");
+    // }
+
+    // update search terms in keyword search box
+    if (prevProps.searchTerms !== this.props.searchTerms) {
+      console.log("new search terms", this.props.searchTerms);
+      this.setState({ searchTerms: this.props.searchTerms });
     }
   }
 
   componentWillUnmount() {
-    this.$el.off('change', this.handleChange);
+    this.$el.off('change', this.handleInputChange);
     window.removeEventListener('keydown', this.captureSearch);
   }
 
-  handleChange(e) {
-    this.props.onChange(e.target.value);
+  handleInputChange(event) {
+    // this.props.onChange(e.target.value);
+    this.setState({ searchTerms: event.target.value });
+
+    // trigger highlight
+    // let searchVal = event.target.value;
   }
 
   // listen for F3 or ctrl F or command F
@@ -48,25 +70,9 @@ class KeywordSearch extends React.Component {
       e.preventDefault();
       this.searchBar.focus();
     }
-    // } else if (this.search_mode) {
-    //   if (e.keyCode === 13) {
-    //     console.log("finished search");
-    //     console.log(this.characters, this.characters.join(''));
-        
-    //     this.words.push(this.characters.join(''));
-    //     // let indices = search_text(doc, query);
-    //     console.log("words: ", this.words);
-
-    //     this.characters = [];
-    //     this.search_mode = false;
-                
-    //   } else {
-    //     // console.log(e.key);
-    //     this.characters.push(e.key);
-    //   }
-    // }
   }
 
+  // jquery display for text search. Temporary
   display() {
 
     // the input field
@@ -90,7 +96,6 @@ class KeywordSearch extends React.Component {
       currentIndex = 0;
 
 
-    // console.log($content.parent());
     /**
      * Jumps to the element matching the currentIndex
      */
@@ -113,9 +118,15 @@ class KeywordSearch extends React.Component {
      * Searches for the entered keyword in the
      * specified context on input
      */
-    $input.on("input", function () {
-      var searchVal = this.value;
-      if (searchVal.length >= 3){
+    // function searchTerms() {
+
+    // }
+    function search(e) {
+      // var searchVal = this.value;
+      
+      var searchVal = e.target.value;
+      console.log(searchVal);
+      if (searchVal.length >= 3){ // min search length for performance
         // this.words.push(searchVal); 
         $content.unmark({
           done: function () {
@@ -130,7 +141,8 @@ class KeywordSearch extends React.Component {
           }
         });
       }
-    });
+    }
+    $input.on("input", search);
 
     /**
      * Clears the search
@@ -159,24 +171,45 @@ class KeywordSearch extends React.Component {
 
   render() {
     return (
-      <div className="keyword-search" ref={el => this.el = el} style={{maxWidth: 600}}>
+      <div className="keyword-search" 
+        ref={el => this.el = el} 
+        style={{maxWidth: 600}}>
         
         {/* search bar */}
         <div class="keyword-search-navbar">
           Search:
             <input type="search"  
               placeholder="Search keywords" 
-              ref={(input) => { this.searchBar = input; }} />
+              ref={(input) => { this.searchBar = input; }}
+              value={this.state.searchTerms}
+              onChange={this.handleInputChange}
+               />
             <button data-search="next">&darr;</button>
             <button data-search="prev">&uarr;</button>
             <button data-search="clear">✖</button>
         </div>
+        {/* <form onSubmit={this.handleSubmit} noValidate autoComplete="off" 
+                style={{"display": "flex", "align-items": "center"}}>
+                <TextField 
+                    inputRef={this.textInput}
+                    value={this.state.searchTerms} 
+                    onChange={this.handleInputChange} 
+                    id="answer_box" 
+                    label={this.props.label} 
+                    variant="outlined" 
+                />
+                <div style={{padding: 20}}>
+                    <Button variant="contained" color="primary" onClick={this.handleSubmit}>
+                        Submit
+                    </Button>
+                </div>
+            </form> */}
 
         {/* content display */}
         <div class="content bordered" 
           dangerouslySetInnerHTML={{ __html: this.props.text }}
           style={{ 
-          maxHeight: 500, 
+          maxHeight: 480, 
           overflow: "scroll", 
           whiteSpace: "pre-wrap", 
           textAlign: "left", 
