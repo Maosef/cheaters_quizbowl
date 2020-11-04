@@ -51,7 +51,7 @@ class Dashboard extends React.Component {
         this.logQueryData = this.logQueryData.bind(this);
 
         //preloaded questions
-        this.question_ids = [53873, 181475, 115844, 6449, 26626, 16848, 15469, 102066, 151976, 90037].reverse();
+        this.question_ids = [181475, 16848, 115844, 26626, 53873, 6449, 15469, 102066, 151976, 90037];
 
         this.maxAttempts = 3;
         this.queryData = new Map();

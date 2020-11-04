@@ -187,6 +187,7 @@ class Searcher extends React.Component {
                     {/* text display, keyword search */}
                     <Grid item xs={7} >
                         <KeywordSearch text={this.state.selectedDoc} searchTerms={this.state.curQuery}/>
+                        {/* <KeywordSearch text={this.state.selectedDoc} searchTerms={this.state.question}/> */}
                     </Grid>
 
                     {/* highlight text */}
