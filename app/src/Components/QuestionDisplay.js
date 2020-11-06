@@ -1,6 +1,6 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
-import useStyles from './Styles';
+import useStyles from '../Styles';
 
 // question card: reads a question word by word. can be interrupted by buzzer
 // option: pause after each sentence, until continue button is clicked

@@ -30,7 +30,7 @@ class AnswerForm extends React.Component {
 
     // keyboard shortcut to focus
     handleShortcut(e) {
-        if ((e.ctrlKey || e.metaKey) && e.keyCode === 32 && this.textInput.current) {
+        if ((e.ctrlKey || e.metaKey) && e.keyCode === 65 && this.textInput.current) {
           e.preventDefault();
         //   console.log(this.textInput);
           this.textInput.current.focus();
