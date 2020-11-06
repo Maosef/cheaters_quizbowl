@@ -25,13 +25,14 @@ class DocumentSearchBox extends React.Component {
     handleSubmit(event) {
         // alert('You submitted: ' + this.state.answer);
         event.preventDefault();
-        this.setState({answer: ''});
+        // this.setState({answer: ''});
         this.props.onSubmit(this.state.answer);
     }
 
     // keyboard shortcut to focus
     handleShortcut(e) {
-        if (e.keyCode === this.shortcutKeyCode && this.textInput.current) {
+        
+        if ((e.ctrlKey || e.metaKey) && e.keyCode === this.shortcutKeyCode && this.textInput.current) {
           e.preventDefault();
         //   console.log(this.textInput);
           this.textInput.current.focus();

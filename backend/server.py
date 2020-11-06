@@ -31,7 +31,7 @@ app.add_middleware(
 app.include_router(security.router, prefix="/token")
 app.include_router(qanta.router)
 
-
+# create html string, nested section dictionary
 def parse_sections(sections, level=1):
     html = ""
     parsed_sections = []
@@ -67,6 +67,7 @@ def search_wikipedia(query: str, limit: int=8):
             # page = wikipedia.page(title)
 
             html, sections = parse_sections(page.sections)
+            html = page.summary + html
             page_dict = {"title": page.title, "html":html, "sections":sections}
             pages.append(page_dict)
 
