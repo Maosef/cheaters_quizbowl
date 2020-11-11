@@ -195,7 +195,28 @@ class Dashboard extends React.Component {
 
     // }
 
-    finishQuestionBackend(playerAnswer) {
+    finishQuestionBackend(question_id, answer) {
+        fetch(`${server_url}/answer/?question_id=${question_id}&answer=${answer}`)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    // console.log('Result: ', result.question);
+                    if (result.correct) {
+                        alert("Correct. Answer is " + result.answer);
+                    } else {
+                        alert("Incorrect. Answer is " + result.answer);
+                    }
+
+                },
+
+                (error) => {
+                    console.log('error');
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
     }
     // parse answer form, record data, get score
     finishQuestion(playerAnswer) {

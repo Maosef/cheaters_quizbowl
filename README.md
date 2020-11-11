@@ -34,3 +34,19 @@ Run frontend:
 
 Run reverse proxy (enables frontend and backend to communicate):  
 `caddy run`
+
+## Architecture
+
+### Backend
+
+`server.py` - main server
+
+### Frontend
+- App
+    - Login
+    - Dashboard_preloaded: the UI container
+        - Navbar
+        - AnswerForm
+        - QuestionDisplayUntimed: displays the question
+        - Searcher: search articles
+            - KeywordSearch: search by keyword

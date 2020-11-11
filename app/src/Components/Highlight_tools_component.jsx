@@ -29,18 +29,6 @@ class Highlight_tools extends React.Component {
         // this.display();
       }
     
-    // when query or document changes, update terms in keyword search box, trigger search
-    // componentDidUpdate(prevProps) {
-    // if (prevProps !== this.props) {
-    //     // console.log("new props", this.props);
-    //     if (prevProps.searchTerms !== this.props.searchTerms) {
-    //     this.setState({ searchTerms: this.props.searchTerms });
-    //     }
-        
-    //     // this.search(this.props.searchTerms);
-    //     $("input[type='search']").val(this.props.searchTerms).trigger("input");
-    // }
-    // }
 
     componentWillUnmount() {
     // this.$el.off('change', this.handleInputChange);
