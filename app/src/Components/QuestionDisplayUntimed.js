@@ -1,7 +1,8 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
-import useStyles from './Styles';
-import ContinueButton from './ContinueButton';
+import useStyles from '../Styles';
+import ContinueButton from '../ContinueButton';
+
 
 // question card: reads a question word by word. can be interrupted by buzzer
 // option: pause after each sentence, until continue button is clicked
@@ -92,6 +93,7 @@ class QuestionDisplay extends React.Component {
             <div style={{ "max-width": "600px", "margin": "auto"}}>
                 <p>{this.state.text}</p>
                 {button}
+
             </div>
         );
     }

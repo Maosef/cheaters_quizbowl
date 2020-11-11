@@ -11,14 +11,15 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Typography from '@material-ui/core/Typography';
 
-import DocumentSearchBox from './DocumentSearchBox';
-import Buzzer from './Buzzer';
+import DocumentSearchBox from '../DocumentSearchBox';
+import Buzzer from '../Buzzer';
 import HighLighter from './Highlighter';
 
 import { withStyles } from '@material-ui/core/styles';
-import useStyles from './Styles';
+import useStyles from '../Styles';
 
-import KeywordSearch from './KeywordSearch';
+import KeywordSearch from '../KeywordSearch';
+import HighlightTools from './HighlightTools';
 
 //search bar, and display results
 
@@ -49,6 +50,9 @@ class Searcher extends React.Component {
         };
 
         this.queryData = new Map()
+
+        // shortcut to search from highlight
+        HighlightTools(this.processQuery);
     }
 
     // fetch data and log query
@@ -61,6 +65,8 @@ class Searcher extends React.Component {
             isLoading: true
         })
         this.queryData.set(query, new Map());
+
+        // display text in search box
 
         this.fetchWikiData(query);
     }
@@ -99,7 +105,7 @@ class Searcher extends React.Component {
             curPage: page,
             curTitle: title
         });
-        // console.log(this.queryData);
+        // console.log(page['html']);
     }
 
     handleHighlight(selection) {
@@ -151,7 +157,7 @@ class Searcher extends React.Component {
                     {/* document search */}
                     <Grid item xs={4}>
                         <Grid container spacing={3}>
-                            <DocumentSearchBox onSubmit={(query) => this.processQuery(query)} label="Search..." />
+                            <DocumentSearchBox onSubmit={(query) => this.processQuery(query)} label="Search Documents..." />
                             {/* article, section display */}
                             <Grid item xs={6}>
                                 {loadingIcon}
@@ -188,6 +194,7 @@ class Searcher extends React.Component {
                     <Grid item xs={7} >
                         <KeywordSearch text={this.state.selectedDoc} searchTerms={this.state.curQuery}/>
                         {/* <KeywordSearch text={this.state.selectedDoc} searchTerms={this.state.question}/> */}
+                        {/* <Highlight_tools /> */}
                     </Grid>
 
                     {/* highlight text */}

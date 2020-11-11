@@ -19,8 +19,8 @@ import Buzzer from './Buzzer';
 import Button_React from './Button_React'
 import ContinueButton from './ContinueButton';
 
-import QuestionDisplay from './QuestionDisplayUntimed';
-import Searcher from './Searcher';
+import QuestionDisplay from './Components/QuestionDisplayUntimed';
+import Searcher from './Components/Searcher';
 
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from './Styles';
@@ -195,6 +195,29 @@ class Dashboard extends React.Component {
 
     // }
 
+    finishQuestionBackend(question_id, answer) {
+        fetch(`${server_url}/answer/?question_id=${question_id}&answer=${answer}`)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    // console.log('Result: ', result.question);
+                    if (result.correct) {
+                        alert("Correct. Answer is " + result.answer);
+                    } else {
+                        alert("Incorrect. Answer is " + result.answer);
+                    }
+
+                },
+
+                (error) => {
+                    console.log('error');
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
+    }
     // parse answer form, record data, get score
     finishQuestion(playerAnswer) {
         let state = this.state;
@@ -360,6 +383,10 @@ class Dashboard extends React.Component {
                             Try to answer the quizbowl question using as few clues as possible. Fewer clues = higher score. <br />
                             You may use the internal search engine to search Wikipedia articles.
                             Using the keyword search is encouraged! <br />
+                            Keyboard shortcuts: <br />
+                            Document search: Ctrl-D <br />
+                            Keyword search: Ctrl-F <br />
+                            Answer: Ctrl-A <br />
                             {/* Highlight helpful text (if any). <br /> */}
                             Hit <code>Continue</code> to reveal the next clue. <br />
                             Type <code>Enter</code> to submit your answer. You get one attempt.

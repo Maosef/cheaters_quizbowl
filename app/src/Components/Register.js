@@ -8,7 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import * as p from "./Login.css";
+import * as p from "../Login.css";
 
 interface Props {}
 

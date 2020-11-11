@@ -1,14 +1,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
-# from quel import entity
 from backend import qanta
 from backend import security
+from backend.database import Database
 
 import wikipedia
 import wikipediaapi
 
-wiki_wiki = wikipediaapi.Wikipedia('en')
+import unidecode
+import string
 
 app = FastAPI()
 origins = [
@@ -26,10 +28,25 @@ app.add_middleware(
     allow_headers=["*", "POST"],
 )
 
-# app.include_router(entity.router, prefix="/api/entity/v1")
 # app.include_router(qanta.router, prefix="/api/qanta/v1")
 app.include_router(security.router, prefix="/token")
 app.include_router(qanta.router)
+
+
+
+class PlayerRequest(BaseModel):
+    name: str
+
+
+db = Database()
+
+wiki_wiki = wikipediaapi.Wikipedia('en')
+wiki_html = wikipediaapi.Wikipedia(
+        language='en',
+        extract_format=wikipediaapi.ExtractFormat.HTML
+)
+
+# helper functions
 
 # create html string, nested section dictionary
 def parse_sections(sections, level=1):
@@ -46,6 +63,145 @@ def parse_sections(sections, level=1):
         parsed_sections.append({'title':s.title, 'sections':inner_parsed_sections})
     return html, parsed_sections
 
+def parse_html_string(html_text):
+
+    return html_text, []
+
+
+QUESTION_IDS = [16848, 115844, 26626, 53873, 6449, 15469, 102066, 151976, 90037, 181475]
+
+# manages the game, records data
+class GameManager:
+    def __init__(self):
+        self.question_data = dict()
+        self.documents = []
+
+        self.config = {
+            'num_questions': 10,
+            'randomize': True,
+            'question_ids': []
+        }
+
+        self._num_questions = self.config['num_questions']
+        self._randomize = self.config['randomize']
+        self._question_ids = self.config['question_ids']
+
+        self.state = {}
+
+        self.states = []
+
+    # get question data
+    def start_game(self, player_id: str):
+
+        self.reset()
+        print("starting new game...")
+        # get questions
+        if self.config['randomize']:
+            for i in range(self._num_questions):
+                q = db.get_random_question()
+                # only get questions that have a page field
+                while not q['page']:
+                    q = db.get_random_question()
+                self._question_ids.append(q['qanta_id'])
+                self.question_data[q['qanta_id']] = q
+        else:
+            for question_id in self._question_ids:
+                question_dict = db.get_question_by_id(question_id)
+                question_dict["text"] = question_dict["text"].replace(chr(160), " ")
+                self.question_data[question_id] = question_dict
+            
+        return self.advance_question()
+
+    def save_game(self):
+        pass
+
+    def reset(self):
+        print("resetting...")
+
+        self.state = {
+            'question_number': 0, 
+            'cur_question': '', 
+            'question_id': '', 
+            'actions': [], 
+            'documents': [],
+            'player_answer': '', 
+            'answer': '',
+            'answer_correct': None, 
+            'score': 0,
+            'game_over': False,
+            }
+        return True
+
+    # get next question, advance state
+    def advance_question(self):
+        cur_question_number = self.state['question_number'] + 1
+
+        if cur_question_number > self._num_questions:
+            self.state['game_over'] = True
+            return self.state
+        
+        cur_question_id = self._question_ids[cur_question_number - 1]
+        cur_question = self.question_data[cur_question_id]
+        self.state['question_number'] = cur_question_number
+        self.state['question_id'] = cur_question_id
+        self.state['cur_question'] = cur_question['text']
+
+        return self.state
+
+    def process_answer(self, player_answer):
+        question_id = self.state['question_id']
+        ground_truth = self.question_data[question_id]['page']
+        self.state['answer_correct'] = self.answer_match(player_answer, ground_truth)
+        self.state['player_answer'] = player_answer
+        self.state['answer'] = ground_truth
+
+        return self.state
+
+    # normalize answers, remove punctuation and whitespace. try prompts?
+    def answer_match(self, player_answer, ground_truth):
+        print('ANSWERS:', player_answer, ground_truth)
+        normalized_str_1 = unidecode.unidecode(player_answer).lower().translate(str.maketrans('', '', string.punctuation))
+        normalized_str_2 = unidecode.unidecode(ground_truth).lower().translate(str.maketrans('', '', string.punctuation))
+
+        print(normalized_str_1, normalized_str_2)
+
+        return (normalized_str_1 == normalized_str_2)
+
+    def search_documents(self, query: str):
+
+        results = wikipedia.search(query)
+        pages = []
+        for title in results:
+            page = wiki_html.page(title)
+            html, sections = parse_html_string(page.text)
+            
+            # html = page.summary + html
+            page_dict = {"title": page.title, "html":html, "sections":sections}
+            pages.append(page_dict)
+
+        self.documents = pages
+        return pages
+
+    def search_document_titles(self, query: str):
+        results = wikipedia.search(query)
+        return results
+
+    def get_wiki_document_html(self, page_title: str):
+        page = wiki_html.page(page_title)
+        html, sections = parse_html_string(page.text)
+        
+        # html = page.summary + html
+        page_dict = {"title": page.title, "html":html, "sections":sections}
+        return page_dict
+
+    def get_wiki_document_text(self, page_title: str):
+        page = wiki_wiki.page(page_title)
+        
+        page_dict = {"title": page.title, "text": page.text}
+        return page_dict
+
+
+game_manager = GameManager() 
 
 # endpoints
 
@@ -53,9 +209,58 @@ def parse_sections(sections, level=1):
 def read_root():
     return {"Hello": "World"}
 
-# search wikipedia
+# start a new game
+@app.post("/start_new_game")
+def start_new_game(player_id: str):
+
+    game_manager.start_game(player_id)
+    return game_manager.state
+
+@app.get("/advance_question")
+def advance_question():
+
+    game_manager.advance_question()
+    return game_manager.state
+
+# get question ids
+@app.get("/get_question_ids")
+def get_question_list():
+    return game_manager.question_ids
+
+# get document
+@app.get("/get_document_text")
+def get_document_text(title: str):
+    return game_manager.get_wiki_document_text(title)
+
+# get document
+@app.get("/get_document_html")
+def get_document_html(title: str):
+    return game_manager.get_wiki_document_html(title)
+
+
+# answer
+@app.post("/answer")
+def answer(answer: str):
+    result = game_manager.process_answer(answer)
+    return result
+
+# search wikipedia. get clean html
 @app.get("/search_wiki")
-def search_wikipedia(query: str, limit: int=8):
+def search_wikipedia_html(query: str, limit=None):
+    
+    pages = game_manager.search_documents(query)
+    return {'error': False, 'pages': pages}
+
+# search wikipedia. get clean html
+@app.get("/search_wiki_titles")
+def search_wikipedia_titles(query: str, limit=None):
+    
+    titles = game_manager.search_document_titles(query)
+    return titles
+
+# search wikipedia. create html from sections
+@app.get("/search_wiki_sections")
+def search_wikipedia_sections(query: str, limit: int=8):
     
     # results = wikipedia.search(query, results = limit)
     results = wikipedia.search(query)
@@ -67,6 +272,7 @@ def search_wikipedia(query: str, limit: int=8):
             # page = wikipedia.page(title)
 
             html, sections = parse_sections(page.sections)
+            
             html = page.summary + html
             page_dict = {"title": page.title, "html":html, "sections":sections}
             pages.append(page_dict)
@@ -81,30 +287,5 @@ def search_wikipedia(query: str, limit: int=8):
     return {'error': False, 'pages': pages}
 
 
-# search wikipedia
-@app.get("/search_wiki_old")
-def search_wikipedia_old(query: str, limit: int=8):
-    
-    results = wikipedia.search(query, results = limit)
-    print(results)
-    titles, summaries = [], []
-    for title in results:
-        try:
-            # page = wiki_wiki.page(title)
-            page = wikipedia.page(title)
-            # summaries.append(wikipedia.summary(title))
-            # print(page.content)
-            summaries.append(page.content)
-            titles.append(title)
-        except wikipedia.exceptions.DisambiguationError as e:
-            print(title, "DisambiguationError")
-            print(e.options)
-            continue
-        except wikipedia.exceptions.PageError:
-            print(title, "PageError")
-            continue
-    # summaries = [wikipedia.summary(title) for title in results]
-    print(len(titles), len(summaries))
-    return {'error': False, 'titles': titles, 'summaries': summaries}
 
 

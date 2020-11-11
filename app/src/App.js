@@ -4,7 +4,7 @@ import Dashboard from './Dashboard_preloaded';
 // import Dashboard from './Dashboard';
 
 import Login from "./Login_dummy";
-import Register from "./Register";
+import Register from "./Components/Register";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 function App() {

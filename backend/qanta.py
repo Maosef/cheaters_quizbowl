@@ -28,12 +28,7 @@ def get_random_question():
 def get_question(qanta_id: int):
 
     question_dict = db.get_question_by_id(qanta_id)
-
     question_dict["text"] = question_dict["text"].replace(chr(160), " ")
-    # entity_list, entity_locations, _ = db.get_entities(qanta_id)
-
-    # question_dict["entities"] = entity_list
-    # question_dict["entity_locations"] = entity_locations
 
     return question_dict
 

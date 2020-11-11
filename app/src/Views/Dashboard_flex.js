@@ -8,16 +8,16 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import AnswerForm from './AnswerForm_multi';
-import Buzzer from './Buzzer';
-import Button_React from './Button_React'
-import ContinueButton from './ContinueButton';
+import AnswerForm from '../AnswerForm_multi';
+import Buzzer from '../Buzzer';
+import Button_React from '../Button_React'
+import ContinueButton from '../ContinueButton';
 
-import QuestionDisplay from './QuestionDisplayUntimed';
-import Searcher from './Searcher';
+import QuestionDisplay from '../Components/QuestionDisplayUntimed';
+import Searcher from '../Components/Searcher';
 
 import { withStyles } from '@material-ui/core/styles';
-import useStyles from './Styles';
+import useStyles from '../Styles';
 
 import './App.css';
 
@@ -91,7 +91,7 @@ class Dashboard extends React.Component {
             .then(res => res.json())
             .then(
                 (result) => {
-                    console.log('question ID: ', result.qanta_id);
+                    // console.log('Result: ', result.question);
                     this.setState({
                         isLoaded: true,
                         // question: result.question.replace(/\|\|\|/g,""),
@@ -207,30 +207,29 @@ class Dashboard extends React.Component {
         // console.log('rendering...')
         return (
             <div className={classes.root}>
-                <Grid container spacing={3}
-                    // display="flex"
-                    // flexDirection="row"
-                    // flexWrap="wrap"
-                    // p={1}
-                    // m={1}
+                <Box container spacing={3}
+                    display="flex"
+                    flexDirection="row"
+                    flexWrap="wrap"
+                    p={1}
+                    m={1}
                     bgcolor="background.paper"
+                    css={{ maxHeight: 800, maxWidth: 1000 }}
                 >
-                    <Grid item xs={12}>
+                    <Box item xs={6}>
 
                         <Paper className={classes.paperBig}>
                             {this.state.question.length ?
                                 // <QuestionDisplay text={this.state.question} interrupted={this.state.interrupted} />
-                                <QuestionDisplay 
-                                text={this.state.question} 
-                                tokenizations={this.state.tokenizations}
+                                <QuestionDisplay text={this.state.question} 
                                 updateSentencePosition={(index)=>this.setState({sentenceIndex: index})}/>
                                 : "Waiting"
                             }
                             {/* {console.log(this.state.sentenceIndex)} */}
                         </Paper>
-                    </Grid>
+                    </Box>
                     
-                    <Grid item xs={4}>
+                    <Box item xs={6}>
                         {/* <div className="flex-container" style={{"display": "flex","justify-content": "center"}}> */}
                             {/* <Buzzer onClick={this.handleBuzz} onTimeout={this.finishQuestion} style={{flex: 1}} /> */}
                             {/* <ContinueButton onClick={this.handleBuzz} style={{flex: 1}}/> */}
@@ -242,15 +241,15 @@ class Dashboard extends React.Component {
                             </Button>
                         {/* <Button onClick={this.skipQuestion} /> */}
 
-                    </Grid>
-                    {/* <Grid item xs={6}>
+                    </Box>
+                    {/* <Box item xs={6}>
 
                         <Paper className={classes.paperBig}>
                             <Searcher server_url = "http://127.0.0.1:8000"/>
                         </Paper>
                         
-                    </Grid> */}
-                    <Grid item xs={4}>
+                    </Box> */}
+                    <Box item xs={3}>
                         <Paper className={classes.paper}>
                             Statistics <br /><br />
                             Category: {this.state.category} <br />
@@ -260,8 +259,8 @@ class Dashboard extends React.Component {
                             {this.state.tournament} {this.state.year}
 
                         </Paper>
-                    </Grid>
-                    <Grid item xs={4}>
+                    </Box>
+                    <Box item xs={3}>
                         <Paper className={classes.paper}>
                             Instructions <br /><br />
                             Try to answer the quizbowl question using as few clues as possible. <br />
@@ -271,14 +270,14 @@ class Dashboard extends React.Component {
                             Hit <code>Submit</code> to submit your answer. You get one attempt.
                             
                         </Paper>
-                    </Grid>
-                    {/* <Grid item xs={3}>
+                    </Box>
+                    {/* <Box item xs={3}>
           <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
+        </Box>
+        <Box item xs={3}>
           <Paper className={classes.paper}>xs=3</Paper>
-        </Grid> */}
-                </Grid>
+        </Box> */}
+                </Box>
             </div>
         );
     }

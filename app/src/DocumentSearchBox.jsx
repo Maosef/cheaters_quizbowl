@@ -10,7 +10,7 @@ class DocumentSearchBox extends React.Component {
         this.state = { answer: '' };
 
         this.textInput = React.createRef();
-        this.shortcutKeyCode = 191;
+        this.shortcutKeyCode = 68;
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);

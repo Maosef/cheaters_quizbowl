@@ -13,29 +13,6 @@ class KeywordSearch extends React.Component {
 
     this.MIN_KEYWORD_LENGTH = 4;
 
-    // not following good code practice
-    // this.$input = $("input[type='search']")
-    //   // clear button
-    //   // $clearBtn = $("button[data-search='clear']"),
-    //   // prev button
-    //   // $prevBtn = $("button[data-search='prev']"),
-    //   // next button
-    //   // $nextBtn = $("button[data-search='next']"),
-    //   // the context where to search
-    //   this.$content = $(".content")
-    //   // // jQuery object to save <mark> elements
-    //   this.$results = null;
-    //   // // the class that will be appended to the current
-    //   // // focused element
-    //   this.currentClass = "current";
-    //   // // top offset for the jump (the search bar)
-    //   this.offsetTop = 50;
-    //   // // the current index of the focused element
-    //   this.currentIndex = 0;
-    // this.search_mode = true;
-    // this.characters = [];
-    // this.words = [];
-
     this.handleInputChange = this.handleInputChange.bind(this);
     this.captureSearch = this.captureSearch.bind(this);
     this.extractKeywords = this.extractKeywords.bind(this);
@@ -51,6 +28,11 @@ class KeywordSearch extends React.Component {
   componentDidMount() {
     this.$el = $(this.el);
 
+    // const script = document.createElement("script");
+    // script.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=MML_HTMLorMML";
+    // script.async = true;
+    // document.body.appendChild(script);
+
     window.addEventListener("keydown", this.captureSearch);
     this.display();
   }
@@ -65,6 +47,9 @@ class KeywordSearch extends React.Component {
       
       // this.search(this.props.searchTerms);
       $("input[type='search']").val(this.props.searchTerms).trigger("input");
+
+      // typeset all math
+      window.MathJax.typeset()
     }
   }
 
