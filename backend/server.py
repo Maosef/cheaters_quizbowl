@@ -12,6 +12,14 @@ import wikipediaapi
 import unidecode
 import string
 
+from typing import Optional
+
+
+class PlayerRequest(BaseModel):
+    # name: str
+    # description: Optional[str] = None
+    data: Optional[dict] = None
+
 app = FastAPI()
 origins = [
     "http://localhost:8000",
@@ -33,9 +41,6 @@ app.include_router(security.router, prefix="/token")
 app.include_router(qanta.router)
 
 
-
-class PlayerRequest(BaseModel):
-    name: str
 
 
 db = Database()
@@ -120,8 +125,9 @@ class GameManager:
 
         self.state = {
             'question_number': 0, 
-            'cur_question': '', 
             'question_id': '', 
+            'cur_question': '', 
+            'question_data': {},
             'actions': [], 
             'documents': [],
             'player_answer': '', 
@@ -145,6 +151,7 @@ class GameManager:
         self.state['question_number'] = cur_question_number
         self.state['question_id'] = cur_question_id
         self.state['cur_question'] = cur_question['text']
+        self.state['question_data'] = cur_question
 
         return self.state
 
@@ -211,12 +218,15 @@ def read_root():
 
 # start a new game
 @app.post("/start_new_game")
-def start_new_game(player_id: str):
+# def start_new_game(player_id: str):
+def start_new_game(player_request: PlayerRequest):
 
+    print(player_request)
+    player_id = 'andrew'
     game_manager.start_game(player_id)
     return game_manager.state
 
-@app.get("/advance_question")
+@app.post("/advance_question")
 def advance_question():
 
     game_manager.advance_question()

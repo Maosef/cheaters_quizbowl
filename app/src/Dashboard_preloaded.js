@@ -50,14 +50,23 @@ class Dashboard extends React.Component {
         this.skipQuestion = this.skipQuestion.bind(this);
         this.logQueryData = this.logQueryData.bind(this);
 
+        this.postRequest = this.postRequest.bind(this);
+        this.answerQuestion = this.answerQuestion.bind(this);
+        this.advanceQuestion = this.advanceQuestion.bind(this);
+        
+
         //preloaded questions
         this.question_ids = [181475, 16848, 115844, 26626, 53873, 6449, 15469, 102066, 151976, 90037];
 
         this.maxAttempts = 3;
         this.queryData = new Map();
 
+        // this.game_state = {};
         // mutable state
         this.state = {
+
+            game_state: {},
+
             sessionToken: "",
             question_id: -1,
             question_idx: 0,
@@ -69,21 +78,26 @@ class Dashboard extends React.Component {
             tournament: "",
 
             interrupted: false,
-            finished: false,
             numSeen: 0,
             score: 0,
             isLoaded: false,
             sentenceIndex: 0,
             numAttempts: 1, // number of attempts on current question
-
         }
-        
     }
 
     // on init: authenticate, grab the user data, fetch first question
     componentDidMount() {
         let question_id = this.question_ids[0];
-        this.fetchData(question_id);
+
+        // start game
+        this.postRequest('start_new_game', {'data':{}}).then(data => {
+            console.log(data);
+            // this.game_state = data;
+            this.setState({game_state: data});
+        });
+
+        // this.fetchData(question_id);
     }
     // componentWillUnmount() {
     //     alert('unmounting');
@@ -95,6 +109,16 @@ class Dashboard extends React.Component {
             interrupted: !this.state.interrupted
         });
     }
+
+    async postRequest(url, data={}) {
+        
+        const response = await fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data)
+          });
+          return response.json(); // parses JSON response into native JavaScript objects
+    }
+
 
     // fetch data from server
     fetchData(question_id) {
@@ -140,84 +164,54 @@ class Dashboard extends React.Component {
         return cleanText;
     }
 
-    // record data from answerform_multi, get score
-    // finishQuestion_multi(query,evidence,playerAnswer){
-    //     let state = this.state;
-    //     let question_idx = this.state.question_idx + 1; //state won't update immediately
-    //     this.setState({
-    //         interrupted: false, numSeen: this.state.numSeen + 1, question: "", question_idx: this.state.question_idx + 1
-    //     });
-    //     console.log(question_idx)
-    //     if (this.cleanText(playerAnswer) == this.cleanText(this.state.page)) {
-    //         let points = state.tokenizations.length - state.sentenceIndex;
-    //         alert("Correct. Answer is " + this.state.page + ". Points added: " + points);
-    //         // console.log('correct');
-    //         this.setState({
-    //             score: this.state.score + points
-    //         });
-    //     } else {
-    //         alert("Incorrect. Answer is " + this.state.page);
-    //         // console.log('incorrect');
-    //     }
-    //     let answer_data = {
-    //         session_id: window.sessionStorage.getItem("token"),
-    //         question_id: this.state.question_id,
-    //         answer: playerAnswer,
-    //         query: query,
-    //         evidence: evidence,
-    //         stop_position: this.state.sentenceIndex,
-    //     };
-    //     console.log(answer_data);
-    //     // log data: session, email, questionID, answer, query, evidence
-    //     fetch('/api/qanta/v1/post_data', {
-    //         method: 'POST', // or 'PUT'
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify(answer_data),
-    //         })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //         console.log('Post Success:', data);
-    //         })
-    //         .catch((error) => {
-    //         console.error('Error:', error);
-    //         });
+    answerQuestion(answer) {
+        this.postRequest(`/answer?answer=${answer}`).then(data => {
+            console.log(data);
+            // this.setState({game_state: data});
+        });
 
-    //     if (question_idx < this.question_ids.length){
-    //         console.log("Question " + question_idx);
-    //         let question_id = this.question_ids[question_idx];
-    //         setTimeout(this.fetchData(question_id), 2000);
+        // parse answer for correctness
+        let game_state = this.state.game_state;
+        if (game_state['answer_correct']) {
+            // let points = state.tokenizations.length - state.sentenceIndex;
+            let points = 10
+            alert("Correct. Answer is " + game_state.page + ". Points added: " + points);
+            // console.log('correct');
+            game_state['score'] += points;
+            // this.setState({
+            //     score: this.state.score + points
+            // });
+            this.advanceQuestion();
+        } else { // wrong answer
+            // console.log("Attempts", this.state.numAttempts, this.maxAttempts)
+            if (this.state.numAttempts < this.maxAttempts) {
+                alert(`Incorrect. Tries left: ${this.maxAttempts-this.state.numAttempts}`);
+                this.setState({numAttempts: this.state.numAttempts + 1});
+                return;
+            } else {
+                alert("Incorrect. Answer is " + this.state.page);
+                this.advanceQuestion();
+            }
+        }
 
-    //     } else {
-    //         alert('Test Completed. Thank you for your time!')
-    //     }
-
-    // }
-
-    finishQuestionBackend(question_id, answer) {
-        fetch(`${server_url}/answer/?question_id=${question_id}&answer=${answer}`)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    // console.log('Result: ', result.question);
-                    if (result.correct) {
-                        alert("Correct. Answer is " + result.answer);
-                    } else {
-                        alert("Incorrect. Answer is " + result.answer);
-                    }
-
-                },
-
-                (error) => {
-                    console.log('error');
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            )
     }
+
+    advanceQuestion(){
+        this.postRequest(`/advance_question`).then(data => {
+            console.log(data);
+            this.setState({game_state: data});
+            console.log(this.state);
+        });
+
+        let game_state = this.state.game_state;
+        //load the next question
+        if (game_state['game_over']) {
+            alert('Game Finished. Thank you for your time!');
+        } else {
+            console.log("New question");
+        }
+    }
+
     // parse answer form, record data, get score
     finishQuestion(playerAnswer) {
         let state = this.state;
@@ -304,7 +298,9 @@ class Dashboard extends React.Component {
             return <Redirect to="/login" />;
         }
         const { classes } = this.props;
-        // console.log('rendering...')
+
+        let question_data = this.state.game_state['question_data'];
+
         return (
 
             <div className={classes.root}>
@@ -331,13 +327,13 @@ class Dashboard extends React.Component {
                         <Grid item xs={8}>
                             {/* <Buzzer onClick={this.handleBuzz} onTimeout={this.finishQuestion} style={{flex: 1}} /> */}
                             
-                            <div className="flex-container" style={{"display": "flex", "align-items": "center"}}>
+                            <div className="flex-container" style={{"display": "flex", "alignItems": "center"}}>
                                 <div style={{padding: 10}}>
-                                    <AnswerForm onSubmit={this.finishQuestion} label="Answer" />
-                                    {/* <AnswerForm onSubmit={this.finishQuestion_multi} label="Answer_multi" /> */}
+                                    {/* <AnswerForm onSubmit={this.finishQuestion} label="Answer" /> */}
+                                    <AnswerForm onSubmit={this.answerQuestion} label="Answer" />
                                 </div>
                                 <div style={{padding: 10}}>
-                                    <Button variant="contained" color="secondary" onClick={this.skipQuestion}>
+                                    <Button variant="contained" color="secondary" onClick={this.advanceQuestion}>
                                         Skip
                                     </Button>
                                 </div>
@@ -348,12 +344,12 @@ class Dashboard extends React.Component {
                         {/* question display */}
                         <Grid item xs={12}>
                             <Paper className={classes.paperBig} style={{ "textAlign": "left" }}>
-                                {this.state.question.length ?
+                                {Object.keys(this.state.game_state).length > 0 ?
                                     <QuestionDisplay
-                                        text={this.state.question}
-                                        tokenizations={this.state.tokenizations}
+                                        text={this.state.game_state['question_data']['text']}
+                                        tokenizations={this.state.game_state['question_data']['tokenizations']}
                                         updateSentencePosition={(index) => this.setState({ sentenceIndex: index })} />
-                                    : "Waiting"
+                                    : "Loading..."
                                 }
                             </Paper>
                         </Grid>
@@ -367,15 +363,18 @@ class Dashboard extends React.Component {
                         
 
                         <Grid item xs={4}>
-                            <Paper className={classes.paper}>
+                            {Object.keys(this.state.game_state).length > 0 ?
+                                <Paper className={classes.paper}>
+                                
                                 Statistics <br /><br />
-                            Category: {this.state.category} <br />
-                                {/* Answer: {this.state.page} <br /> */}
-                            Score: {this.state.score} <br />
-                            Number of Questions seen: {this.state.numSeen} <br />
-                                {this.state.tournament} {this.state.year}
-
-                            </Paper>
+                                Category: {this.state.game_state['question_data']['category']} <br />
+                                    {/* Answer: {this.state.page} <br /> */}
+                                Score: {this.state.game_state['question_data']['score']} <br />
+                                Number of Questions seen: {question_data['numSeen']} <br />
+                                {question_data['tournament']} {question_data['year']}
+                                
+                                </Paper>
+                            : "Waiting"}
                         </Grid>
                         <Grid item xs={4}>
                             <Paper className={classes.paper}>

@@ -41,7 +41,7 @@ class AnswerForm extends React.Component {
         const { classes } = this.props;
         return (
             <form onSubmit={this.handleSubmit} className={classes.root} noValidate autoComplete="off" 
-                style={{"display": "flex", "align-items": "center"}}>
+                style={{"display": "flex", "alignItems": "center"}}>
                 <TextField 
                     inputRef={this.textInput}
                     value={this.state.answer} 
