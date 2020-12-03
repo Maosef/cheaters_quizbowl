@@ -12,6 +12,17 @@ import wikipediaapi
 import unidecode
 import string
 
+from typing import Optional
+import copy
+
+import pandas as pd
+from datetime import datetime
+
+class PlayerRequest(BaseModel):
+    # name: str
+    # description: Optional[str] = None
+    data: Optional[dict] = None
+
 app = FastAPI()
 origins = [
     "http://localhost:8000",
@@ -31,11 +42,6 @@ app.add_middleware(
 # app.include_router(qanta.router, prefix="/api/qanta/v1")
 app.include_router(security.router, prefix="/token")
 app.include_router(qanta.router)
-
-
-
-class PlayerRequest(BaseModel):
-    name: str
 
 
 db = Database()
@@ -77,9 +83,9 @@ class GameManager:
         self.documents = []
 
         self.config = {
-            'num_questions': 10,
-            'randomize': True,
-            'question_ids': []
+            'num_questions': 3,
+            'randomize': False,
+            'question_ids': [16848, 115844, 26626, 53873, 6449, 15469, 102066, 151976, 90037, 181475]
         }
 
         self._num_questions = self.config['num_questions']
@@ -88,7 +94,7 @@ class GameManager:
 
         self.state = {}
 
-        self.states = []
+        self.game_history = []
 
     # get question data
     def start_game(self, player_id: str):
@@ -113,31 +119,45 @@ class GameManager:
         return self.advance_question()
 
     def save_game(self):
-        pass
+
+        filename = "backend/data/recorded_game_{}.csv".format(str(datetime.now()))
+
+        df = pd.DataFrame(self.game_history)
+        df.to_csv(filename)
+        print("saved game to {}".format(filename))
 
     def reset(self):
         print("resetting...")
 
         self.state = {
+            'username': '',
             'question_number': 0, 
-            'cur_question': '', 
             'question_id': '', 
-            'actions': [], 
-            'documents': [],
+            'cur_question': '', 
+            'question_data': {},
+            'queries': [], 
+            'documents_selected': [],
+            'keyword_searches': [],
             'player_answer': '', 
             'answer': '',
             'answer_correct': None, 
             'score': 0,
             'game_over': False,
-            }
+        }
         return True
 
     # get next question, advance state
     def advance_question(self):
+
+        # record state
+        self.game_history.append(copy.deepcopy(self.state))
+
         cur_question_number = self.state['question_number'] + 1
 
         if cur_question_number > self._num_questions:
+            print('game finished')
             self.state['game_over'] = True
+            self.save_game()
             return self.state
         
         cur_question_id = self._question_ids[cur_question_number - 1]
@@ -145,6 +165,7 @@ class GameManager:
         self.state['question_number'] = cur_question_number
         self.state['question_id'] = cur_question_id
         self.state['cur_question'] = cur_question['text']
+        self.state['question_data'] = cur_question
 
         return self.state
 
@@ -157,15 +178,26 @@ class GameManager:
 
         return self.state
 
+    def normalize(self, s):
+        return unidecode.unidecode(s).lower().translate(str.maketrans('', '', string.punctuation))
+        
     # normalize answers, remove punctuation and whitespace. try prompts?
     def answer_match(self, player_answer, ground_truth):
         print('ANSWERS:', player_answer, ground_truth)
-        normalized_str_1 = unidecode.unidecode(player_answer).lower().translate(str.maketrans('', '', string.punctuation))
-        normalized_str_2 = unidecode.unidecode(ground_truth).lower().translate(str.maketrans('', '', string.punctuation))
 
-        print(normalized_str_1, normalized_str_2)
+        # if the player answer words overlap with ground truth words
+        player_answer_words = map(self.normalize, player_answer.split(' '))
+        ground_truth_words = map(self.normalize, ground_truth.split('_'))
 
-        return (normalized_str_1 == normalized_str_2)
+        # print(len(set(player_answer_words)), len(set(ground_truth_words)))
+        # print(set(player_answer_words) & set(ground_truth_words), len(set(player_answer_words).intersection(set(ground_truth_words))))
+        return len(set(player_answer_words) & set(ground_truth_words)) > 0
+        # normalized_str_1 = unidecode.unidecode(player_answer).lower().translate(str.maketrans('', '', string.punctuation))
+        # normalized_str_2 = unidecode.unidecode(ground_truth).lower().translate(str.maketrans('', '', string.punctuation))
+
+        # print(normalized_str_1, normalized_str_2)
+
+        # return (normalized_str_1 == normalized_str_2)
 
     def search_documents(self, query: str):
 
@@ -184,6 +216,7 @@ class GameManager:
 
     def search_document_titles(self, query: str):
         results = wikipedia.search(query)
+        self.state['queries'].append(query)
         return results
 
     def get_wiki_document_html(self, page_title: str):
@@ -192,6 +225,8 @@ class GameManager:
         
         # html = page.summary + html
         page_dict = {"title": page.title, "html":html, "sections":sections}
+        self.state['documents_selected'].append(page_title)
+
         return page_dict
 
     def get_wiki_document_text(self, page_title: str):
@@ -211,12 +246,14 @@ def read_root():
 
 # start a new game
 @app.post("/start_new_game")
-def start_new_game(player_id: str):
+def start_new_game(player_request: PlayerRequest):
 
+    # print(player_request)
+    player_id = 'andrew'
     game_manager.start_game(player_id)
     return game_manager.state
 
-@app.get("/advance_question")
+@app.post("/advance_question")
 def advance_question():
 
     game_manager.advance_question()
@@ -237,12 +274,11 @@ def get_document_text(title: str):
 def get_document_html(title: str):
     return game_manager.get_wiki_document_html(title)
 
-
 # answer
 @app.post("/answer")
 def answer(answer: str):
-    result = game_manager.process_answer(answer)
-    return result
+    state = game_manager.process_answer(answer)
+    return state
 
 # search wikipedia. get clean html
 @app.get("/search_wiki")

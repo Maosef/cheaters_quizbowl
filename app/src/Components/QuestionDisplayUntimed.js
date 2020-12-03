@@ -1,5 +1,4 @@
 import React from 'react';
-import Paper from '@material-ui/core/Paper';
 import useStyles from '../Styles';
 import ContinueButton from '../ContinueButton';
 
@@ -13,65 +12,80 @@ class QuestionDisplay extends React.Component {
         super(props);
         // this.classes = useStyles();
         this.READ_DELAY_MS = 120;
-        this.state = {wordIndex: 0, sentenceIndex: 0, words: [], text: "", isReading: false };
-        
-        this.sentences = props.tokenizations.map(span => props.text.slice(...span));
-        // console.log(this.sentences);
+        this.state = {
+            wordIndex: 0, 
+            sentenceIndex: 0, 
+            words: [], 
+            text: "", 
+            isReading: false,
+            sentences: [],
+            readerID: 0,
+        };
 
         this.read = this.read.bind(this);
         this.readWords = this.readWords.bind(this);
     }
 
     componentDidMount() {
+        let sentences = this.props.tokenizations.map(span => this.props.text.slice(...span));
+        this.setState({
+            sentences: sentences,
+            words: sentences[0].trim().split(" ")
+        });
         this.read();
     }
+
     componentDidUpdate(prevProps) {
-        // console.log(this.state.sentenceIndex + " " + this.sentences.length);
-        if (prevProps.interrupted !== this.props.interrupted && this.state.sentenceIndex+1 <= this.sentences.length){
-            // console.log(this.state.sentenceIndex + " " + this.sentences.length);
-            // alert(this.state.sentenceIndex);
-            // console.log(prevProps.interrupted,this.props.interrupted);
+        // reset state if question changed
+        if (prevProps.text !== this.props.text){
+            console.log('question changed');
+            let sentences = this.props.tokenizations.map(span => this.props.text.slice(...span));
+            this.setState({
+                wordIndex: 0, 
+                sentenceIndex: 0, 
+                text: "", 
+                isReading: false,
+                sentences: sentences,
+                words: sentences[0].trim().split(" ")
+            });
+            // reset the reader or else there will be two
+            clearInterval(this.state.readerID);
             this.read();
         }
-        
-        // if (!this.props.interrupted && this.state.sentenceIndex < this.sentences.length) { //continue button clicked
-        //     console.log("continue");
-        //     this.read();
-        // }
     }
     
+    // read a sentence, then pause
     read() {
-
-        // read a sentence, then pause
-            
         this.setState({
             wordIndex: 0, isReading: true
         });
-        // this.words = props.text.split(" ");
-        // alert(this.sentences[this.state.sentenceIndex]);
 
-        this.readerID = setInterval(
+        let readerID = setInterval(
             () => this.readWords(this.state.sentenceIndex),
             this.READ_DELAY_MS
         );
-        
-        //only update sentenceIndex after reading is finished
-        //enable continue button
 
+        this.setState({
+            readerID: readerID
+        });
     }
 
-    readWords(sentenceIndex) { //add word to text, display
-        let words = this.sentences[sentenceIndex].trim().split(" ");
-        // alert(words);
-        if (this.state.wordIndex >= words.length) { //finished reading
-            clearInterval(this.readerID);
+    //add word to text, display
+    readWords(sentenceIndex) {
+
+        let words = this.state.words;
+
+        //finished reading sentence
+        if (this.state.wordIndex >= words.length) {
+            clearInterval(this.state.readerID);
             
             this.setState({
-                sentenceIndex: this.state.sentenceIndex + 1
+                words: this.state.sentences[sentenceIndex + 1].trim().split(" "),
+                sentenceIndex: this.state.sentenceIndex + 1,
             });
-            if (this.state.sentenceIndex < this.sentences.length){ //finished all clues, dont display continue
+            if (this.state.sentenceIndex < this.state.sentences.length){ //finished all clues, dont display continue
                 this.setState({
-                    isReading: false
+                    isReading: false,
                 });
             }
             // send index of last sentence read to Dashboard
@@ -80,9 +94,8 @@ class QuestionDisplay extends React.Component {
             this.setState({
                 text: this.state.text + " " + words[this.state.wordIndex],
                 wordIndex: this.state.wordIndex + 1
-              });
+            });
         }
-
     }
 
     render() {
@@ -90,7 +103,7 @@ class QuestionDisplay extends React.Component {
             var button = <ContinueButton onClick={this.read} style={{flex: 1}}/>
         }
         return (
-            <div style={{ "max-width": "600px", "margin": "auto"}}>
+            <div style={{ "maxWidth": "600px", "margin": "auto"}}>
                 <p>{this.state.text}</p>
                 {button}
 

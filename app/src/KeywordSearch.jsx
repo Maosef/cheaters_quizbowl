@@ -226,8 +226,7 @@ class KeywordSearch extends React.Component {
         style={{maxWidth: 600}}>
         
         {/* search bar */}
-        <div class="keyword-search-navbar">
-          Search:
+        <div className="keyword-search-navbar">
             <input type="search"  
               placeholder="Search keywords" 
               ref={(input) => { this.searchBar = input; }}
@@ -241,7 +240,7 @@ class KeywordSearch extends React.Component {
 
 
         {/* content display */}
-        <div class="content bordered" 
+        <div className="content bordered" 
           dangerouslySetInnerHTML={{ __html: this.props.text }}
           style={{ 
           maxHeight: 480, 

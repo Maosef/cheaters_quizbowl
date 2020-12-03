@@ -10,9 +10,11 @@ class AnswerForm extends React.Component {
         this.state = { answer: '' };
 
         this.textInput = React.createRef();
+        this.isToggled = false;
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        // this.handleClick = this.handleClick.bind(this);
         this.handleShortcut = this.handleShortcut.bind(this);
         window.addEventListener("keydown", this.handleShortcut);
     }
@@ -30,18 +32,21 @@ class AnswerForm extends React.Component {
 
     // keyboard shortcut to focus
     handleShortcut(e) {
-        if ((e.ctrlKey || e.metaKey) && e.keyCode === 65 && this.textInput.current) {
+        if ((e.ctrlKey || e.metaKey) && e.keyCode === 32 && this.textInput.current) {
+        // if (e.keyCode === 32 && this.textInput.current && document.activeElement.tagName == 'BODY') {
+          console.log(document.activeElement.tagName)
           e.preventDefault();
         //   console.log(this.textInput);
           this.textInput.current.focus();
         }
     }
 
+
     render() {
         const { classes } = this.props;
         return (
             <form onSubmit={this.handleSubmit} className={classes.root} noValidate autoComplete="off" 
-                style={{"display": "flex", "align-items": "center"}}>
+                style={{"display": "flex", "alignItems": "center"}}>
                 <TextField 
                     inputRef={this.textInput}
                     value={this.state.answer} 
@@ -50,11 +55,11 @@ class AnswerForm extends React.Component {
                     label={this.props.label} 
                     variant="outlined" 
                 />
-                <div style={{padding: 20}}>
+                {/* <div style={{padding: 20}}>
                     <Button variant="contained" color="primary" onClick={this.handleSubmit}>
                         Submit
                     </Button>
-                </div>
+                </div> */}
             </form>
 
         );
