@@ -18,7 +18,8 @@ class QuestionDisplay extends React.Component {
             words: [], 
             text: "", 
             isReading: false,
-            sentences: []
+            sentences: [],
+            readerID: 0,
         };
 
         this.read = this.read.bind(this);
@@ -33,6 +34,7 @@ class QuestionDisplay extends React.Component {
         });
         this.read();
     }
+
     componentDidUpdate(prevProps) {
         // reset state if question changed
         if (prevProps.text !== this.props.text){
@@ -46,11 +48,8 @@ class QuestionDisplay extends React.Component {
                 sentences: sentences,
                 words: sentences[0].trim().split(" ")
             });
-
-            // reset reader or else error
-            this.read();
-        }
-        else if (prevProps.interrupted !== this.props.interrupted && this.state.sentenceIndex+1 <= this.state.sentences.length){
+            // reset the reader or else there will be two
+            clearInterval(this.state.readerID);
             this.read();
         }
     }
@@ -61,22 +60,28 @@ class QuestionDisplay extends React.Component {
             wordIndex: 0, isReading: true
         });
 
-        this.readerID = setInterval(
+        let readerID = setInterval(
             () => this.readWords(this.state.sentenceIndex),
             this.READ_DELAY_MS
         );
+
+        this.setState({
+            readerID: readerID
+        });
     }
 
     //add word to text, display
     readWords(sentenceIndex) {
+
         let words = this.state.words;
-        // alert(words);
-        if (this.state.wordIndex >= words.length) { //finished reading
-            clearInterval(this.readerID);
+
+        //finished reading sentence
+        if (this.state.wordIndex >= words.length) {
+            clearInterval(this.state.readerID);
             
             this.setState({
+                words: this.state.sentences[sentenceIndex + 1].trim().split(" "),
                 sentenceIndex: this.state.sentenceIndex + 1,
-                words: this.state.sentences[sentenceIndex].trim().split(" ")
             });
             if (this.state.sentenceIndex < this.state.sentences.length){ //finished all clues, dont display continue
                 this.setState({

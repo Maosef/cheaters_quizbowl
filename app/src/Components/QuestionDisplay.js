@@ -10,45 +10,63 @@ class QuestionDisplay extends React.Component {
     constructor(props) {
         super(props);
         // this.classes = useStyles();
-        this.state = {wordIndex: 0, text: "" };
-        // this.sentences = props.text.match(/[^.?!]+[.!?]+[\])'"`’”]*/g); //extract sentences via matching
-        // console.log(this.sentences);
-        // display the previous K sentences, then the next N words
-        this.words = props.text.split(" ");
+        this.state = {
+            wordIndex: 0, 
+            text: "",
+            readerID: 0,
+            words: []
+        };
 
         // this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
-        this.readerID = setInterval(
+        this.setState({words: this.props.text.split(" ")});
+        let readerID = setInterval(
             () => this.read(),
-            100
+            150
         );
+        this.setState({readerID: readerID})
     }
     componentWillUnmount() {
-        clearInterval(this.timerID);
+        clearInterval(this.state.readerID);
     }
+
+    componentDidUpdate(prevProps) {
+        // reset state if question changed
+        if (prevProps.text !== this.props.text){
+            console.log('question changed');
+            this.setState({wordIndex: 0, text: "", words: this.props.text.split(" ")});
+            // reset the reader or else there will be two
+            clearInterval(this.state.readerID);
+
+            let readerID = setInterval(
+                () => this.read(),
+                150
+            );
+            this.setState({readerID: readerID})
+        }
+    }
+
     read() {
-        if (this.state.wordIndex >= this.words.length) {
-            clearInterval(this.timerID);
+        if (this.state.wordIndex >= this.state.words.length) {
+            clearInterval(this.state.readerID);
         } else if (this.props.interrupted){
             this.setState({
                 text: this.state.text});
         } else {
             this.setState({
-                text: this.state.text + " " + this.words[this.state.wordIndex],
+                text: this.state.text + " " + this.state.words[this.state.wordIndex],
                 wordIndex: this.state.wordIndex + 1
               });
         }
-        
     }
 
     render() {
         return (
-            // <Paper className={this.classes.paper}>
-            <p>{this.state.text}</p>
-                
-            // </Paper>
+            <div style={{ "maxWidth": "600px", "margin": "auto"}}>
+                <p>{this.state.text}</p>
+            </div>
         );
     }
 }

@@ -227,7 +227,6 @@ class KeywordSearch extends React.Component {
         
         {/* search bar */}
         <div className="keyword-search-navbar">
-          Search:
             <input type="search"  
               placeholder="Search keywords" 
               ref={(input) => { this.searchBar = input; }}

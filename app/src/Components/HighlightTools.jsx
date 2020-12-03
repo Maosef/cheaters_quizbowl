@@ -2,6 +2,7 @@
 export default function HightlightTools(searchCallback) {
 
     // listen for shortcut key and highlight
+    // Ctrl + S
     function captureSearch(e) {
         var selectedText = getSelectedText();
         if (e.keyCode === 83 && selectedText) {

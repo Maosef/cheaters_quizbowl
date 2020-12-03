@@ -19,7 +19,8 @@ import Buzzer from './Buzzer';
 import Button_React from './Button_React'
 import ContinueButton from './ContinueButton';
 
-import QuestionDisplay from './Components/QuestionDisplayUntimed';
+// import QuestionDisplay from './Components/QuestionDisplayUntimed';
+import QuestionDisplay from './Components/QuestionDisplay';
 import Searcher from './Components/Searcher';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -43,8 +44,8 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.handleBuzz = this.handleBuzz.bind(this);
-        this.fetchData = this.fetchData.bind(this);
-        this.finishQuestion = this.finishQuestion.bind(this);
+        // this.fetchData = this.fetchData.bind(this);
+        // this.finishQuestion = this.finishQuestion.bind(this);
         // this.finishQuestion_multi = this.finishQuestion_multi.bind(this);
         this.cleanText = this.cleanText.bind(this);
         this.skipQuestion = this.skipQuestion.bind(this);
@@ -53,12 +54,11 @@ class Dashboard extends React.Component {
         this.postRequest = this.postRequest.bind(this);
         this.answerQuestion = this.answerQuestion.bind(this);
         this.advanceQuestion = this.advanceQuestion.bind(this);
-        
 
         //preloaded questions
         this.question_ids = [181475, 16848, 115844, 26626, 53873, 6449, 15469, 102066, 151976, 90037];
 
-        this.maxAttempts = 3;
+        this.maxAttempts = 1;
         this.queryData = new Map();
 
         // this.game_state = {};
@@ -92,22 +92,20 @@ class Dashboard extends React.Component {
 
         // start game
         this.postRequest('start_new_game', {'data':{}}).then(data => {
-            console.log(data);
+            console.log('new game started, ', data);
             // this.game_state = data;
             this.setState({game_state: data});
         });
-
-        // this.fetchData(question_id);
     }
     // componentWillUnmount() {
     //     alert('unmounting');
     // }
 
     handleBuzz() {
-        console.log(this.state.interrupted);
         this.setState({
-            interrupted: !this.state.interrupted
+            interrupted: true
         });
+        console.log('interrupted', this.state.interrupted);
     }
 
     async postRequest(url, data={}) {
@@ -121,40 +119,40 @@ class Dashboard extends React.Component {
 
 
     // fetch data from server
-    fetchData(question_id) {
-        // let id = Math.floor(Math.random() * num_questions);
+    // fetchData(question_id) {
+    //     // let id = Math.floor(Math.random() * num_questions);
 
-        // fetch(server_url + "/get_question/")
-        fetch(server_url + "/api/qanta/v1/" + question_id)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    // console.log('Result: ', result.question);
-                    this.setState({
-                        isLoaded: true,
-                        // question: result.question.replace(/\|\|\|/g,""),
-                        question_id: result.qanta_id,
-                        question: result.text,
-                        answer: result.answer,
-                        category: result.category,
-                        page: result.page,
-                        tokenizations: result.tokenizations,
-                        year: result.year,
-                        tournament: result.tournament
-                    });
-                },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
-                (error) => {
-                    console.log('error');
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            )
-    }
+    //     // fetch(server_url + "/get_question/")
+    //     fetch(server_url + "/api/qanta/v1/" + question_id)
+    //         .then(res => res.json())
+    //         .then(
+    //             (result) => {
+    //                 // console.log('Result: ', result.question);
+    //                 this.setState({
+    //                     isLoaded: true,
+    //                     // question: result.question.replace(/\|\|\|/g,""),
+    //                     question_id: result.qanta_id,
+    //                     question: result.text,
+    //                     answer: result.answer,
+    //                     category: result.category,
+    //                     page: result.page,
+    //                     tokenizations: result.tokenizations,
+    //                     year: result.year,
+    //                     tournament: result.tournament
+    //                 });
+    //             },
+    //             // Note: it's important to handle errors here
+    //             // instead of a catch() block so that we don't swallow
+    //             // exceptions from actual bugs in components.
+    //             (error) => {
+    //                 console.log('error');
+    //                 this.setState({
+    //                     isLoaded: true,
+    //                     error
+    //                 });
+    //             }
+    //         )
+    // }
 
     cleanText(text) { //remove accents, text in parentheses, whitespace and punctuation
         let string_norm = text.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
@@ -166,41 +164,35 @@ class Dashboard extends React.Component {
 
     answerQuestion(answer) {
         this.postRequest(`/answer?answer=${answer}`).then(data => {
-            console.log(data);
-            // this.setState({game_state: data});
-        });
+            this.setState({game_state: data});
+            let game_state = data;
 
-        // parse answer for correctness
-        let game_state = this.state.game_state;
-        if (game_state['answer_correct']) {
-            // let points = state.tokenizations.length - state.sentenceIndex;
-            let points = 10
-            alert("Correct. Answer is " + game_state.page + ". Points added: " + points);
-            // console.log('correct');
-            game_state['score'] += points;
-            // this.setState({
-            //     score: this.state.score + points
-            // });
-            this.advanceQuestion();
-        } else { // wrong answer
-            // console.log("Attempts", this.state.numAttempts, this.maxAttempts)
-            if (this.state.numAttempts < this.maxAttempts) {
-                alert(`Incorrect. Tries left: ${this.maxAttempts-this.state.numAttempts}`);
-                this.setState({numAttempts: this.state.numAttempts + 1});
-                return;
-            } else {
-                alert("Incorrect. Answer is " + this.state.page);
+            // parse answer for correctness
+            if (game_state['answer_correct']) {
+                // let points = state.tokenizations.length - state.sentenceIndex;
+                let points = 10
+                alert("Correct. Answer is " + game_state['answer'] + ". Points added: " + points);
+                game_state['score'] += points;
+                console.log('score', game_state['score']);
+                this.setState({game_state: game_state});
                 this.advanceQuestion();
+            } else { // wrong answer
+                // console.log("Attempts", this.state.numAttempts, this.maxAttempts)
+                if (this.state.numAttempts < this.maxAttempts) {
+                    alert(`Incorrect. Tries left: ${this.maxAttempts-this.state.numAttempts}`);
+                    this.setState({numAttempts: this.state.numAttempts + 1});
+                    return;
+                } else {
+                    alert("Incorrect. Answer is " + game_state['answer']);
+                    this.advanceQuestion();
+                }
             }
-        }
-
+        });
     }
 
     advanceQuestion(){
         this.postRequest(`/advance_question`).then(data => {
-            console.log(data);
-            this.setState({game_state: data});
-            console.log(this.state);
+            this.setState({game_state: data, interrupted: false});
         });
 
         let game_state = this.state.game_state;
@@ -213,71 +205,71 @@ class Dashboard extends React.Component {
     }
 
     // parse answer form, record data, get score
-    finishQuestion(playerAnswer) {
-        let state = this.state;
-        let question_idx = this.state.question_idx + 1; //state won't update immediately
+    // finishQuestion(playerAnswer) {
+    //     let state = this.state;
+    //     let question_idx = this.state.question_idx + 1; //state won't update immediately
         
-        // parse answer for correctness
-        if (this.cleanText(playerAnswer) == this.cleanText(this.state.page)) {
-            let points = state.tokenizations.length - state.sentenceIndex;
-            alert("Correct. Answer is " + this.state.page + ". Points added: " + points);
-            // console.log('correct');
-            this.setState({
-                score: this.state.score + points
-            });
-        } else { // wrong answer
-            console.log("Attempts", this.state.numAttempts, this.maxAttempts)
-            if (this.state.numAttempts < this.maxAttempts) {
-                alert(`Incorrect. Tries left: ${this.maxAttempts-this.state.numAttempts}`);
-                this.setState({numAttempts: this.state.numAttempts + 1});
-                return;
-            } else {
-                alert("Incorrect. Answer is " + this.state.page);
-            }
-        }
+    //     // parse answer for correctness
+    //     if (this.cleanText(playerAnswer) == this.cleanText(this.state.page)) {
+    //         let points = state.tokenizations.length - state.sentenceIndex;
+    //         alert("Correct. Answer is " + this.state.page + ". Points added: " + points);
+    //         // console.log('correct');
+    //         this.setState({
+    //             score: this.state.score + points
+    //         });
+    //     } else { // wrong answer
+    //         console.log("Attempts", this.state.numAttempts, this.maxAttempts)
+    //         if (this.state.numAttempts < this.maxAttempts) {
+    //             alert(`Incorrect. Tries left: ${this.maxAttempts-this.state.numAttempts}`);
+    //             this.setState({numAttempts: this.state.numAttempts + 1});
+    //             return;
+    //         } else {
+    //             alert("Incorrect. Answer is " + this.state.page);
+    //         }
+    //     }
 
-        this.setState({
-            numAttempts: 1, interrupted: false, numSeen: this.state.numSeen + 1, question: "", question_idx: this.state.question_idx + 1
-        });
-        console.log(question_idx)
-        console.log("data: ", this.queryData);
+    //     this.setState({
+    //         numAttempts: 1, interrupted: false, numSeen: this.state.numSeen + 1, question: "", question_idx: this.state.question_idx + 1
+    //     });
+    //     console.log(question_idx)
+    //     console.log("data: ", this.queryData);
 
-        let answer_data = {
-            session_id: window.sessionStorage.getItem("token"),
-            question_id: this.state.question_id,
-            answer: playerAnswer,
-            // query: query,
-            // evidence: evidence,
-            stop_position: this.state.sentenceIndex,
-        };
-        console.log(answer_data);
-        // log data: session, email, questionID, answer, query, evidence
-        // fetch('/api/qanta/v1/post_data', {
-        //     method: 'POST', // or 'PUT'
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(answer_data),
-        //     })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //     console.log('Post Success:', data);
-        //     })
-        //     .catch((error) => {
-        //     console.error('Error:', error);
-        //     });
+    //     let answer_data = {
+    //         session_id: window.sessionStorage.getItem("token"),
+    //         question_id: this.state.question_id,
+    //         answer: playerAnswer,
+    //         // query: query,
+    //         // evidence: evidence,
+    //         stop_position: this.state.sentenceIndex,
+    //     };
+    //     console.log(answer_data);
+    //     // log data: session, email, questionID, answer, query, evidence
+    //     // fetch('/api/qanta/v1/post_data', {
+    //     //     method: 'POST', // or 'PUT'
+    //     //     headers: {
+    //     //         'Content-Type': 'application/json',
+    //     //     },
+    //     //     body: JSON.stringify(answer_data),
+    //     //     })
+    //     //     .then(response => response.json())
+    //     //     .then(data => {
+    //     //     console.log('Post Success:', data);
+    //     //     })
+    //     //     .catch((error) => {
+    //     //     console.error('Error:', error);
+    //     //     });
 
-        //load the next question (on a time delay)
-        if (question_idx < this.question_ids.length) {
-            console.log("Question " + question_idx);
-            let question_id = this.question_ids[question_idx];
-            setTimeout(this.fetchData(question_id), 2000);
+    //     //load the next question (on a time delay)
+    //     if (question_idx < this.question_ids.length) {
+    //         console.log("Question " + question_idx);
+    //         let question_id = this.question_ids[question_idx];
+    //         setTimeout(this.fetchData(question_id), 2000);
 
-        } else {
-            alert('Test Completed. Thank you for your time!')
-        }
+    //     } else {
+    //         alert('Test Completed. Thank you for your time!')
+    //     }
 
-    }
+    // }
 
     skipQuestion() {
         let question_idx = this.state.question_idx + 1
@@ -325,12 +317,14 @@ class Dashboard extends React.Component {
                     >   
                         {/* answer form */}
                         <Grid item xs={8}>
-                            {/* <Buzzer onClick={this.handleBuzz} onTimeout={this.finishQuestion} style={{flex: 1}} /> */}
                             
                             <div className="flex-container" style={{"display": "flex", "alignItems": "center"}}>
                                 <div style={{padding: 10}}>
                                     {/* <AnswerForm onSubmit={this.finishQuestion} label="Answer" /> */}
                                     <AnswerForm onSubmit={this.answerQuestion} label="Answer" />
+                                </div>
+                                <div style={{padding: 10}}>
+                                    <Buzzer onClick={this.handleBuzz} onTimeout={this.advanceQuestion} />
                                 </div>
                                 <div style={{padding: 10}}>
                                     <Button variant="contained" color="secondary" onClick={this.advanceQuestion}>
@@ -345,9 +339,13 @@ class Dashboard extends React.Component {
                         <Grid item xs={12}>
                             <Paper className={classes.paperBig} style={{ "textAlign": "left" }}>
                                 {Object.keys(this.state.game_state).length > 0 ?
+                                    // <QuestionDisplay
+                                    //     text={this.state.game_state['question_data']['text']}
+                                    //     tokenizations={this.state.game_state['question_data']['tokenizations']}
+                                    //     updateSentencePosition={(index) => this.setState({ sentenceIndex: index })} />
                                     <QuestionDisplay
                                         text={this.state.game_state['question_data']['text']}
-                                        tokenizations={this.state.game_state['question_data']['tokenizations']}
+                                        interrupted={this.state.interrupted}
                                         updateSentencePosition={(index) => this.setState({ sentenceIndex: index })} />
                                     : "Loading..."
                                 }
@@ -369,7 +367,7 @@ class Dashboard extends React.Component {
                                 Statistics <br /><br />
                                 Category: {this.state.game_state['question_data']['category']} <br />
                                     {/* Answer: {this.state.page} <br /> */}
-                                Score: {this.state.game_state['question_data']['score']} <br />
+                                Score: {this.state.game_state['score']} <br />
                                 Number of Questions seen: {question_data['numSeen']} <br />
                                 {question_data['tournament']} {question_data['year']}
                                 
@@ -379,15 +377,15 @@ class Dashboard extends React.Component {
                         <Grid item xs={4}>
                             <Paper className={classes.paper}>
                                 Instructions <br /><br />
-                            Try to answer the quizbowl question using as few clues as possible. Fewer clues = higher score. <br />
+                            Try to answer the quizbowl question using as few clues as possible. <br />
                             You may use the internal search engine to search Wikipedia articles.
-                            Using the keyword search is encouraged! <br />
+                            Using the keyword search is encouraged! <br /> <br />
                             Keyboard shortcuts: <br />
-                            Document search: Ctrl-D <br />
-                            Keyword search: Ctrl-F <br />
-                            Answer: Ctrl-A <br />
-                            {/* Highlight helpful text (if any). <br /> */}
-                            Hit <code>Continue</code> to reveal the next clue. <br />
+                            Buzz/Answer: <code>Ctrl-space</code> <br />
+                            Query: <code>Ctrl-D</code> <br />
+                            Keyword search: <code>Ctrl-F</code> <br />
+                            Query highlighted text: <code>s</code> <br />
+                            {/* Hit <code>Continue</code> to reveal the next clue. <br /> */}
                             Type <code>Enter</code> to submit your answer. You get one attempt.
 
                             </Paper>
