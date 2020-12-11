@@ -183,7 +183,6 @@ class DocumentDisplay extends React.Component {
       // let cleaned_words = this.extractKeywords(searchVal);
 
       if (searchVal.length >= 3){ // min search length for performance
-        this.searchVals.push(searchVal); 
         $content.unmark({
           done: function () {
             $content.mark(searchVal, {
