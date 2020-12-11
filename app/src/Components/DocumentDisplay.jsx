@@ -6,8 +6,8 @@ import "mark.js/src/jquery.js"
 
 import TextField from '@material-ui/core/TextField';
 
-
-class KeywordSearch extends React.Component {
+// search and highlight keywords
+class DocumentDisplay extends React.Component {
   constructor(props) {
     super(props);
 
@@ -20,6 +20,7 @@ class KeywordSearch extends React.Component {
     // this.search = this.search.bind(this);
     this.display = this.display.bind(this);
     
+    this.searchVals = []
     this.state = {
       searchTerms: "",
     };
@@ -27,12 +28,6 @@ class KeywordSearch extends React.Component {
 
   componentDidMount() {
     this.$el = $(this.el);
-
-    // const script = document.createElement("script");
-    // script.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=MML_HTMLorMML";
-    // script.async = true;
-    // document.body.appendChild(script);
-
     window.addEventListener("keydown", this.captureSearch);
     this.display();
   }
@@ -40,15 +35,19 @@ class KeywordSearch extends React.Component {
   // when query or document changes, update terms in keyword search box, trigger search
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
-      // console.log("new props", this.props);
       if (prevProps.searchTerms !== this.props.searchTerms) {
         this.setState({ searchTerms: this.props.searchTerms });
       }
       
+      // log stored search terms
+      // this.props.
+      this.words = [];
+
+      // trigger search
       // this.search(this.props.searchTerms);
       $("input[type='search']").val(this.props.searchTerms).trigger("input");
 
-      // typeset all math
+      // typeset math
       window.MathJax.typeset()
     }
   }
@@ -58,6 +57,16 @@ class KeywordSearch extends React.Component {
     window.removeEventListener('keydown', this.captureSearch);
   }
 
+
+  async recordKeywordSearch() {
+
+    const response = await fetch(`/record_keyword_search`, {
+      method: 'POST',
+      body: JSON.stringify(this.words)
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
   handleInputChange(event) {
     // this.props.onChange(e.target.value);
     this.setState({ searchTerms: event.target.value });
@@ -65,7 +74,6 @@ class KeywordSearch extends React.Component {
     // trigger highlight
     let searchVal = event.target.value;
     // this.search(searchVal);
-    
   }
 
   // listen for F3 or ctrl F or command F
@@ -102,26 +110,26 @@ class KeywordSearch extends React.Component {
   }
 
   // search for terms, highlight, jump to
-  search(searchVal) {    
-      // // jQuery object to save <mark> elements
-    let $content = $(".content")
-    let component = this;
-    if (searchVal.length >= 3){ // min search length for performance
-      // this.words.push(searchVal); 
-      $content.unmark({
-        done: function () {
-          $content.mark(searchVal, {
-            separateWordSearch: false,
-            done: function () {
-              component.$results = $content.find("mark");
-              component.currentIndex = 0;
-              component.jumpTo();
-            }
-          });
-        }
-      });
-    }
-  }
+  // search(searchVal) {    
+  //     // // jQuery object to save <mark> elements
+  //   let $content = $(".content")
+  //   let component = this;
+  //   if (searchVal.length >= 3){ // min search length for performance
+  //     // this.words.push(searchVal); 
+  //     $content.unmark({
+  //       done: function () {
+  //         $content.mark(searchVal, {
+  //           separateWordSearch: false,
+  //           done: function () {
+  //             component.$results = $content.find("mark");
+  //             component.currentIndex = 0;
+  //             component.jumpTo();
+  //           }
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
 
   // jquery display for text search. Temporary
   display() {
@@ -170,14 +178,12 @@ class KeywordSearch extends React.Component {
      * specified context on input
      */
     function search(e) {
-      // var searchVal = this.value;
-      
       var searchVal = e.target.value;
       // console.log(searchVal);
       // let cleaned_words = this.extractKeywords(searchVal);
 
       if (searchVal.length >= 3){ // min search length for performance
-        // this.words.push(searchVal); 
+        this.searchVals.push(searchVal); 
         $content.unmark({
           done: function () {
             $content.mark(searchVal, {
@@ -248,7 +254,6 @@ class KeywordSearch extends React.Component {
           whiteSpace: "pre-wrap", 
           textAlign: "left", 
           }}>
-          {/* {this.props.text} */}
 
         </div>
       </div>
@@ -256,4 +261,4 @@ class KeywordSearch extends React.Component {
     }
   }
 
-  export default KeywordSearch;
+  export default DocumentDisplay;

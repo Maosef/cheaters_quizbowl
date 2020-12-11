@@ -10,6 +10,7 @@ class QuestionDisplay extends React.Component {
     constructor(props) {
         super(props);
         // this.classes = useStyles();
+        this.read_time_ms = 175;
         this.state = {
             wordIndex: 0, 
             text: "",
@@ -24,7 +25,7 @@ class QuestionDisplay extends React.Component {
         this.setState({words: this.props.text.split(" ")});
         let readerID = setInterval(
             () => this.read(),
-            150
+            this.read_time_ms
         );
         this.setState({readerID: readerID})
     }
@@ -42,7 +43,7 @@ class QuestionDisplay extends React.Component {
 
             let readerID = setInterval(
                 () => this.read(),
-                150
+                this.read_time_ms
             );
             this.setState({readerID: readerID})
         }

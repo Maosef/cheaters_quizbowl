@@ -12,13 +12,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 
 import DocumentSearchBox from '../DocumentSearchBox';
-import Buzzer from '../Buzzer';
 import HighLighter from './Highlighter';
 
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../Styles';
 
-import KeywordSearch from '../KeywordSearch';
+import DocumentDisplay from './DocumentDisplay';
 import HighlightTools from './HighlightTools';
 
 //search bar, and display results
@@ -28,7 +27,7 @@ class Searcher extends React.Component {
         super(props);
         // this.handleBuzz = this.handleBuzz.bind(this);
 
-        this.fetchWikiData = this.fetchWikiData.bind(this);
+        // this.fetchWikiData = this.fetchWikiData.bind(this);
         this.processQuery = this.processQuery.bind(this);
         this.handleHighlight = this.handleHighlight.bind(this);
 
@@ -100,29 +99,29 @@ class Searcher extends React.Component {
 
     
     // fetch wikipedia data
-    fetchWikiData(query) {
+    // fetchWikiData(query) {
 
-        console.log("query: ", query);
-        fetch(`/search_wiki?query=${query}&limit=${this.state.pageLimit}`)
-            // fetch(this.props.server_url + "/search_wiki")
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    // console.log('Result: ', result);
-                    let pages = result.pages;
-                    this.setState({
-                        pages: pages,
-                        isLoading: false,
-                    });
-                },
-                (error) => {
-                    console.log('error');
-                    this.setState({
-                        error
-                    });
-                }
-            )
-    }
+    //     console.log("query: ", query);
+    //     fetch(`/search_wiki?query=${query}&limit=${this.state.pageLimit}`)
+    //         // fetch(this.props.server_url + "/search_wiki")
+    //         .then(res => res.json())
+    //         .then(
+    //             (result) => {
+    //                 // console.log('Result: ', result);
+    //                 let pages = result.pages;
+    //                 this.setState({
+    //                     pages: pages,
+    //                     isLoading: false,
+    //                 });
+    //             },
+    //             (error) => {
+    //                 console.log('error');
+    //                 this.setState({
+    //                     error
+    //                 });
+    //             }
+    //         )
+    // }
 
     // display doc content, log title
     displayText(e, page) {
@@ -238,8 +237,8 @@ class Searcher extends React.Component {
 
                     {/* text display, keyword search */}
                     <Grid item xs={7} >
-                        <KeywordSearch text={this.state.selectedDoc} searchTerms={this.state.curQuery}/>
-                        {/* <KeywordSearch text={this.state.selectedDoc} searchTerms={this.state.question}/> */}
+                        <DocumentDisplay text={this.state.selectedDoc} searchTerms={this.state.curQuery}/>
+                        {/* <DocumentDisplay text={this.state.selectedDoc} searchTerms={this.state.question}/> */}
                         {/* <Highlight_tools /> */}
                     </Grid>
 

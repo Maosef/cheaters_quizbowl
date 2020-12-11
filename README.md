@@ -39,10 +39,6 @@ Run reverse proxy (enables frontend and backend to communicate):
 
 ## Architecture
 
-### Backend
-
-`server.py` - main server
-
 ### Frontend
 - App
     - Login
@@ -51,4 +47,18 @@ Run reverse proxy (enables frontend and backend to communicate):
         - AnswerForm
         - QuestionDisplayUntimed: displays the question
         - Searcher: search articles
-            - KeywordSearch: search by keyword
+            - DocumentDisplay: search by keyword
+
+### Backend
+
+`server.py` - main server
+
+Each game is represented by a `GameManager` object. The frontend hits the API, which calls functions from the `GameManager`.
+
+API endpoints
+* start_new_game
+* advance_question - handles getting the next question, and ending the game. Saves data each time.
+* search_wiki_titles
+* get_document_text
+* answer
+

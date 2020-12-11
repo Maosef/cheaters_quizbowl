@@ -28,8 +28,6 @@ import useStyles from './Styles';
 
 import './App.css';
 
-import KeywordSearch from './KeywordSearch';
-
 
 // main Dashboard. Load question, handle interrupt, load next question
 // preloaded questions for experiment setting
@@ -46,7 +44,6 @@ class Dashboard extends React.Component {
         this.handleBuzz = this.handleBuzz.bind(this);
         // this.fetchData = this.fetchData.bind(this);
         // this.finishQuestion = this.finishQuestion.bind(this);
-        // this.finishQuestion_multi = this.finishQuestion_multi.bind(this);
         this.cleanText = this.cleanText.bind(this);
         this.skipQuestion = this.skipQuestion.bind(this);
         this.logQueryData = this.logQueryData.bind(this);
@@ -117,43 +114,6 @@ class Dashboard extends React.Component {
           return response.json(); // parses JSON response into native JavaScript objects
     }
 
-
-    // fetch data from server
-    // fetchData(question_id) {
-    //     // let id = Math.floor(Math.random() * num_questions);
-
-    //     // fetch(server_url + "/get_question/")
-    //     fetch(server_url + "/api/qanta/v1/" + question_id)
-    //         .then(res => res.json())
-    //         .then(
-    //             (result) => {
-    //                 // console.log('Result: ', result.question);
-    //                 this.setState({
-    //                     isLoaded: true,
-    //                     // question: result.question.replace(/\|\|\|/g,""),
-    //                     question_id: result.qanta_id,
-    //                     question: result.text,
-    //                     answer: result.answer,
-    //                     category: result.category,
-    //                     page: result.page,
-    //                     tokenizations: result.tokenizations,
-    //                     year: result.year,
-    //                     tournament: result.tournament
-    //                 });
-    //             },
-    //             // Note: it's important to handle errors here
-    //             // instead of a catch() block so that we don't swallow
-    //             // exceptions from actual bugs in components.
-    //             (error) => {
-    //                 console.log('error');
-    //                 this.setState({
-    //                     isLoaded: true,
-    //                     error
-    //                 });
-    //             }
-    //         )
-    // }
-
     cleanText(text) { //remove accents, text in parentheses, whitespace and punctuation
         let string_norm = text.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
         let str_no_paren = string_norm.replace(/ *\([^)]*\) */g, "");
@@ -193,15 +153,17 @@ class Dashboard extends React.Component {
     advanceQuestion(){
         this.postRequest(`/advance_question`).then(data => {
             this.setState({game_state: data, interrupted: false});
+
+            let game_state = this.state.game_state;
+            //load the next question
+            if (game_state['game_over']) {
+                alert('Game Finished. Thank you for your time!');
+            } else {
+                console.log("New question");
+            }
         });
 
-        let game_state = this.state.game_state;
-        //load the next question
-        if (game_state['game_over']) {
-            alert('Game Finished. Thank you for your time!');
-        } else {
-            console.log("New question");
-        }
+        
     }
 
     // parse answer form, record data, get score
