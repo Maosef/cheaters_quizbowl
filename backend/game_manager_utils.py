@@ -1,16 +1,19 @@
+import os
+from datetime import datetime
+import csv
+
 import wikipedia
 import wikipediaapi
 
 import unidecode
 import string
+import pandas as pd
 
 from typing import Optional
 import copy
 
-import pandas as pd
-from datetime import datetime
-
 from backend.database import Database
+
 
 db = Database()
 
@@ -60,18 +63,30 @@ class GameManager:
         self._num_questions = self.config['num_questions']
         self._randomize = self.config['randomize']
         self._question_ids = self.config['question_ids']
-        # self._data_path = self.config['data_path'] 
-        self._file_name = None
+        self._file_name = "backend/data/recorded_game_{}.csv".format(str(datetime.today().date()))
+        # self._fieldnames = ['username','session_token','time','question_number','question_id','cur_question','question_data','queries','query_results_map',
+        #     'documents_selected',
+        #     'cur_doc_selected',
+        #     'keyword_searches',
+        #     'player_answer',
+        #     'answer',
+        #     'answer_correct',
+        #     'score',
+        #     'game_over']
+        
 
-        self.state = {}
+        self._username = None
+        self._session_token = None
+        self.state = {} # changes for each question
 
         self.game_history = []
 
     # resets, then starts a new game
-    def start_game(self, player_id: str):
+    def start_game(self, username: str, session_token: str):
 
         self.reset()
-        self._file_name = "backend/data/recorded_game_{}.csv".format(str(datetime.now()))
+        self.state
+        # self._file_name = "backend/data/recorded_game_{}.csv".format(str(datetime.today()))
 
         print("starting new game...")
         # get questions
@@ -88,28 +103,39 @@ class GameManager:
                 question_dict = db.get_question_by_id(question_id)
                 question_dict["text"] = question_dict["text"].replace(chr(160), " ")
                 self.question_data[question_id] = question_dict
-            
+        
         return self.advance_question()
 
     def save_game(self):
-
         df = pd.DataFrame(self.game_history)
         df.to_csv(self._file_name)
         print("saved game to {}".format(self._file_name))
+
+    def save_state(self):
+        df = pd.DataFrame([self.state])
+        df.to_csv(self._file_name, mode='a', header=False)
+        print("saved state to {}".format(self._file_name))
 
     def reset(self):
         print("resetting...")
 
         self.game_history = []
+        # state is organized per question, corresponds to rows
         self.state = {
-            'username': '',
+            'username': self._username,
+            'session_token': self._session_token,
+            'time': str(datetime.utcnow()),
             'question_number': 0, 
             'question_id': '', 
             'cur_question': '', 
             'question_data': {},
+
             'queries': [], 
+            'query_results_map': {}, # map of query to doc search results
             'documents_selected': [],
-            'keyword_searches': [],
+            'cur_doc_selected': '',
+            'keyword_searches': {}, # map of doc to searches
+
             'player_answer': '', 
             'answer': '',
             'answer_correct': None, 
@@ -121,9 +147,17 @@ class GameManager:
     # get next question, advance state
     def advance_question(self):
 
-        # record the previous state
-        self.game_history.append(copy.deepcopy(self.state))
-        self.save_game()
+        print('keywords:', self.state['keyword_searches'])
+        
+        # create log file if it doesn't exist
+        if not os.path.exists(self._file_name):
+            print('creating new file for today: ', self._file_name)
+            df = pd.DataFrame(self.game_history)
+            df.to_csv(self._file_name)
+        elif self.state['question_number'] > 0: # record the current state
+            self.game_history.append(copy.deepcopy(self.state))
+            self.save_state()
+            print('saved state')
 
         cur_question_number = self.state['question_number'] + 1
 
@@ -142,8 +176,9 @@ class GameManager:
         self.state['question_data'] = cur_question
 
         self.state['queries'] = []
+        self.state['query_results_map'] = {}
         self.state['documents_selected'] = []
-        self.state['keyword_searches'] = []
+        self.state['keyword_searches'] = {}
 
         return self.state
 
@@ -177,6 +212,14 @@ class GameManager:
 
         # return (normalized_str_1 == normalized_str_2)
 
+    def search_document_titles(self, query: str):
+        print('searching documents...')
+        results = wikipedia.search(query)
+        self.state['queries'].append(query)
+        self.state['query_results_map'][query] = results
+        return results
+
+    # old
     def search_documents(self, query: str):
 
         results = wikipedia.search(query)
@@ -192,11 +235,6 @@ class GameManager:
         self.documents = pages
         return pages
 
-    def search_document_titles(self, query: str):
-        results = wikipedia.search(query)
-        self.state['queries'].append(query)
-        return results
-
     def get_wiki_document_html(self, page_title: str):
         page = wiki_html.page(page_title)
         html, sections = parse_html_string(page.text)
@@ -204,6 +242,7 @@ class GameManager:
         # html = page.summary + html
         page_dict = {"title": page.title, "html":html, "sections":sections}
         self.state['documents_selected'].append(page_title)
+        self.state['cur_doc_selected'] = page_title
 
         return page_dict
 
@@ -212,3 +251,8 @@ class GameManager:
         
         page_dict = {"title": page.title, "text": page.text}
         return page_dict
+
+    def record_keyword_search(self, keywords):
+        print('keywords', keywords)
+        cur_doc = self.state['cur_doc_selected']
+        self.state['keyword_searches'][cur_doc] = keywords.keywords

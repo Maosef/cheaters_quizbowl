@@ -77,12 +77,12 @@ class Searcher extends React.Component {
     // fetch wikipedia data
     async searchDocuments(query) {
 
-        console.log("query: ", query);
+        console.log("querying: ", query);
         fetch(`/search_wiki_titles?query=${query}`)
             .then(res => res.json())
             .then(
                 (result) => {
-                    console.log('Result: ', result);
+                    console.log('search results: ', result);
                     this.setState({
                         titles: result,
                         isLoading: false,
@@ -163,7 +163,6 @@ class Searcher extends React.Component {
         section_element.parentNode.scrollTop = section_element.offsetTop - section_element.parentNode.offsetTop;
     }
     
-
     render() {
         const { classes } = this.props;
 
@@ -237,7 +236,10 @@ class Searcher extends React.Component {
 
                     {/* text display, keyword search */}
                     <Grid item xs={7} >
-                        <DocumentDisplay text={this.state.selectedDoc} searchTerms={this.state.curQuery}/>
+                        <DocumentDisplay 
+                            text={this.state.selectedDoc} 
+                            searchTerms={this.state.curQuery} 
+                            recordKeywordSearchTerms={this.props.recordKeywordSearchTerms}/>
                         {/* <DocumentDisplay text={this.state.selectedDoc} searchTerms={this.state.question}/> */}
                         {/* <Highlight_tools /> */}
                     </Grid>

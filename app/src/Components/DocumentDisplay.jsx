@@ -5,6 +5,7 @@ import "mark.js"
 import "mark.js/src/jquery.js"
 
 import TextField from '@material-ui/core/TextField';
+import {postRequest} from '../utils';
 
 // search and highlight keywords
 class DocumentDisplay extends React.Component {
@@ -32,7 +33,7 @@ class DocumentDisplay extends React.Component {
     this.display();
   }
 
-  // when query or document changes, update terms in keyword search box, trigger search
+  // when query or document changes, update terms in keyword search box, trigger search, log keyword search data
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       if (prevProps.searchTerms !== this.props.searchTerms) {
@@ -40,8 +41,10 @@ class DocumentDisplay extends React.Component {
       }
       
       // log stored search terms
-      // this.props.
-      this.words = [];
+      // console.log('search vals:', this.searchVals);
+      // // let resp = postRequest(`/record_keyword_search`, {'keywords': this.searchVals});
+      // this.props.recordKeywordSearchTerms(this.searchVals);
+      // this.searchVals = [];
 
       // trigger search
       // this.search(this.props.searchTerms);
@@ -53,26 +56,16 @@ class DocumentDisplay extends React.Component {
   }
 
   componentWillUnmount() {
-    // this.$el.off('change', this.handleInputChange);
     window.removeEventListener('keydown', this.captureSearch);
   }
 
-
-  async recordKeywordSearch() {
-
-    const response = await fetch(`/record_keyword_search`, {
-      method: 'POST',
-      body: JSON.stringify(this.words)
-    });
-    return response.json(); // parses JSON response into native JavaScript objects
-  }
 
   handleInputChange(event) {
     // this.props.onChange(e.target.value);
     this.setState({ searchTerms: event.target.value });
 
     // trigger highlight
-    let searchVal = event.target.value;
+    // let searchVal = event.target.value;
     // this.search(searchVal);
   }
 
@@ -177,27 +170,29 @@ class DocumentDisplay extends React.Component {
      * Searches for the entered keyword in the
      * specified context on input
      */
-    function search(e) {
-      var searchVal = e.target.value;
-      // console.log(searchVal);
-      // let cleaned_words = this.extractKeywords(searchVal);
+    $input.on("input", (e)=>{
+      {
+        var searchVal = e.target.value;
+        if (searchVal.length >= 3){ // min search length for performance
+          // console.log('search vals: ', this.searchVals);
+          // this.searchVals.push(searchVal);
+          this.props.recordKeywordSearchTerms(searchVal);
 
-      if (searchVal.length >= 3){ // min search length for performance
-        $content.unmark({
-          done: function () {
-            $content.mark(searchVal, {
-              separateWordSearch: false,
-              done: function () {
-                $results = $content.find("mark");
-                currentIndex = 0;
-                jumpTo();
-              }
-            });
-          }
-        });
+          $content.unmark({
+            done: function () {
+              $content.mark(searchVal, {
+                separateWordSearch: false,
+                done: function () {
+                  $results = $content.find("mark");
+                  currentIndex = 0;
+                  jumpTo();
+                }
+              });
+            }
+          });
+        }
       }
-    }
-    $input.on("input", search);
+    });
 
     /**
      * Clears the search

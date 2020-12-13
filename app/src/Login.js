@@ -65,11 +65,12 @@ export default class Login extends React.Component<Props, State> {
   }
 
   render() {
+    // redirect to dashboard if there's an existing token
     if (window.sessionStorage.getItem("token")) {
       return <Redirect to="/" />;
     }
 
-    console.log("Login style "+login_css);
+    // console.log("Login style "+login_css);
 
     return (
       <Container maxWidth="xs">

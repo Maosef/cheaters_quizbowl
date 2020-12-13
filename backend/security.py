@@ -98,6 +98,7 @@ async def register(form_data: OAuth2PasswordRequestForm = Depends()):
     print("User already exists")
     return {}
 
+# registers username without password
 @router.post("/register_easy")
 async def register_easy(form_data: OAuth2PasswordRequestForm = Depends()):
     print(

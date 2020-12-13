@@ -32,8 +32,6 @@ import './App.css';
 // main Dashboard. Load question, handle interrupt, load next question
 // preloaded questions for experiment setting
 
-// let server_url = "http://127.0.0.1:8000";
-// let server_url = "http://127.0.0.1:8000/api/qanta/v1/random"
 let server_url = "";
 let num_questions = 20408;
 
@@ -44,21 +42,19 @@ class Dashboard extends React.Component {
         this.handleBuzz = this.handleBuzz.bind(this);
         // this.fetchData = this.fetchData.bind(this);
         // this.finishQuestion = this.finishQuestion.bind(this);
-        this.cleanText = this.cleanText.bind(this);
         this.skipQuestion = this.skipQuestion.bind(this);
         this.logQueryData = this.logQueryData.bind(this);
 
         this.postRequest = this.postRequest.bind(this);
         this.answerQuestion = this.answerQuestion.bind(this);
         this.advanceQuestion = this.advanceQuestion.bind(this);
-
-        //preloaded questions
-        this.question_ids = [181475, 16848, 115844, 26626, 53873, 6449, 15469, 102066, 151976, 90037];
+        this.recordKeywordSearchTerms = this.recordKeywordSearchTerms.bind(this);
 
         this.maxAttempts = 1;
         this.queryData = new Map();
 
-        // this.game_state = {};
+        this.keywords = [];
+
         // mutable state
         this.state = {
 
@@ -80,23 +76,25 @@ class Dashboard extends React.Component {
             isLoaded: false,
             sentenceIndex: 0,
             numAttempts: 1, // number of attempts on current question
+
+            keywords: [],
         }
     }
 
     // on init: authenticate, grab the user data, fetch first question
     componentDidMount() {
-        let question_id = this.question_ids[0];
 
         // start game
-        this.postRequest('start_new_game', {'data':{}}).then(data => {
+        let username = window.sessionStorage.getItem("username");
+        let token = window.sessionStorage.getItem("token");
+        
+        console.log('username and token: ', username, token);
+        this.postRequest('start_new_game', {'username': username, 'session_token': token}).then(data => {
             console.log('new game started, ', data);
-            // this.game_state = data;
             this.setState({game_state: data});
         });
+        // save game progress
     }
-    // componentWillUnmount() {
-    //     alert('unmounting');
-    // }
 
     handleBuzz() {
         this.setState({
@@ -112,14 +110,6 @@ class Dashboard extends React.Component {
             body: JSON.stringify(data)
           });
           return response.json(); // parses JSON response into native JavaScript objects
-    }
-
-    cleanText(text) { //remove accents, text in parentheses, whitespace and punctuation
-        let string_norm = text.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-        let str_no_paren = string_norm.replace(/ *\([^)]*\) */g, "");
-        let cleanText = str_no_paren.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()\s"'”“]/g, "");
-        // alert(cleanText)
-        return cleanText;
     }
 
     answerQuestion(answer) {
@@ -150,7 +140,10 @@ class Dashboard extends React.Component {
         });
     }
 
+    // advance to next question, record keyword search data
     advanceQuestion(){
+        this.postRequest(`/record_keyword_search`, {'keywords': this.keywords});
+        this.keywords = []
         this.postRequest(`/advance_question`).then(data => {
             this.setState({game_state: data, interrupted: false});
 
@@ -161,11 +154,18 @@ class Dashboard extends React.Component {
             } else {
                 console.log("New question");
             }
-        });
-
-        
+        }); 
     }
 
+    recordKeywordSearchTerms(searchVal: str){
+        // this.setState({keywords: this.state.keywords + [searchVal]}) # bug: this clears the search box
+        // check if we're adding a duplicate
+        let cleaned_searchVal = searchVal.trim()
+        if (cleaned_searchVal !== this.keywords[this.keywords.length - 1]) {
+            this.keywords.push(cleaned_searchVal);
+            console.log('keywords: ', this.keywords);
+        }
+    }
     // parse answer form, record data, get score
     // finishQuestion(playerAnswer) {
     //     let state = this.state;
@@ -316,9 +316,8 @@ class Dashboard extends React.Component {
                         
                         {/* document search */}
                         <Grid item xs={12}>
-                            {/* <Paper className={classes.paperBig}> */}
-                            <Searcher sendData={this.logQueryData} />
-                            {/* </Paper> */}
+                            <Searcher sendData={this.logQueryData} 
+                                recordKeywordSearchTerms={this.recordKeywordSearchTerms}/>
                         </Grid>
                         
 

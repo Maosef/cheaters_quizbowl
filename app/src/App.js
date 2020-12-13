@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as s from "./App.css";
 import Dashboard from './Dashboard';
-// import Dashboard from './Dashboard';
 
 import Login from "./Login_dummy";
 import Register from "./Components/Register";
@@ -27,4 +26,3 @@ function App() {
 }
 
 export default App;
-

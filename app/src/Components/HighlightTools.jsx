@@ -5,7 +5,7 @@ export default function HightlightTools(searchCallback) {
     // Ctrl + S
     function captureSearch(e) {
         var selectedText = getSelectedText();
-        if (e.keyCode === 83 && selectedText) {
+        if ((e.ctrlKey || e.metaKey) && e.keyCode === 83 && selectedText) { 
             e.preventDefault();
             // this.searchBar.focus();
 

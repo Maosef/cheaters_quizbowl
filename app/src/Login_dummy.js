@@ -1,3 +1,5 @@
+// dummy Login page, takes username only
+
 import * as React from "react";
 import { Redirect } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
@@ -56,6 +58,7 @@ export default class Login extends React.Component<Props, State> {
         if ("access_token" in result) {
           let token = result["access_token"];
           window.sessionStorage.setItem("token", token);
+          window.sessionStorage.setItem("username", this.state.username);
           this.setState({ username: this.state.username });
         } else {
           this.setState({ username: "", password: "", username_helper:"Username already used", password_helper:"" });

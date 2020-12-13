@@ -15,9 +15,13 @@ import copy
 from backend.game_manager_utils import GameManager 
 
 class PlayerRequest(BaseModel):
-    # name: str
-    # description: Optional[str] = None
-    data: Optional[dict] = None
+    username: Optional[str] = None
+    session_token: Optional[str] = None
+    # data: Optional[dict] = None
+
+class Keywords(BaseModel):
+
+    keywords: Optional[list] = None
 
 app = FastAPI()
 origins = [
@@ -57,8 +61,7 @@ def read_root():
 def start_new_game(player_request: PlayerRequest):
 
     # print(player_request)
-    player_id = 'andrew'
-    game_manager.start_game(player_id)
+    game_manager.start_game(player_request.username, player_request.session_token)
     return game_manager.state
 
 @app.post("/advance_question")
@@ -79,6 +82,11 @@ def get_document_text(title: str):
 @app.get("/get_document_html")
 def get_document_html(title: str):
     return game_manager.get_wiki_document_html(title)
+
+@app.post("/record_keyword_search")
+def record_keyword_search(keywords: Keywords):
+    game_manager.record_keyword_search(keywords)
+    return game_manager.state
 
 # answer
 @app.post("/answer")
