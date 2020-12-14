@@ -12,11 +12,15 @@ class Buzzer extends React.Component {
       this.handleShortcut = this.handleShortcut.bind(this);
       this.countdown = this.countdown.bind(this);
       
+    }
+
+    componentDidMount() {
       document.onkeydown = this.handleShortcut;
     }
 
     // keyboard shortcut to focus
     handleShortcut(e) {
+        console.log('keypress')
         if ((e.ctrlKey || e.metaKey) && e.keyCode === 32 && this.isToggled === false) {
         // if (e.keyCode === 32 && this.isToggled == false && document.activeElement.tagName == 'BODY') {
           this.isToggled = true;

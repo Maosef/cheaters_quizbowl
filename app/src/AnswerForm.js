@@ -16,6 +16,11 @@ class AnswerForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         // this.handleClick = this.handleClick.bind(this);
         this.handleShortcut = this.handleShortcut.bind(this);
+        
+    }
+
+    componentDidMount() {
+        // document.onkeydown = this.handleShortcut;
         window.addEventListener("keydown", this.handleShortcut);
     }
 
@@ -34,7 +39,7 @@ class AnswerForm extends React.Component {
     handleShortcut(e) {
         if ((e.ctrlKey || e.metaKey) && e.keyCode === 32 && this.textInput.current) {
         // if (e.keyCode === 32 && this.textInput.current && document.activeElement.tagName == 'BODY') {
-          console.log(document.activeElement.tagName)
+        //   console.log(document.activeElement.tagName)
           e.preventDefault();
         //   console.log(this.textInput);
           this.textInput.current.focus();
