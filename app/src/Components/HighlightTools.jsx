@@ -1,18 +1,26 @@
 
 export default function HightlightTools(searchCallback) {
 
+    let activated = false;
+
     // listen for shortcut key and highlight
     // Ctrl + S
     function captureSearch(e) {
         var selectedText = getSelectedText();
-        if ((e.ctrlKey || e.metaKey) && e.keyCode === 83 && selectedText) { 
+        if (!activated && (e.ctrlKey || e.metaKey) && e.keyCode === 83 && selectedText) { 
+        // if (!activated && e.keyCode === 83) { 
             e.preventDefault();
+            activated = true;
             // this.searchBar.focus();
 
             searchCallback(selectedText);
         }
     }
-  
+    
+    function deactivateShortcut(e) {
+        activated = false;
+    }
+
     function getSelectedText() {
         var text = "";
         if (typeof window.getSelection != "undefined") {
@@ -30,7 +38,6 @@ export default function HightlightTools(searchCallback) {
         }
     }
     
-    // document.onmouseup = doSomethingWithSelectedText;
-    // document.onkeyup = doSomethingWithSelectedText;
-    window.addEventListener("keydown", captureSearch);
+    document.onkeydown = captureSearch;
+    document.onkeyup = deactivateShortcut;
 }

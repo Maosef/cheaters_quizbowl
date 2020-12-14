@@ -21,7 +21,7 @@ class PlayerRequest(BaseModel):
 
 class Keywords(BaseModel):
 
-    keywords: Optional[list] = None
+    keywords: Optional[dict] = None
 
 app = FastAPI()
 origins = [

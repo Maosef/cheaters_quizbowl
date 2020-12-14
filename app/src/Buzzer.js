@@ -11,14 +11,16 @@ class Buzzer extends React.Component {
       this.handleClick = this.handleClick.bind(this);
       this.handleShortcut = this.handleShortcut.bind(this);
       this.countdown = this.countdown.bind(this);
-      window.addEventListener("keydown", this.handleShortcut);
+      
+      document.onkeydown = this.handleShortcut;
     }
 
     // keyboard shortcut to focus
     handleShortcut(e) {
-        if ((e.ctrlKey || e.metaKey) && e.keyCode === 32 && this.isToggled == false) {
+        if ((e.ctrlKey || e.metaKey) && e.keyCode === 32 && this.isToggled === false) {
         // if (e.keyCode === 32 && this.isToggled == false && document.activeElement.tagName == 'BODY') {
           this.isToggled = true;
+          
           e.preventDefault();
           this.handleClick();
           console.log('buzzed, ', this.isToggled);
@@ -46,7 +48,6 @@ class Buzzer extends React.Component {
         }
     }
     render() {
-
       return <Button variant="contained" color="primary" onClick={this.handleClick}>
          {this.state.time}
              </Button>;

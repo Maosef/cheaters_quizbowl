@@ -49,11 +49,12 @@ class Dashboard extends React.Component {
         this.answerQuestion = this.answerQuestion.bind(this);
         this.advanceQuestion = this.advanceQuestion.bind(this);
         this.recordKeywordSearchTerms = this.recordKeywordSearchTerms.bind(this);
+        this.updateCurrentDocument = this.updateCurrentDocument.bind(this);
 
         this.maxAttempts = 1;
         this.queryData = new Map();
 
-        this.keywords = [];
+        this.keywords = {};
 
         // mutable state
         this.state = {
@@ -143,7 +144,7 @@ class Dashboard extends React.Component {
     // advance to next question, record keyword search data
     advanceQuestion(){
         this.postRequest(`/record_keyword_search`, {'keywords': this.keywords});
-        this.keywords = []
+        this.keywords = {};
         this.postRequest(`/advance_question`).then(data => {
             this.setState({game_state: data, interrupted: false});
 
@@ -157,15 +158,29 @@ class Dashboard extends React.Component {
         }); 
     }
 
+    // update keywords dict
     recordKeywordSearchTerms(searchVal: str){
         // this.setState({keywords: this.state.keywords + [searchVal]}) # bug: this clears the search box
-        // check if we're adding a duplicate
+        
         let cleaned_searchVal = searchVal.trim()
-        if (cleaned_searchVal !== this.keywords[this.keywords.length - 1]) {
-            this.keywords.push(cleaned_searchVal);
+        let doc_title = this.state.game_state['cur_doc_selected'];
+        if (!this.keywords.hasOwnProperty(doc_title)){
+            this.keywords[doc_title] = [];
+        }
+
+        let doc_searchVals = this.keywords[this.state.game_state['cur_doc_selected']]
+        // check if we're adding a duplicate
+        if (cleaned_searchVal !== doc_searchVals[doc_searchVals.length - 1]) {
+            doc_searchVals.push(cleaned_searchVal);
             console.log('keywords: ', this.keywords);
         }
     }
+
+    updateCurrentDocument(doc_title: str){
+        // console.log('keywords: ', this.keywords);
+        this.state.game_state['cur_doc_selected'] = doc_title;
+    }
+
     // parse answer form, record data, get score
     // finishQuestion(playerAnswer) {
     //     let state = this.state;
@@ -317,7 +332,8 @@ class Dashboard extends React.Component {
                         {/* document search */}
                         <Grid item xs={12}>
                             <Searcher sendData={this.logQueryData} 
-                                recordKeywordSearchTerms={this.recordKeywordSearchTerms}/>
+                                recordKeywordSearchTerms={this.recordKeywordSearchTerms}
+                                updateCurrentDocument={this.updateCurrentDocument}/>
                         </Grid>
                         
 
@@ -345,7 +361,7 @@ class Dashboard extends React.Component {
                             Buzz/Answer: <code>Ctrl-space</code> <br />
                             Query: <code>Ctrl-D</code> <br />
                             Keyword search: <code>Ctrl-F</code> <br />
-                            Query highlighted text: <code>s</code> <br />
+                            Query highlighted text: <code>Ctrl+s</code> <br />
                             {/* Hit <code>Continue</code> to reveal the next clue. <br /> */}
                             Type <code>Enter</code> to submit your answer. You get one attempt.
 

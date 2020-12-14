@@ -97,31 +97,6 @@ class Searcher extends React.Component {
             )
     }
 
-    
-    // fetch wikipedia data
-    // fetchWikiData(query) {
-
-    //     console.log("query: ", query);
-    //     fetch(`/search_wiki?query=${query}&limit=${this.state.pageLimit}`)
-    //         // fetch(this.props.server_url + "/search_wiki")
-    //         .then(res => res.json())
-    //         .then(
-    //             (result) => {
-    //                 // console.log('Result: ', result);
-    //                 let pages = result.pages;
-    //                 this.setState({
-    //                     pages: pages,
-    //                     isLoading: false,
-    //                 });
-    //             },
-    //             (error) => {
-    //                 console.log('error');
-    //                 this.setState({
-    //                     error
-    //                 });
-    //             }
-    //         )
-    // }
 
     // display doc content, log title
     displayText(e, page) {
@@ -136,6 +111,7 @@ class Searcher extends React.Component {
     }
 
     async getDocument(e, title) {
+        this.props.updateCurrentDocument(title);
         fetch(`get_document_html/?title=${title}`)
             .then(response => response.json())
             .then(data => {

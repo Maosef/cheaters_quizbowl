@@ -149,15 +149,18 @@ class GameManager:
 
         print('keywords:', self.state['keyword_searches'])
         
-        # create log file if it doesn't exist
-        if not os.path.exists(self._file_name):
-            print('creating new file for today: ', self._file_name)
-            df = pd.DataFrame(self.game_history)
-            df.to_csv(self._file_name)
-        elif self.state['question_number'] > 0: # record the current state
-            self.game_history.append(copy.deepcopy(self.state))
-            self.save_state()
-            print('saved state')
+        
+        if self.state['question_number'] > 0: # record the current state
+            # create log file if it doesn't exist
+            if not os.path.exists(self._file_name):
+                print('creating new file for today: ', self._file_name)
+                df = pd.DataFrame([self.state])
+                print(df)
+                df.to_csv(self._file_name)
+            else:
+                # self.game_history.append(copy.deepcopy(self.state))
+                self.save_state()
+                print('saved state')
 
         cur_question_number = self.state['question_number'] + 1
 
@@ -254,5 +257,5 @@ class GameManager:
 
     def record_keyword_search(self, keywords):
         print('keywords', keywords)
-        cur_doc = self.state['cur_doc_selected']
-        self.state['keyword_searches'][cur_doc] = keywords.keywords
+        # cur_doc = self.state['cur_doc_selected']
+        self.state['keyword_searches'] = keywords.keywords
