@@ -20,7 +20,6 @@ class Buzzer extends React.Component {
 
     // keyboard shortcut to focus
     handleShortcut(e) {
-        console.log('keypress')
         if ((e.ctrlKey || e.metaKey) && e.keyCode === 32 && this.isToggled === false) {
         // if (e.keyCode === 32 && this.isToggled == false && document.activeElement.tagName == 'BODY') {
           this.isToggled = true;
@@ -57,6 +56,5 @@ class Buzzer extends React.Component {
              </Button>;
     }
   }
-
 
 export default Buzzer;

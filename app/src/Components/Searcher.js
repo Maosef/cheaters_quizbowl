@@ -20,6 +20,8 @@ import useStyles from '../Styles';
 import DocumentDisplay from './DocumentDisplay';
 import HighlightTools from './HighlightTools';
 
+import TextField from '@material-ui/core/TextField';
+
 //search bar, and display results
 
 class Searcher extends React.Component {
@@ -28,26 +30,36 @@ class Searcher extends React.Component {
         // this.handleBuzz = this.handleBuzz.bind(this);
 
         // this.fetchWikiData = this.fetchWikiData.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
         this.processQuery = this.processQuery.bind(this);
-        this.handleHighlight = this.handleHighlight.bind(this);
+        // this.handleHighlight = this.handleHighlight.bind(this);
+        this.textInput = React.createRef();
+        this.shortcutKeyCode = 68;
 
         this.state = {
             // pages: [],
             curPage: {'sections':[]},
 
             curQuery: "",
-            // curTitle: "",
+            curTitle: "",
             titles: [],
             
-            selectedDoc: '',
+            selectedDoc: '', // HTML of doc
             isLoading: false,
             pageLimit: 8
         };
 
         this.queryData = new Map()
 
+    }
+
+    componentDidMount() {
         // shortcut to search from highlight
         HighlightTools(this.processQuery);
+    }
+
+    handleInputChange(event) {
+        this.setState({ curQuery: event.target.value });
     }
 
     // fetch data and log query
@@ -124,15 +136,15 @@ class Searcher extends React.Component {
             });
     }
 
-    handleHighlight(selection) {
-        //do something with selection
-        console.log(selection);
-        // console.log(this);
+    // handleHighlight(selection) {
+    //     //do something with selection
+    //     console.log(selection);
+    //     // console.log(this);
 
-        this.queryData.get(this.state.curQuery).get(this.state.curTitle).push(selection);
-        this.props.sendData(this.queryData);
-        // console.log(this.queryData);
-    }
+    //     this.queryData.get(this.state.curQuery).get(this.state.curTitle).push(selection);
+    //     this.props.sendData(this.queryData);
+    //     // console.log(this.queryData);
+    // }
 
     scrollToSection(section_title) {
         let section_element = document.getElementById(section_title);
@@ -177,7 +189,27 @@ class Searcher extends React.Component {
                     {/* document search */}
                     <Grid item xs={4}>
                         <Grid container spacing={3}>
-                            <DocumentSearchBox onSubmit={(query) => this.processQuery(query)} label="Search Documents..." />
+                            <DocumentSearchBox onSubmit={(query) => this.processQuery(query)} 
+                                label="Search Documents..." 
+                                curQuery={this.state.curQuery}
+                                handleInputChange={this.handleInputChange}/>
+                            {/* <form onSubmit={(query) => this.processQuery(query)} className={classes.root} noValidate autoComplete="off" 
+                                style={{"display": "flex", "alignItems": "center"}}>
+                                <TextField 
+                                    inputRef={this.textInput}
+                                    value={this.state.curQuery} 
+                                    onChange={this.handleChange} 
+                                    id="answer_box" 
+                                    label="Search Documents..."
+                                    variant="outlined" 
+                                    // defaultValue={this.props.curQuery}
+                                />
+                                <div style={{padding: 20}}>
+                                    <Button variant="contained" color="primary" onClick={this.handleSubmit}>
+                                        Submit
+                                    </Button>
+                                </div>
+                            </form> */}
                             {/* article, section display */}
                             <Grid item xs={6}>
                                 {loadingIcon}
@@ -216,7 +248,6 @@ class Searcher extends React.Component {
                             text={this.state.selectedDoc} 
                             searchTerms={this.state.curQuery} 
                             recordKeywordSearchTerms={this.props.recordKeywordSearchTerms}/>
-                        {/* <DocumentDisplay text={this.state.selectedDoc} searchTerms={this.state.question}/> */}
                         {/* <Highlight_tools /> */}
                     </Grid>
 

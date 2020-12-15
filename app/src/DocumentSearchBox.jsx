@@ -10,7 +10,7 @@ class DocumentSearchBox extends React.Component {
         this.state = { answer: '' };
 
         this.textInput = React.createRef();
-        this.shortcutKeyCode = 68;
+        this.shortcutKeyCode = 83;
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -19,23 +19,24 @@ class DocumentSearchBox extends React.Component {
     }
 
     handleChange(event) {
-        this.setState({ answer: event.target.value });
+        // this.setState({ answer: event.target.value });
+        this.props.handleInputChange(event);
     }
 
     handleSubmit(event) {
         // alert('You submitted: ' + this.state.answer);
         event.preventDefault();
-        // this.setState({answer: ''});
-        this.props.onSubmit(this.state.answer);
+        this.props.onSubmit(this.props.curQuery);
     }
 
     // keyboard shortcut to focus
     handleShortcut(e) {
         
         if ((e.ctrlKey || e.metaKey) && e.keyCode === this.shortcutKeyCode && this.textInput.current) {
-          e.preventDefault();
+            e.preventDefault();
         //   console.log(this.textInput);
-          this.textInput.current.focus();
+            // this.setState({answer: });
+            this.textInput.current.focus();
         }
     }
 
@@ -46,11 +47,12 @@ class DocumentSearchBox extends React.Component {
                 style={{"display": "flex", "alignItems": "center"}}>
                 <TextField 
                     inputRef={this.textInput}
-                    value={this.state.answer} 
+                    value={this.props.curQuery} 
                     onChange={this.handleChange} 
                     id="answer_box" 
-                    label={this.props.label} 
+                    label={"Search Documents (Ctrl-s)"} 
                     variant="outlined" 
+                    // defaultValue={this.props.curQuery}
                 />
                 <div style={{padding: 20}}>
                     <Button variant="contained" color="primary" onClick={this.handleSubmit}>

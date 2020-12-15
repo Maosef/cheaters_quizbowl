@@ -57,7 +57,7 @@ class AnswerForm extends React.Component {
                     value={this.state.answer} 
                     onChange={this.handleChange} 
                     id="answer_box" 
-                    label={this.props.label} 
+                    label={"Answer"} 
                     variant="outlined" 
                 />
                 {/* <div style={{padding: 20}}>

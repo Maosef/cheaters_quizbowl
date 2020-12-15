@@ -91,13 +91,14 @@ class GameManager:
         print("starting new game...")
         # get questions
         if self.config['randomize']:
-            for i in range(self._num_questions):
-                q = db.get_random_question()
-                # only get questions that have a page field
-                while not q['page']:
-                    q = db.get_random_question()
-                self._question_ids.append(q['qanta_id'])
-                self.question_data[q['qanta_id']] = q
+            # for i in range(self._num_questions):
+            #     q = db.get_random_question()
+            #     # only get questions that have a page field
+            #     while not q['page']:
+            #         q = db.get_random_question()
+            #     self._question_ids.append(q['qanta_id'])
+            #     self.question_data[q['qanta_id']] = q
+            pass
         else:
             for question_id in self._question_ids:
                 question_dict = db.get_question_by_id(question_id)
@@ -136,6 +137,7 @@ class GameManager:
             'cur_doc_selected': '',
             'keyword_searches': {}, # map of doc to searches
 
+            'buzz_word_index': -1,
             'player_answer': '', 
             'answer': '',
             'answer_correct': None, 
@@ -148,7 +150,6 @@ class GameManager:
     def advance_question(self):
 
         print('keywords:', self.state['keyword_searches'])
-        
         
         if self.state['question_number'] > 0: # record the current state
             # create log file if it doesn't exist
@@ -169,8 +170,18 @@ class GameManager:
             self.state['game_over'] = True
             return self.state
         
-        cur_question_id = self._question_ids[cur_question_number - 1]
-        cur_question = self.question_data[cur_question_id]
+        if self.config['randomize']:
+            q = db.get_random_question()
+            # only get questions that have a page field
+            while not q['page']:
+                q = db.get_random_question()
+            # self._question_ids.append(q['qanta_id'])
+            # self.question_data[q['qanta_id']] = q
+            cur_question_id = q['qanta_id']
+            cur_question = q
+        else:
+            cur_question_id = self._question_ids[cur_question_number - 1]
+            cur_question = self.question_data[cur_question_id]
 
         # update state
         self.state['question_number'] = cur_question_number
@@ -181,16 +192,26 @@ class GameManager:
         self.state['queries'] = []
         self.state['query_results_map'] = {}
         self.state['documents_selected'] = []
+        self.state['cur_doc_selected'] = ''
         self.state['keyword_searches'] = {}
+        self.state['buzz_word_index'] = -1
 
         return self.state
 
+    def buzz(self, word_index):
+        self.state['buzz_word_index'] = word_index
+        return True
+
     def process_answer(self, player_answer):
         question_id = self.state['question_id']
-        ground_truth = self.question_data[question_id]['page']
-        self.state['answer_correct'] = self.answer_match(player_answer, ground_truth)
+        ground_truth = self.state['question_data']['page']
+        answer_correct = self.answer_match(player_answer, ground_truth)
+        self.state['answer_correct'] = answer_correct
         self.state['player_answer'] = player_answer
         self.state['answer'] = ground_truth
+
+        if answer_correct:
+            self.state['score'] += 10
 
         return self.state
 
@@ -208,12 +229,6 @@ class GameManager:
         # print(len(set(player_answer_words)), len(set(ground_truth_words)))
         # print(set(player_answer_words) & set(ground_truth_words), len(set(player_answer_words).intersection(set(ground_truth_words))))
         return len(set(player_answer_words) & set(ground_truth_words)) > 0
-        # normalized_str_1 = unidecode.unidecode(player_answer).lower().translate(str.maketrans('', '', string.punctuation))
-        # normalized_str_2 = unidecode.unidecode(ground_truth).lower().translate(str.maketrans('', '', string.punctuation))
-
-        # print(normalized_str_1, normalized_str_2)
-
-        # return (normalized_str_1 == normalized_str_2)
 
     def search_document_titles(self, query: str):
         print('searching documents...')

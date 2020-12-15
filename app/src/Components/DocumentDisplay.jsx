@@ -33,25 +33,17 @@ class DocumentDisplay extends React.Component {
     this.display();
   }
 
-  // when query or document changes, update terms in keyword search box, trigger search, log keyword search data
+  // when query or document changes, update terms in keyword search box, trigger search
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
-      if (prevProps.searchTerms !== this.props.searchTerms) {
+      // document changed
+      if (prevProps.text !== this.props.text) {
         this.setState({ searchTerms: this.props.searchTerms });
+        // typeset math
+        window.MathJax.typeset()
+        // trigger search
+        $("input[type='search']").val(this.props.searchTerms).trigger("input");
       }
-      
-      // log stored search terms
-      // console.log('search vals:', this.searchVals);
-      // // let resp = postRequest(`/record_keyword_search`, {'keywords': this.searchVals});
-      // this.props.recordKeywordSearchTerms(this.searchVals);
-      // this.searchVals = [];
-
-      // trigger search
-      // this.search(this.props.searchTerms);
-      $("input[type='search']").val(this.props.searchTerms).trigger("input");
-
-      // typeset math
-      window.MathJax.typeset()
     }
   }
 
@@ -228,7 +220,7 @@ class DocumentDisplay extends React.Component {
         {/* search bar */}
         <div className="keyword-search-navbar">
             <input type="search"  
-              placeholder="Search keywords" 
+              placeholder="Search keywords (Ctrl-f)" 
               ref={(input) => { this.searchBar = input; }}
               // value={this.state.searchTerms}
               // onChange={this.handleInputChange}

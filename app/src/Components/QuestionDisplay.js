@@ -50,16 +50,17 @@ class QuestionDisplay extends React.Component {
     }
 
     read() {
-        if (this.state.wordIndex >= this.state.words.length) {
+        if (this.props.wordIndex >= this.state.words.length) {
             clearInterval(this.state.readerID);
         } else if (this.props.interrupted){
             this.setState({
                 text: this.state.text});
         } else {
             this.setState({
-                text: this.state.text + " " + this.state.words[this.state.wordIndex],
-                wordIndex: this.state.wordIndex + 1
-              });
+                text: this.state.text + " " + this.state.words[this.props.wordIndex],
+                // wordIndex: this.props.wordIndex + 1
+            });
+            this.props.updateWordIndex();
         }
     }
 

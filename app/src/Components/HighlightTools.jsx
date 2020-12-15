@@ -41,3 +41,28 @@ export default function HightlightTools(searchCallback) {
     document.onkeydown = captureSearch;
     document.onkeyup = deactivateShortcut;
 }
+
+export function KeyboardShortcutHandler(keyCode, searchCallback) {
+
+    let activated = false;
+
+    // listen for shortcut key and highlight
+    // Ctrl + S
+    function captureSearch(e) {
+        if (!activated && (e.ctrlKey || e.metaKey) && e.keyCode === keyCode) { 
+        // if (!activated && e.keyCode === 83) { 
+            e.preventDefault();
+            activated = true;
+            // this.searchBar.focus();
+
+            searchCallback();
+        }
+    }
+    
+    function deactivateShortcut(e) {
+        activated = false;
+    }
+    
+    document.onkeydown = captureSearch;
+    document.onkeyup = deactivateShortcut;
+}

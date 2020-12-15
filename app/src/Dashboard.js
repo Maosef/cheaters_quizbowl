@@ -15,9 +15,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Navbar from './Navbar'
 
 import AnswerForm from './AnswerForm';
-import Buzzer from './Buzzer';
-import Button_React from './Button_React'
-import ContinueButton from './ContinueButton';
+// import Buzzer from './Buzzer';
+import Buzzer from './Components/BuzzerUntimed';
+import Button_React from './Components/Button_React'
+import ContinueButton from './Components/ContinueButton';
 
 // import QuestionDisplay from './Components/QuestionDisplayUntimed';
 import QuestionDisplay from './Components/QuestionDisplay';
@@ -39,7 +40,10 @@ let num_questions = 20408;
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
+        
+        this.handleShortcut = this.handleShortcut.bind(this);
         this.handleBuzz = this.handleBuzz.bind(this);
+        
         // this.fetchData = this.fetchData.bind(this);
         // this.finishQuestion = this.finishQuestion.bind(this);
         this.skipQuestion = this.skipQuestion.bind(this);
@@ -50,6 +54,9 @@ class Dashboard extends React.Component {
         this.advanceQuestion = this.advanceQuestion.bind(this);
         this.recordKeywordSearchTerms = this.recordKeywordSearchTerms.bind(this);
         this.updateCurrentDocument = this.updateCurrentDocument.bind(this);
+
+        this.handleShortcut = this.handleShortcut.bind(this);
+        this.deactivateShortcut = this.deactivateShortcut.bind(this);
 
         this.maxAttempts = 1;
         this.queryData = new Map();
@@ -79,6 +86,8 @@ class Dashboard extends React.Component {
             numAttempts: 1, // number of attempts on current question
 
             keywords: [],
+            shortcutToggled: false,
+            wordIndex: 0
         }
     }
 
@@ -94,14 +103,33 @@ class Dashboard extends React.Component {
             console.log('new game started, ', data);
             this.setState({game_state: data});
         });
-        // save game progress
+
+        window.addEventListener("keydown", this.handleShortcut);
+        window.addEventListener("keyup", this.deactivateShortcut);
     }
 
+    // keyboard shortcut to buzz
+    handleShortcut(e) {
+        // if ((e.ctrlKey || e.metaKey) && e.keyCode === 32 && this.state.isToggled === false) {
+        if (e.keyCode === 32 && this.state.shortcutToggled === false && document.activeElement.tagName == 'BODY') {
+          this.setState({shortcutToggled: true});
+          
+          e.preventDefault();
+          this.handleBuzz();
+          console.log('buzzed, ', this.shortcutToggled);
+        }
+    }
+
+    deactivateShortcut(e) {
+        this.setState({shortcutToggled: false});
+    }
+
+    // record buzz location
     handleBuzz() {
+        this.postRequest(`/buzz?word_index=${this.state.wordIndex}`);
         this.setState({
-            interrupted: true
+            interrupted: !this.state.interrupted
         });
-        console.log('interrupted', this.state.interrupted);
     }
 
     async postRequest(url, data={}) {
@@ -121,11 +149,7 @@ class Dashboard extends React.Component {
             // parse answer for correctness
             if (game_state['answer_correct']) {
                 // let points = state.tokenizations.length - state.sentenceIndex;
-                let points = 10
-                alert("Correct. Answer is " + game_state['answer'] + ". Points added: " + points);
-                game_state['score'] += points;
-                console.log('score', game_state['score']);
-                this.setState({game_state: game_state});
+                alert("Correct. Answer is " + game_state['answer'] + ". Score: " + game_state['score']);
                 this.advanceQuestion();
             } else { // wrong answer
                 // console.log("Attempts", this.state.numAttempts, this.maxAttempts)
@@ -145,8 +169,9 @@ class Dashboard extends React.Component {
     advanceQuestion(){
         this.postRequest(`/record_keyword_search`, {'keywords': this.keywords});
         this.keywords = {};
+
         this.postRequest(`/advance_question`).then(data => {
-            this.setState({game_state: data, interrupted: false});
+            this.setState({game_state: data, interrupted: false, wordIndex: 0});
 
             let game_state = this.state.game_state;
             //load the next question
@@ -301,7 +326,9 @@ class Dashboard extends React.Component {
                                     <AnswerForm onSubmit={this.answerQuestion} label="Answer" />
                                 </div>
                                 <div style={{padding: 10}}>
-                                    <Buzzer onClick={this.handleBuzz} onTimeout={this.advanceQuestion} />
+                                    <Buzzer onClick={this.handleBuzz} 
+                                        onTimeout={this.advanceQuestion} 
+                                        interrupted={this.state.interrupted}/>
                                 </div>
                                 <div style={{padding: 10}}>
                                     <Button variant="contained" color="secondary" onClick={this.advanceQuestion}>
@@ -323,7 +350,9 @@ class Dashboard extends React.Component {
                                     <QuestionDisplay
                                         text={this.state.game_state['question_data']['text']}
                                         interrupted={this.state.interrupted}
-                                        updateSentencePosition={(index) => this.setState({ sentenceIndex: index })} />
+                                        updateSentencePosition={(index) => this.setState({ sentenceIndex: index })}
+                                        wordIndex={this.state.wordIndex}
+                                        updateWordIndex={() => this.setState({wordIndex: this.state.wordIndex + 1})}/>
                                     : "Loading..."
                                 }
                             </Paper>
@@ -342,10 +371,12 @@ class Dashboard extends React.Component {
                                 <Paper className={classes.paper}>
                                 
                                 Statistics <br /><br />
-                                Category: {this.state.game_state['question_data']['category']} <br />
+                                
                                     {/* Answer: {this.state.page} <br /> */}
                                 Score: {this.state.game_state['score']} <br />
-                                Number of Questions seen: {question_data['numSeen']} <br />
+                                Question Number: {this.state.game_state['question_number']} <br />
+                                Question ID: {this.state.game_state['question_id']} <br />
+                                Category: {this.state.game_state['question_data']['category']} <br />
                                 {question_data['tournament']} {question_data['year']}
                                 
                                 </Paper>
@@ -358,10 +389,9 @@ class Dashboard extends React.Component {
                             You may use the internal search engine to search Wikipedia articles.
                             Using the keyword search is encouraged! <br /> <br />
                             Keyboard shortcuts: <br />
-                            Buzz/Answer: <code>Ctrl-space</code> <br />
-                            Query: <code>Ctrl-D</code> <br />
-                            Keyword search: <code>Ctrl-F</code> <br />
-                            Query highlighted text: <code>Ctrl+s</code> <br />
+                            Buzz: <code>space</code> <br />
+                            Query: <code>Ctrl-s</code>. Also auto-searches highlighted text. <br />
+                            Keyword search: <code>Ctrl-f</code> <br />
                             {/* Hit <code>Continue</code> to reveal the next clue. <br /> */}
                             Type <code>Enter</code> to submit your answer. You get one attempt.
 

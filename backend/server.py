@@ -64,6 +64,16 @@ def start_new_game(player_request: PlayerRequest):
     game_manager.start_game(player_request.username, player_request.session_token)
     return game_manager.state
 
+@app.post("/buzz")
+def buzz(word_index: int):
+    return game_manager.buzz(word_index)
+
+# answer
+@app.post("/answer")
+def answer(answer: str):
+    state = game_manager.process_answer(answer)
+    return state
+    
 @app.post("/advance_question")
 def advance_question():
     return game_manager.advance_question()
@@ -87,12 +97,6 @@ def get_document_html(title: str):
 def record_keyword_search(keywords: Keywords):
     game_manager.record_keyword_search(keywords)
     return game_manager.state
-
-# answer
-@app.post("/answer")
-def answer(answer: str):
-    state = game_manager.process_answer(answer)
-    return state
 
 # search wikipedia. get titles
 @app.get("/search_wiki_titles")
