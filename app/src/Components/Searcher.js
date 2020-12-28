@@ -124,7 +124,7 @@ class Searcher extends React.Component {
 
     async getDocument(e, title) {
         this.props.updateCurrentDocument(title);
-        fetch(`get_document_html/?title=${title}`)
+        fetch(`get_document_html?title=${title}`)
             .then(response => response.json())
             .then(data => {
                 // console.log(data);
@@ -166,13 +166,13 @@ class Searcher extends React.Component {
             </ListItem>
         );
 
-        const sections = this.state.curPage.sections.map((section) =>
+        //const sections = this.state.curPage.sections.map((section) =>
             // <a href={"#" + section['title'] }>{section['title']}</a>
-            <ListItem button onClick={(e) => this.scrollToSection(section['title'])} 
-                key={section['title'].toString()}>
-                <ListItemText primary={section['title']} />
-            </ListItem>
-        )
+          //  <ListItem button onClick={(e) => this.scrollToSection(section['title'])} 
+            //    key={section['title'].toString()}>
+              //  <ListItemText primary={section['title']} />
+            //</ListItem>
+        //)
 
         // loading icon
         let loadingIcon;
@@ -234,7 +234,7 @@ class Searcher extends React.Component {
                                         whiteSpace: "pre-wrap", 
                                         textAlign: "left", 
                                         }}>
-                                    {sections}
+                                    {/*sections*/}
                                 </List>
                             </Grid>
                         </Grid>

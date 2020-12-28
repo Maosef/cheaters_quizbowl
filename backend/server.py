@@ -91,6 +91,7 @@ def get_document_text(title: str):
 # get document
 @app.get("/get_document_html")
 def get_document_html(title: str):
+    print("get doc endpoint")
     return game_manager.get_wiki_document_html(title)
 
 @app.post("/record_keyword_search")
