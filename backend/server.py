@@ -2,17 +2,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from backend.database import Database
 from backend import qanta
 from backend import security
-from backend.database import Database
+from backend.game_manager_utils import GameManager 
 
 import wikipedia
 import wikipediaapi
 
 from typing import Optional
 import copy
+import requests
 
-from backend.game_manager_utils import GameManager 
 
 class PlayerRequest(BaseModel):
     username: Optional[str] = None
@@ -42,6 +43,8 @@ app.add_middleware(
 # app.include_router(qanta.router, prefix="/api/qanta/v1")
 app.include_router(security.router, prefix="/token")
 app.include_router(qanta.router)
+# app.include_router(search_engine.router, prefix="/search")
+
 
 
 QUESTION_IDS = [16848, 115844, 26626, 53873, 6449, 15469, 102066, 151976, 90037, 181475]
@@ -103,8 +106,7 @@ def record_keyword_search(keywords: Keywords):
 @app.get("/search_wiki_titles")
 def search_wikipedia_titles(query: str, limit=None):
     
-    titles = game_manager.search_document_titles(query)
-    return titles
+    return game_manager.search_document_titles(query)
 
 # search wikipedia. get clean html
 @app.get("/search_wiki")
@@ -112,6 +114,25 @@ def search_wikipedia_html(query: str, limit=None):
     
     pages = game_manager.search_documents(query)
     return {'error': False, 'pages': pages}
+
+
+# TF-IDF index
+@app.get("/search_tfidf")
+def search_tfidf(query: str, limit=None):
+    
+    r = requests.get(f"http://127.0.0.1:5000/search_passages?query={query}")
+    if r.status_code != requests.codes.ok:
+        print("Error")
+    return r.json()
+
+@app.get("/get_document_by_id/{doc_id}")
+def get_document_by_id(doc_id: int):
+    
+    r = requests.get(f"http://127.0.0.1:5000/get_document_by_id/{doc_id}")
+    if r.status_code != requests.codes.ok:
+        print("Error")
+    return r.json()
+
 
 # search wikipedia. create html from sections
 # @app.get("/search_wiki_sections")

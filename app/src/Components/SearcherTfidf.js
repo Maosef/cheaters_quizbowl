@@ -1,29 +1,30 @@
 import React, { useState } from 'react';
-
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import TextField from '@material-ui/core/TextField';
 
 import Typography from '@material-ui/core/Typography';
+
+import DocumentSearchBox from '../DocumentSearchBox';
+import HighLighter from './Highlighter';
+
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../Styles';
 
-import DocumentSearchBox from '../DocumentSearchBox';
-// import HighLighter from './Highlighter';
 import DocumentDisplay from './DocumentDisplay';
 import HighlightTools from './HighlightTools';
 
-import postRequest from '../utils';
+import TextField from '@material-ui/core/TextField';
 
 //search bar, and display results
 
-class Searcher extends React.Component {
+class SearcherTfidf extends React.Component {
     constructor(props) {
         super(props);
         // this.handleBuzz = this.handleBuzz.bind(this);
@@ -32,6 +33,9 @@ class Searcher extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.processQuery = this.processQuery.bind(this);
         // this.handleHighlight = this.handleHighlight.bind(this);
+        this.searchDocumentsTfidf = this.searchDocumentsTfidf.bind(this);
+        this.getDocumentById = this.getDocumentById.bind(this);
+        
         this.textInput = React.createRef();
         this.shortcutKeyCode = 68;
 
@@ -42,6 +46,8 @@ class Searcher extends React.Component {
             curQuery: "",
             curTitle: "",
             titles: [],
+            passages: [],
+            curPassage: {},
             
             selectedDoc: '', // HTML of doc
             isLoading: false,
@@ -73,25 +79,46 @@ class Searcher extends React.Component {
         this.queryData.set(query, new Map());
 
         // this.fetchWikiData(query);
-        this.searchDocuments(query);
+        this.searchDocumentsTfidf(query);
+        console.log('searching...')
     }
 
-    // fetch wikipedia data
-    async searchDocuments(query) {
+    // fetch tfidf data
+    async searchDocumentsTfidf(query) {
 
         console.log("querying: ", query);
-        fetch(`/search_wiki_titles?query=${query}`)
+        fetch(`/search_tfidf?query=${query}`)
             .then(res => res.json())
             .then(
                 (result) => {
-                    // console.log('search results: ', result);
-                    this.props.updateGameState(result);
-                    let titles = result['query_results_map'][query]
+                    console.log('search results: ', result);
+                    
                     this.setState({
-                        titles: titles,
+                        titles: result.map(e => e['page']),
+                        passages: result,
                         isLoading: false,
                     });
+                },
+                (error) => {
+                    console.log('error');
+                    this.setState({
+                        error
+                    });
+                }
+            )
+    }
 
+    async getDocumentById(id) {
+
+        console.log("doc id: ", id);
+        fetch(`/get_document_by_id/${id}`)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    // console.log('doc results: ', result);
+                    this.setState({
+                        curPage: result,
+                    });
                 },
                 (error) => {
                     console.log('error');
@@ -102,30 +129,26 @@ class Searcher extends React.Component {
     // display doc content, log title
     displayText(e, page) {
         const title = page['title'];
-        this.queryData.get(this.state.curQuery).set(title, []);
         this.setState({
-            selectedDoc: page['html'],
             curPage: page,
             curTitle: title
         });
         // console.log(page['html']);
     }
 
-    async getDocument(e, title) {
-        this.props.updateCurrentDocument(title);
-        fetch(`get_document_html?title=${title}`)
-            .then(response => response.json())
-            .then(data => {
-                // console.log(data);
-                this.props.updateGameState(data);
-                let doc = data['cur_doc_selected']
-                this.setState({
-                    selectedDoc: doc['html'],
-                    curPage: doc,
-                    curTitle: doc['title']
-                });
-            });
-    }
+    // async getDocument(e, title) {
+    //     this.props.updateCurrentDocument(title);
+    //     fetch(`get_document_html?title=${title}`)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             // console.log(data);
+    //             this.setState({
+    //                 selectedDoc: data['html'],
+    //                 curPage: data,
+    //                 curTitle: title
+    //             });
+    //         });
+    // }
 
     // handleHighlight(selection) {
     //     //do something with selection
@@ -146,24 +169,16 @@ class Searcher extends React.Component {
         const { classes } = this.props;
 
         // articles, sections
-        // const listItems = this.state.pages.map((page) =>
-        //     <ListItem button onClick={(e) => this.displayText(e, page)} key={page['title'].toString()}>
-        //         <ListItemText primary={page['title']} />
+        // const document_titles = this.state.titles.map((title) =>
+        //     <ListItem button onClick={(e) => this.getDocument(e, title)} key={title.toString()}>
+        //         <ListItemText primary={title} />
         //     </ListItem>
         // );
-        const document_titles = this.state.titles.map((title) =>
-            <ListItem button onClick={(e) => this.getDocument(e, title)} key={title.toString()}>
-                <ListItemText primary={title} />
+        const document_titles = this.state.passages.map((psg) =>
+            <ListItem button onClick={(e) => this.displayText(e, psg)} key={psg['id'].toString()}>
+                <ListItemText primary={psg['page']} />
             </ListItem>
         );
-
-        //const sections = this.state.curPage.sections.map((section) =>
-            // <a href={"#" + section['title'] }>{section['title']}</a>
-          //  <ListItem button onClick={(e) => this.scrollToSection(section['title'])} 
-            //    key={section['title'].toString()}>
-              //  <ListItemText primary={section['title']} />
-            //</ListItem>
-        //)
 
         // loading icon
         let loadingIcon;
@@ -184,23 +199,7 @@ class Searcher extends React.Component {
                                 label="Search Documents..." 
                                 curQuery={this.state.curQuery}
                                 handleInputChange={this.handleInputChange}/>
-                            {/* <form onSubmit={(query) => this.processQuery(query)} className={classes.root} noValidate autoComplete="off" 
-                                style={{"display": "flex", "alignItems": "center"}}>
-                                <TextField 
-                                    inputRef={this.textInput}
-                                    value={this.state.curQuery} 
-                                    onChange={this.handleChange} 
-                                    id="answer_box" 
-                                    label="Search Documents..."
-                                    variant="outlined" 
-                                    // defaultValue={this.props.curQuery}
-                                />
-                                <div style={{padding: 20}}>
-                                    <Button variant="contained" color="primary" onClick={this.handleSubmit}>
-                                        Submit
-                                    </Button>
-                                </div>
-                            </form> */}
+                            
                             {/* article, section display */}
                             <Grid item xs={6}>
                                 {loadingIcon}
@@ -236,10 +235,29 @@ class Searcher extends React.Component {
                     {/* text display, keyword search */}
                     <Grid item xs={7} >
                         <DocumentDisplay 
-                            text={this.state.selectedDoc} 
+                            text={this.state.curPage['text']} 
                             searchTerms={this.state.curQuery} 
                             recordKeywordSearchTerms={this.props.recordKeywordSearchTerms}/>
                         {/* <Highlight_tools /> */}
+
+                                    <Button variant="contained" 
+                                        color="primary" 
+                                        onClick={() => { this.getDocumentById(this.state.curPage['id']-1) }}
+                                        style={{ 
+                                            margin: 10, 
+                                            }}>
+                                        {'<<< Previous Page'}
+                                    </Button>
+                                    <Button variant="contained" 
+                                        color="primary" 
+                                        onClick={() => { this.getDocumentById(this.state.curPage['id']+1) }}
+                                        style={{ 
+                                            margin: 10, 
+                                            }}>
+                                        {'Next Page >>>'}
+                                    </Button>
+
+
                     </Grid>
 
                     {/* highlight text */}
@@ -261,4 +279,4 @@ class Searcher extends React.Component {
     }
 }
 
-export default withStyles(useStyles)(Searcher);
+export default withStyles(useStyles)(SearcherTfidf);

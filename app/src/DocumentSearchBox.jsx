@@ -54,11 +54,11 @@ class DocumentSearchBox extends React.Component {
                     variant="outlined" 
                     // defaultValue={this.props.curQuery}
                 />
-                <div style={{padding: 20}}>
+                {/* <div style={{padding: 20}}>
                     <Button variant="contained" color="primary" onClick={this.handleSubmit}>
                         Submit
                     </Button>
-                </div>
+                </div> */}
             </form>
 
         );

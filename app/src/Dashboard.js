@@ -12,22 +12,27 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import Navbar from './Navbar'
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
+import Navbar from './Navbar'
 import AnswerForm from './AnswerForm';
 // import Buzzer from './Buzzer';
 import Buzzer from './Components/BuzzerUntimed';
 import Button_React from './Components/Button_React'
 import ContinueButton from './Components/ContinueButton';
-
-// import QuestionDisplay from './Components/QuestionDisplayUntimed';
 import QuestionDisplay from './Components/QuestionDisplay';
 import Searcher from './Components/Searcher';
+// import SearcherTfidf from './Components/SearcherTfidf';
+
+import postRequest from './utils';
 
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from './Styles';
 
 import './App.css';
+import HightlightTools from './Components/HighlightToolsComponent';
 
 
 // main Dashboard. Load question, handle interrupt, load next question
@@ -47,7 +52,7 @@ class Dashboard extends React.Component {
         // this.fetchData = this.fetchData.bind(this);
         // this.finishQuestion = this.finishQuestion.bind(this);
         this.skipQuestion = this.skipQuestion.bind(this);
-        this.logQueryData = this.logQueryData.bind(this);
+        this.updateGameState = this.updateGameState.bind(this);
 
         this.postRequest = this.postRequest.bind(this);
         this.answerQuestion = this.answerQuestion.bind(this);
@@ -59,7 +64,6 @@ class Dashboard extends React.Component {
         this.deactivateShortcut = this.deactivateShortcut.bind(this);
 
         this.maxAttempts = 1;
-        this.queryData = new Map();
 
         this.keywords = {};
 
@@ -87,7 +91,7 @@ class Dashboard extends React.Component {
 
             keywords: [],
             shortcutToggled: false,
-            wordIndex: 0
+            wordIndex: 0,
         }
     }
 
@@ -206,73 +210,6 @@ class Dashboard extends React.Component {
         this.state.game_state['cur_doc_selected'] = doc_title;
     }
 
-    // parse answer form, record data, get score
-    // finishQuestion(playerAnswer) {
-    //     let state = this.state;
-    //     let question_idx = this.state.question_idx + 1; //state won't update immediately
-        
-    //     // parse answer for correctness
-    //     if (this.cleanText(playerAnswer) == this.cleanText(this.state.page)) {
-    //         let points = state.tokenizations.length - state.sentenceIndex;
-    //         alert("Correct. Answer is " + this.state.page + ". Points added: " + points);
-    //         // console.log('correct');
-    //         this.setState({
-    //             score: this.state.score + points
-    //         });
-    //     } else { // wrong answer
-    //         console.log("Attempts", this.state.numAttempts, this.maxAttempts)
-    //         if (this.state.numAttempts < this.maxAttempts) {
-    //             alert(`Incorrect. Tries left: ${this.maxAttempts-this.state.numAttempts}`);
-    //             this.setState({numAttempts: this.state.numAttempts + 1});
-    //             return;
-    //         } else {
-    //             alert("Incorrect. Answer is " + this.state.page);
-    //         }
-    //     }
-
-    //     this.setState({
-    //         numAttempts: 1, interrupted: false, numSeen: this.state.numSeen + 1, question: "", question_idx: this.state.question_idx + 1
-    //     });
-    //     console.log(question_idx)
-    //     console.log("data: ", this.queryData);
-
-    //     let answer_data = {
-    //         session_id: window.sessionStorage.getItem("token"),
-    //         question_id: this.state.question_id,
-    //         answer: playerAnswer,
-    //         // query: query,
-    //         // evidence: evidence,
-    //         stop_position: this.state.sentenceIndex,
-    //     };
-    //     console.log(answer_data);
-    //     // log data: session, email, questionID, answer, query, evidence
-    //     // fetch('/api/qanta/v1/post_data', {
-    //     //     method: 'POST', // or 'PUT'
-    //     //     headers: {
-    //     //         'Content-Type': 'application/json',
-    //     //     },
-    //     //     body: JSON.stringify(answer_data),
-    //     //     })
-    //     //     .then(response => response.json())
-    //     //     .then(data => {
-    //     //     console.log('Post Success:', data);
-    //     //     })
-    //     //     .catch((error) => {
-    //     //     console.error('Error:', error);
-    //     //     });
-
-    //     //load the next question (on a time delay)
-    //     if (question_idx < this.question_ids.length) {
-    //         console.log("Question " + question_idx);
-    //         let question_id = this.question_ids[question_idx];
-    //         setTimeout(this.fetchData(question_id), 2000);
-
-    //     } else {
-    //         alert('Test Completed. Thank you for your time!')
-    //     }
-
-    // }
-
     skipQuestion() {
         let question_idx = this.state.question_idx + 1
         this.setState({
@@ -282,8 +219,10 @@ class Dashboard extends React.Component {
         setTimeout(this.fetchData(question_id), 2000);
     }
 
-    logQueryData(queryData) {
-        this.queryData = queryData;
+    updateGameState(gameState) {
+        console.log('updating game state...')
+        this.setState({game_state: gameState});
+        console.log('docs', this.state.game_state['documents_selected'])
     }
 
     render() {
@@ -295,30 +234,38 @@ class Dashboard extends React.Component {
 
         let question_data = this.state.game_state['question_data'];
 
+        let queries;
+        if (this.state.game_state['queries']) {
+            queries = this.state.game_state['queries'].map((query) =>
+                <ListItem button key={query.toString()}>
+                    <ListItemText primary={query} />
+                </ListItem>
+            );
+        }
+
+        let docs_selected;
+        if (this.state.game_state['documents_selected']) {
+            docs_selected = this.state.game_state['documents_selected'].map((query) =>
+                <ListItem button key={query.toString()}>
+                    <ListItemText primary={query} />
+                </ListItem>
+            );
+        }
+
         return (
 
             <div className={classes.root}>
-
-                {/* <AppBar position="static">
-                    <Toolbar>
-                        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="h6" className={classes.title}>
-                            Cheater's Quizbowl
-                    </Typography>
-                        <Button color="inherit">Logout</Button>
-                    </Toolbar>
-                </AppBar> */}
                 
                 <Navbar />
 
-                <div className={classes.body} style={{maxWidth: 1200, margin: "auto"}}>
-                    <Grid container spacing={3}
+                <div className={classes.body} style={{maxWidth: 2000, margin: "auto"}}>
+                    <Grid container spacing={1}
                         bgcolor="background.paper"
                     >   
+                        <Grid container item xs={8}>
+                        
                         {/* answer form */}
-                        <Grid item xs={8}>
+                        <Grid item xs={9}>
                             
                             <div className="flex-container" style={{"display": "flex", "alignItems": "center"}}>
                                 <div style={{padding: 10}}>
@@ -341,7 +288,7 @@ class Dashboard extends React.Component {
 
                         {/* question display */}
                         <Grid item xs={12}>
-                            <Paper className={classes.paperBig} style={{ "textAlign": "left" }}>
+                            <Paper className={classes.paper} style={{ "textAlign": "left" }}>
                                 {Object.keys(this.state.game_state).length > 0 ?
                                     // <QuestionDisplay
                                     //     text={this.state.game_state['question_data']['text']}
@@ -360,43 +307,16 @@ class Dashboard extends React.Component {
                         
                         {/* document search */}
                         <Grid item xs={12}>
-                            <Searcher sendData={this.logQueryData} 
+                            <Searcher updateGameState={this.updateGameState} 
                                 recordKeywordSearchTerms={this.recordKeywordSearchTerms}
                                 updateCurrentDocument={this.updateCurrentDocument}/>
                         </Grid>
                         
 
                         <Grid item xs={4}>
-                            {Object.keys(this.state.game_state).length > 0 ?
-                                <Paper className={classes.paper}>
-                                
-                                Statistics <br /><br />
-                                
-                                    {/* Answer: {this.state.page} <br /> */}
-                                Score: {this.state.game_state['score']} <br />
-                                Question Number: {this.state.game_state['question_number']} <br />
-                                Question ID: {this.state.game_state['question_id']} <br />
-                                Category: {this.state.game_state['question_data']['category']} <br />
-                                {question_data['tournament']} {question_data['year']}
-                                
-                                </Paper>
-                            : "Waiting"}
+                            
                         </Grid>
-                        <Grid item xs={4}>
-                            <Paper className={classes.paper}>
-                                Instructions <br /><br />
-                            Try to answer the quizbowl question using as few clues as possible. <br />
-                            You may use the internal search engine to search Wikipedia articles.
-                            Using the keyword search is encouraged! <br /> <br />
-                            Keyboard shortcuts: <br />
-                            Buzz: <code>space</code> <br />
-                            Query: <code>Ctrl-s</code>. Also auto-searches highlighted text. <br />
-                            Keyword search: <code>Ctrl-f</code> <br />
-                            {/* Hit <code>Continue</code> to reveal the next clue. <br /> */}
-                            Type <code>Enter</code> to submit your answer. You get one attempt.
-
-                            </Paper>
-                        </Grid>
+                        
                         {/* <Grid item xs={4}>
                             <Paper className={classes.paper}>
                                 Settings <br /><br />
@@ -405,6 +325,75 @@ class Dashboard extends React.Component {
                             </Paper>
                         </Grid> */}
                     </Grid>
+
+                    {/* Toolbar */}
+                        <Grid item xs={3}>
+                            <Paper className={classes.paper}>
+                                    
+                                {Object.keys(this.state.game_state).length > 0 ?
+                                    <div >                                        
+                                            {/* Answer: {this.state.page} <br /> */}
+                                        Score: {this.state.game_state['score']} <br />
+                                        Question Number: {this.state.game_state['question_number']} <br />
+                                        Question ID: {this.state.game_state['question_id']} <br />
+                                        Category: {this.state.game_state['question_data']['category']} <br />
+                                        {question_data['tournament']} {question_data['year']}
+                                        
+                                    </div>
+                                    
+                                    
+                                : "Waiting"}
+
+                                    <HightlightTools />
+
+                                    <h4>Previous queries</h4> 
+
+                                    <List component="nav" aria-label="search results" border={1}
+                                        style={{ 
+                                            maxHeight: 500, 
+                                            overflow: "scroll", 
+                                            whiteSpace: "pre-wrap", 
+                                            textAlign: "left", 
+                                            
+                                            }}>
+                                        {queries}
+                                    </List>
+                                    
+                                    <h4>Previous documents</h4> 
+
+                                    <List component="nav" aria-label="search results"
+                                        style={{ 
+                                            maxHeight: 500, 
+                                            overflow: "scroll", 
+                                            whiteSpace: "pre-wrap", 
+                                            textAlign: "left", 
+                                            }}>
+                                        {docs_selected}
+                                    </List>
+                                    <h4>Instructions</h4> 
+                                    
+                                    <p>
+                                    Try to answer the quizbowl question using as few clues as possible. You may use the internal search engine to search Wikipedia articles.
+                                    Using the keyword search is encouraged!
+                                    </p>
+
+
+                                    <h4>Keyboard shortcuts:</h4>
+                                    <p style={{ textAlign: "left"}}>
+                                        <ul>
+                                        <li>Buzz: <code>space</code></li>
+                                        <li>Query (focus on search box or auto-search highlighted text): <code>Ctrl-s</code>.</li>
+                                        <li>Keyword search: <code>Ctrl-f</code></li>                                        
+                                        </ul>
+                                    
+                                    Type <code>Enter</code> to submit your answer. You get one attempt.
+                                    </p>
+
+                                
+                            </Paper>
+                        </Grid>
+                    </Grid>
+
                 </div>
             </div>
         );

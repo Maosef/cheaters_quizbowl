@@ -7,6 +7,7 @@ import wikipediaapi
 
 import unidecode
 import string
+import requests
 import pandas as pd
 
 from typing import Optional
@@ -91,13 +92,6 @@ class GameManager:
         print("starting new game...")
         # get questions
         if self.config['randomize']:
-            # for i in range(self._num_questions):
-            #     q = db.get_random_question()
-            #     # only get questions that have a page field
-            #     while not q['page']:
-            #         q = db.get_random_question()
-            #     self._question_ids.append(q['qanta_id'])
-            #     self.question_data[q['qanta_id']] = q
             pass
         else:
             for question_id in self._question_ids:
@@ -106,11 +100,6 @@ class GameManager:
                 self.question_data[question_id] = question_dict
         
         return self.advance_question()
-
-    def save_game(self):
-        df = pd.DataFrame(self.game_history)
-        df.to_csv(self._file_name)
-        print("saved game to {}".format(self._file_name))
 
     def save_state(self):
         df = pd.DataFrame([self.state])
@@ -235,7 +224,37 @@ class GameManager:
         results = wikipedia.search(query)
         self.state['queries'].append(query)
         self.state['query_results_map'][query] = results
-        return results
+        return self.state
+
+    def search_documents_tfidf(self, query: str):
+
+        r = requests.get(f"http://127.0.0.1:5000/search_passages?query={query}")
+        if r.status_code != requests.codes.ok:
+            print("Error")
+        self.state['tfidf_results'] = r.json()
+        return self.state
+
+    def get_wiki_document_html(self, page_title: str):
+        page = wiki_html.page(page_title)
+        html, sections = parse_html_string(page.text)
+        
+        # html = page.summary + html
+        page_dict = {"title": page.title, "html":html, "sections":sections}
+        self.state['documents_selected'].append(page_title)
+        self.state['cur_doc_selected'] = page_dict
+
+        return self.state
+
+    def get_wiki_document_text(self, page_title: str):
+        page = wiki_wiki.page(page_title)
+        
+        page_dict = {"title": page.title, "text": page.text}
+        return page_dict
+
+    def record_keyword_search(self, keywords):
+        print('keywords', keywords)
+        # cur_doc = self.state['cur_doc_selected']
+        self.state['keyword_searches'] = keywords.keywords
 
     # old
     def search_documents(self, query: str):
@@ -252,25 +271,3 @@ class GameManager:
 
         self.documents = pages
         return pages
-
-    def get_wiki_document_html(self, page_title: str):
-        page = wiki_html.page(page_title)
-        html, sections = parse_html_string(page.text)
-        
-        # html = page.summary + html
-        page_dict = {"title": page.title, "html":html, "sections":sections}
-        self.state['documents_selected'].append(page_title)
-        self.state['cur_doc_selected'] = page_title
-
-        return page_dict
-
-    def get_wiki_document_text(self, page_title: str):
-        page = wiki_wiki.page(page_title)
-        
-        page_dict = {"title": page.title, "text": page.text}
-        return page_dict
-
-    def record_keyword_search(self, keywords):
-        print('keywords', keywords)
-        # cur_doc = self.state['cur_doc_selected']
-        self.state['keyword_searches'] = keywords.keywords
