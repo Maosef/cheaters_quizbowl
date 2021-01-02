@@ -16,15 +16,15 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import Navbar from './Navbar'
-import AnswerForm from './AnswerForm';
+import Navbar from './Components/Navbar'
+import AnswerForm from './Components/AnswerForm';
 // import Buzzer from './Buzzer';
 import Buzzer from './Components/BuzzerUntimed';
 import Button_React from './Components/Button_React'
 import ContinueButton from './Components/ContinueButton';
 import QuestionDisplay from './Components/QuestionDisplay';
 import Searcher from './Components/Searcher';
-// import SearcherTfidf from './Components/SearcherTfidf';
+import SearcherTfidf from './Components/SearcherTfidf';
 
 import postRequest from './utils';
 
@@ -305,16 +305,18 @@ class Dashboard extends React.Component {
                             </Paper>
                         </Grid>
                         
-                        {/* document search */}
+                        {/* full document search */}
                         <Grid item xs={12}>
                             <Searcher updateGameState={this.updateGameState} 
                                 recordKeywordSearchTerms={this.recordKeywordSearchTerms}
                                 updateCurrentDocument={this.updateCurrentDocument}/>
                         </Grid>
-                        
 
-                        <Grid item xs={4}>
-                            
+                        {/* full document search */}
+                        <Grid item xs={12}>
+                            <SearcherTfidf updateGameState={this.updateGameState} 
+                                recordKeywordSearchTerms={this.recordKeywordSearchTerms}
+                                updateCurrentDocument={this.updateCurrentDocument}/>
                         </Grid>
                         
                         {/* <Grid item xs={4}>

@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../Styles';
 
-import DocumentSearchBox from '../DocumentSearchBox';
+import DocumentSearchBox from './DocumentSearchBox';
 // import HighLighter from './Highlighter';
 import DocumentDisplay from './DocumentDisplay';
 import HighlightTools from './HighlightTools';
@@ -146,16 +146,19 @@ class Searcher extends React.Component {
         const { classes } = this.props;
 
         // articles, sections
-        // const listItems = this.state.pages.map((page) =>
-        //     <ListItem button onClick={(e) => this.displayText(e, page)} key={page['title'].toString()}>
-        //         <ListItemText primary={page['title']} />
-        //     </ListItem>
-        // );
-        const document_titles = this.state.titles.map((title) =>
-            <ListItem button onClick={(e) => this.getDocument(e, title)} key={title.toString()}>
-                <ListItemText primary={title} />
+        let document_titles;
+        if (this.state.titles.length === 0) {
+            document_titles = <ListItem>
+                <ListItemText primary={'No Results'} />
             </ListItem>
-        );
+        }
+        else {
+            document_titles = this.state.titles.map((title) =>
+                <ListItem button onClick={(e) => this.getDocument(e, title)} key={title.toString()}>
+                    <ListItemText primary={title} />
+                </ListItem>
+            );
+        } 
 
         //const sections = this.state.curPage.sections.map((section) =>
             // <a href={"#" + section['title'] }>{section['title']}</a>
@@ -171,38 +174,24 @@ class Searcher extends React.Component {
             loadingIcon = <CircularProgress style={{margin: 20}}/>;
         }
         return (
-            // <div className={classes.root}>
-
-            <Paper className={classes.paperBig} style={{ height: 600 }}>
+            <Paper className={classes.paperFlexVertical} >
+                <h4>Full Document Search</h4>
                 <Grid container spacing={3}
                     bgcolor="background.paper"
                 >
+                    
                     {/* document search */}
                     <Grid item xs={4}>
                         <Grid container spacing={3}>
-                            <DocumentSearchBox onSubmit={(query) => this.processQuery(query)} 
-                                label="Search Documents..." 
+                            <DocumentSearchBox 
+                                onSubmit={(query) => this.processQuery(query)} 
+                                label="Search Documents (Ctrl-S)" 
                                 curQuery={this.state.curQuery}
-                                handleInputChange={this.handleInputChange}/>
-                            {/* <form onSubmit={(query) => this.processQuery(query)} className={classes.root} noValidate autoComplete="off" 
-                                style={{"display": "flex", "alignItems": "center"}}>
-                                <TextField 
-                                    inputRef={this.textInput}
-                                    value={this.state.curQuery} 
-                                    onChange={this.handleChange} 
-                                    id="answer_box" 
-                                    label="Search Documents..."
-                                    variant="outlined" 
-                                    // defaultValue={this.props.curQuery}
-                                />
-                                <div style={{padding: 20}}>
-                                    <Button variant="contained" color="primary" onClick={this.handleSubmit}>
-                                        Submit
-                                    </Button>
-                                </div>
-                            </form> */}
+                                handleInputChange={this.handleInputChange}
+                                handleKeyboardShortcut={true}/>
+                            
                             {/* article, section display */}
-                            <Grid item xs={6}>
+                            <Grid item xs={8}>
                                 {loadingIcon}
                                 {/* document titles */}
                                 <List component="nav" aria-label="search results"
@@ -216,8 +205,8 @@ class Searcher extends React.Component {
                                 </List>
                             </Grid>
                             
-                            <Grid item xs={6}>
-                                {/* document section titles */}
+                            {/* document section titles */}
+                            {/* <Grid item xs={6}>
                                 <List component="nav" aria-label="search results"
                                     style={{ 
                                         maxHeight: 500, 
@@ -225,38 +214,27 @@ class Searcher extends React.Component {
                                         whiteSpace: "pre-wrap", 
                                         textAlign: "left", 
                                         }}>
-                                    {/*sections*/}
+                                    sections
                                 </List>
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                     </Grid>
                     
-                    <Divider orientation="vertical" flexItem />
+                    {/* <Divider orientation="vertical" flexItem /> */}
 
                     {/* text display, keyword search */}
-                    <Grid item xs={7} >
+                    <Grid item xs={8} >
                         <DocumentDisplay 
                             text={this.state.selectedDoc} 
                             searchTerms={this.state.curQuery} 
-                            recordKeywordSearchTerms={this.props.recordKeywordSearchTerms}/>
+                            recordKeywordSearchTerms={this.props.recordKeywordSearchTerms}
+                            separateWordSearch={true}
+                            cleanText={true}/>
                         {/* <Highlight_tools /> */}
                     </Grid>
 
-                    {/* highlight text */}
-                    {/* <Grid item xs={7} >
-                        <div style={{ maxHeight: 500, overflow: "scroll", whiteSpace: "pre-wrap", textAlign: "left" }}>
-                            <HighLighter
-                                text={this.state.selectedDoc}
-                                selectionHandler={this.handleHighlight}
-                                customClass="highlight-class"
-                            />
-                        </div>
-                    </Grid> */}
-
                 </Grid>
             </Paper>
-
-            // </div>
         );
     }
 }

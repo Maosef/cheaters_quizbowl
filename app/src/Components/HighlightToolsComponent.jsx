@@ -3,7 +3,7 @@ import Box from '@material-ui/core/Box';
 
 export default function HightlightTools(searchCallback) {
 
-    const [selectedText, setSelectedText] = useState('');
+    const [selectedText, setSelectedText] = useState('None');
 
     let activated = false;
 
@@ -27,7 +27,11 @@ export default function HightlightTools(searchCallback) {
     function captureSearch(e) {
         let selectedText = getSelectedText();
         console.log('selected', selectedText);
-        setSelectedText(selectedText);
+        if (selectedText === ''){
+            setSelectedText('None');
+        } else {
+            setSelectedText(selectedText);
+        }
 
         // if (!activated && (e.ctrlKey || e.metaKey) && e.keyCode === 83 && selectedText) { 
         // // if (!activated && e.keyCode === 83) { 
@@ -61,8 +65,6 @@ export default function HightlightTools(searchCallback) {
         <div>
             <h4>Highlighted text (Ctrl-S to auto-search): </h4>
             <Box border={1}>{selectedText}</Box>
-
-            
         </div>
     );
 }

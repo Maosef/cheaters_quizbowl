@@ -11,7 +11,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Typography from '@material-ui/core/Typography';
 
-import DocumentSearchBox from '../DocumentSearchBox';
+import DocumentSearchBox from './DocumentSearchBox';
 import HighLighter from './Highlighter';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -60,7 +60,7 @@ class SearcherTfidf extends React.Component {
 
     componentDidMount() {
         // shortcut to search from highlight
-        HighlightTools(this.processQuery);
+        // HighlightTools(this.processQuery);
     }
 
     handleInputChange(event) {
@@ -186,9 +186,8 @@ class SearcherTfidf extends React.Component {
             loadingIcon = <CircularProgress style={{margin: 20}}/>;
         }
         return (
-            // <div className={classes.root}>
-
-            <Paper className={classes.paperBig} style={{ height: 600 }}>
+            <Paper className={classes.paperFlexVertical} >
+                <h4>Passage Search</h4>
                 <Grid container spacing={3}
                     bgcolor="background.paper"
                 >
@@ -196,12 +195,12 @@ class SearcherTfidf extends React.Component {
                     <Grid item xs={4}>
                         <Grid container spacing={3}>
                             <DocumentSearchBox onSubmit={(query) => this.processQuery(query)} 
-                                label="Search Documents..." 
+                                label="Search Passages" 
                                 curQuery={this.state.curQuery}
                                 handleInputChange={this.handleInputChange}/>
                             
                             {/* article, section display */}
-                            <Grid item xs={6}>
+                            <Grid item xs={8}>
                                 {loadingIcon}
                                 {/* document titles */}
                                 <List component="nav" aria-label="search results"
@@ -215,29 +214,19 @@ class SearcherTfidf extends React.Component {
                                 </List>
                             </Grid>
                             
-                            <Grid item xs={6}>
-                                {/* document section titles */}
-                                <List component="nav" aria-label="search results"
-                                    style={{ 
-                                        maxHeight: 500, 
-                                        overflow: "scroll", 
-                                        whiteSpace: "pre-wrap", 
-                                        textAlign: "left", 
-                                        }}>
-                                    {/*sections*/}
-                                </List>
-                            </Grid>
                         </Grid>
                     </Grid>
                     
-                    <Divider orientation="vertical" flexItem />
+                    {/* <Divider orientation="vertical" flexItem /> */}
 
                     {/* text display, keyword search */}
-                    <Grid item xs={7} >
+                    <Grid item xs={8} >
                         <DocumentDisplay 
                             text={this.state.curPage['text']} 
                             searchTerms={this.state.curQuery} 
-                            recordKeywordSearchTerms={this.props.recordKeywordSearchTerms}/>
+                            recordKeywordSearchTerms={this.props.recordKeywordSearchTerms}
+                            separateWordSearch={true}
+                            cleanText={true}/>
                         {/* <Highlight_tools /> */}
 
                                     <Button variant="contained" 

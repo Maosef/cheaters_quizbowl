@@ -4,8 +4,11 @@ import $ from 'jquery';
 import "mark.js"
 import "mark.js/src/jquery.js"
 
+import {postRequest, cleanText} from '../utils';
+
 import TextField from '@material-ui/core/TextField';
-import {postRequest} from '../utils';
+import Box from '@material-ui/core/Box';
+
 
 // search and highlight keywords
 class DocumentDisplay extends React.Component {
@@ -164,16 +167,21 @@ class DocumentDisplay extends React.Component {
      */
     $input.on("input", (e)=>{
       {
-        var searchVal = e.target.value;
+        let searchVal = e.target.value;
+        let separateWordSearch = this.props.separateWordSearch;
         if (searchVal.length >= 3){ // min search length for performance
           // console.log('search vals: ', this.searchVals);
           // this.searchVals.push(searchVal);
           this.props.recordKeywordSearchTerms(searchVal);
 
+          if (this.props.cleanText){
+            searchVal = cleanText(searchVal);
+          }
+
           $content.unmark({
             done: function () {
               $content.mark(searchVal, {
-                separateWordSearch: false,
+                separateWordSearch: separateWordSearch,
                 done: function () {
                   $results = $content.find("mark");
                   currentIndex = 0;
@@ -213,15 +221,18 @@ class DocumentDisplay extends React.Component {
 
   render() {
     return (
-      <div className="keyword-search" 
+      <Box className="keyword-search" border={1}
         ref={el => this.el = el} 
-        style={{maxWidth: 600}}>
+        // style={{maxWidth: 600}}
+        >
         
         {/* search bar */}
         <div className="keyword-search-navbar">
-            <input type="search"  
+            <input 
+              type="search"  
               placeholder="Search keywords (Ctrl-f)" 
               ref={(input) => { this.searchBar = input; }}
+              style={{width: "50%"}}
               // value={this.state.searchTerms}
               // onChange={this.handleInputChange}
                />
@@ -233,16 +244,16 @@ class DocumentDisplay extends React.Component {
 
         {/* content display */}
         <div className="content bordered" 
-          dangerouslySetInnerHTML={{ __html: this.props.text }}
-          style={{ 
-          maxHeight: 480, 
-          overflow: "scroll", 
-          whiteSpace: "pre-wrap", 
-          textAlign: "left", 
+            dangerouslySetInnerHTML={{ __html: this.props.text }}
+            style={{ 
+              maxHeight: 500, 
+              overflow: "scroll", 
+              whiteSpace: "pre-wrap", 
+              textAlign: "left", 
+              padding: 20
           }}>
-
         </div>
-      </div>
+      </Box>
       );
     }
   }

@@ -48,6 +48,12 @@ const useStyles = ((theme) => ({
         textAlign: 'center',
         // color: theme.palette.text.secondary,
     },
+    paperFlexVertical: {
+        padding: 20,
+        maxHeight: 800,
+        padding: theme.spacing(2),
+        textAlign: 'center',
+    },
 }));
 
 export default useStyles;
