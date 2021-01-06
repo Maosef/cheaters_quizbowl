@@ -5,7 +5,10 @@ from pydantic import BaseModel
 from backend.database import Database
 from backend import qanta
 from backend import security
-from backend.game_manager_utils import GameManager 
+from backend import data_server
+
+# from backend.game_manager_utils import GameManager 
+from backend.game_manager_generic import GameManager 
 
 import wikipedia
 import wikipediaapi
@@ -43,11 +46,8 @@ app.add_middleware(
 # app.include_router(qanta.router, prefix="/api/qanta/v1")
 app.include_router(security.router, prefix="/token")
 app.include_router(qanta.router)
-# app.include_router(search_engine.router, prefix="/search")
+app.include_router(data_server.router)
 
-
-
-QUESTION_IDS = [16848, 115844, 26626, 53873, 6449, 15469, 102066, 151976, 90037, 181475]
 
 # todo: allow managing multiple game sessions at once
 games = dict()

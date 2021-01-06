@@ -295,7 +295,7 @@ class Dashboard extends React.Component {
                                     //     tokenizations={this.state.game_state['question_data']['tokenizations']}
                                     //     updateSentencePosition={(index) => this.setState({ sentenceIndex: index })} />
                                     <QuestionDisplay
-                                        text={this.state.game_state['question_data']['text']}
+                                        text={this.state.game_state['question_data']['question']}
                                         interrupted={this.state.interrupted}
                                         updateSentencePosition={(index) => this.setState({ sentenceIndex: index })}
                                         wordIndex={this.state.wordIndex}
