@@ -24,8 +24,8 @@ class PlayerRequest(BaseModel):
     # data: Optional[dict] = None
 
 class Keywords(BaseModel):
-
-    keywords: Optional[dict] = None
+    keywords: dict
+    passage_keywords_map: dict
 
 app = FastAPI()
 origins = [
@@ -99,7 +99,10 @@ def get_document_html(title: str):
 
 @app.post("/record_keyword_search")
 def record_keyword_search(keywords: Keywords):
-    game_manager.record_keyword_search(keywords)
+    print(keywords)
+
+    game_manager.record_keyword_search(keywords.keywords, 'full')
+    game_manager.record_keyword_search(keywords.passage_keywords_map, 'passage')
     return game_manager.state
 
 # search wikipedia. get titles
@@ -118,19 +121,25 @@ def search_wikipedia_html(query: str, limit=None):
 
 # TF-IDF index
 @app.get("/search_tfidf")
-def search_tfidf(query: str, limit=None):
+def search_tfidf(query: str, limit:int=10):
     
-    r = requests.get(f"http://127.0.0.1:5000/search_passages?query={query}")
+    r = requests.get(f"http://127.0.0.1:5000/search_passages?query={query}&n_docs={limit}")
     if r.status_code != requests.codes.ok:
-        print("Error")
-    return r.json()
+        print("Error in search")
+    else:
+        search_results = r.json()
+        game_manager.state['tfidf_search_map']['queries'].append(query)
+        game_manager.state['tfidf_search_map']['query_results_map'][query] = [(res['id'], res['page']) for res in search_results]
+    return search_results
 
 @app.get("/get_document_by_id/{doc_id}")
 def get_document_by_id(doc_id: int):
     
     r = requests.get(f"http://127.0.0.1:5000/get_document_by_id/{doc_id}")
     if r.status_code != requests.codes.ok:
-        print("Error")
+        print("Error in getting document")
+    else:
+        game_manager.state['tfidf_search_map']['documents_selected'].append(doc_id)
     return r.json()
 
 

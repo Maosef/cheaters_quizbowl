@@ -19,7 +19,7 @@ import DocumentSearchBox from './DocumentSearchBox';
 import DocumentDisplay from './DocumentDisplay';
 import HighlightTools from './HighlightTools';
 
-import postRequest from '../utils';
+import {getRequest, postRequest} from '../utils';
 
 //search bar, and display results
 
@@ -31,6 +31,8 @@ class Searcher extends React.Component {
         // this.fetchWikiData = this.fetchWikiData.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.processQuery = this.processQuery.bind(this);
+        this.processShortcut = this.processShortcut.bind(this);
+        
         // this.handleHighlight = this.handleHighlight.bind(this);
         this.textInput = React.createRef();
         this.shortcutKeyCode = 68;
@@ -54,13 +56,20 @@ class Searcher extends React.Component {
 
     componentDidMount() {
         // shortcut to search from highlight
-        HighlightTools(this.processQuery);
+        HighlightTools(this.processShortcut);
     }
 
     handleInputChange(event) {
         this.setState({ curQuery: event.target.value });
     }
 
+    processShortcut(query) {
+        if (!query){
+            this.textInput.current.focus();
+        } else {
+            this.processQuery(query);
+        }
+    }
     // fetch data and log query
     processQuery(query) {
         if (!query){
@@ -70,47 +79,35 @@ class Searcher extends React.Component {
             curQuery: query,
             isLoading: true
         })
-        this.queryData.set(query, new Map());
+        // this.queryData.set(query, new Map());
 
         // this.fetchWikiData(query);
         this.searchDocuments(query);
     }
 
-    // fetch wikipedia data
+    // fetch document titles, update game state
     async searchDocuments(query) {
 
         console.log("querying: ", query);
-        fetch(`/search_wiki_titles?query=${query}`)
-            .then(res => res.json())
+        getRequest(`/search_wiki_titles?query=${query}`)
             .then(
                 (result) => {
                     // console.log('search results: ', result);
                     this.props.updateGameState(result);
                     let titles = result['query_results_map'][query]
+                    console.log('titles: ', titles);
                     this.setState({
                         titles: titles,
                         isLoading: false,
                     });
-
                 },
                 (error) => {
-                    console.log('error');
+                    console.log('Error', error)
                 }
             )
     }
 
     // display doc content, log title
-    displayText(e, page) {
-        const title = page['title'];
-        this.queryData.get(this.state.curQuery).set(title, []);
-        this.setState({
-            selectedDoc: page['html'],
-            curPage: page,
-            curTitle: title
-        });
-        // console.log(page['html']);
-    }
-
     async getDocument(e, title) {
         this.props.updateCurrentDocument(title);
         fetch(`get_document_html?title=${title}`)
@@ -141,6 +138,7 @@ class Searcher extends React.Component {
         let section_element = document.getElementById(section_title);
         section_element.parentNode.scrollTop = section_element.offsetTop - section_element.parentNode.offsetTop;
     }
+
     
     render() {
         const { classes } = this.props;
@@ -151,8 +149,7 @@ class Searcher extends React.Component {
             document_titles = <ListItem>
                 <ListItemText primary={'No Results'} />
             </ListItem>
-        }
-        else {
+        } else {
             document_titles = this.state.titles.map((title) =>
                 <ListItem button onClick={(e) => this.getDocument(e, title)} key={title.toString()}>
                     <ListItemText primary={title} />
@@ -183,12 +180,26 @@ class Searcher extends React.Component {
                     {/* document search */}
                     <Grid item xs={4}>
                         <Grid container spacing={3}>
-                            <DocumentSearchBox 
+                            {/* <DocumentSearchBox 
                                 onSubmit={(query) => this.processQuery(query)} 
                                 label="Search Documents (Ctrl-S)" 
                                 curQuery={this.state.curQuery}
                                 handleInputChange={this.handleInputChange}
-                                handleKeyboardShortcut={true}/>
+                                handleKeyboardShortcut={true}/> */}
+                            <form onSubmit={(event) => {event.preventDefault(); this.processQuery(this.state.curQuery)}}
+                                className={classes.root} 
+                                noValidate 
+                                autoComplete="off" 
+                                style={{"display": "flex", "alignItems": "center"}}>
+                                <TextField 
+                                    inputRef={this.textInput}
+                                    value={this.state.curQuery} 
+                                    onChange={this.handleInputChange} 
+                                    label="Search Documents (Ctrl-S)" 
+                                    variant="outlined" 
+                                    // defaultValue={this.props.curQuery}
+                                />
+                            </form>
                             
                             {/* article, section display */}
                             <Grid item xs={8}>
@@ -227,9 +238,10 @@ class Searcher extends React.Component {
                         <DocumentDisplay 
                             text={this.state.selectedDoc} 
                             searchTerms={this.state.curQuery} 
-                            recordKeywordSearchTerms={this.props.recordKeywordSearchTerms}
+                            recordKeywordSearchTerms={(keywords) => this.props.recordKeywordSearchTerms(keywords, 'full')}
                             separateWordSearch={true}
-                            cleanText={true}/>
+                            cleanText={true}
+                            searchType={"fullSearch"}/>
                         {/* <Highlight_tools /> */}
                     </Grid>
 

@@ -136,29 +136,6 @@ class SearcherTfidf extends React.Component {
         // console.log(page['html']);
     }
 
-    // async getDocument(e, title) {
-    //     this.props.updateCurrentDocument(title);
-    //     fetch(`get_document_html?title=${title}`)
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             // console.log(data);
-    //             this.setState({
-    //                 selectedDoc: data['html'],
-    //                 curPage: data,
-    //                 curTitle: title
-    //             });
-    //         });
-    // }
-
-    // handleHighlight(selection) {
-    //     //do something with selection
-    //     console.log(selection);
-    //     // console.log(this);
-
-    //     this.queryData.get(this.state.curQuery).get(this.state.curTitle).push(selection);
-    //     this.props.sendData(this.queryData);
-    //     // console.log(this.queryData);
-    // }
 
     scrollToSection(section_title) {
         let section_element = document.getElementById(section_title);
@@ -224,9 +201,10 @@ class SearcherTfidf extends React.Component {
                         <DocumentDisplay 
                             text={this.state.curPage['text']} 
                             searchTerms={this.state.curQuery} 
-                            recordKeywordSearchTerms={this.props.recordKeywordSearchTerms}
+                            recordKeywordSearchTerms={(keywords) => this.props.recordKeywordSearchTerms(keywords, 'passage')}
                             separateWordSearch={true}
-                            cleanText={true}/>
+                            cleanText={true}
+                            searchType={"passageSearch"}/>
                         {/* <Highlight_tools /> */}
 
                                     <Button variant="contained" 

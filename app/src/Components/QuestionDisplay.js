@@ -10,7 +10,7 @@ class QuestionDisplay extends React.Component {
     constructor(props) {
         super(props);
         // this.classes = useStyles();
-        this.read_time_ms = 175;
+        this.read_time_ms = 200;
         this.state = {
             wordIndex: 0, 
             text: "",
@@ -36,7 +36,6 @@ class QuestionDisplay extends React.Component {
     componentDidUpdate(prevProps) {
         // reset state if question changed
         if (prevProps.text !== this.props.text){
-            console.log('question changed');
             this.setState({wordIndex: 0, text: "", words: this.props.text.split(" ")});
             // reset the reader or else there will be two
             clearInterval(this.state.readerID);

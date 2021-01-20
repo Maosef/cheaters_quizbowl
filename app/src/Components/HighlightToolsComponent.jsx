@@ -1,46 +1,38 @@
 import React, { useState } from 'react';
 import Box from '@material-ui/core/Box';
 
-export default function HightlightTools(searchCallback) {
+export default function HightlightTools(props) {
 
     const [selectedText, setSelectedText] = useState('None');
+    const shorcutKeyCode = 69; //e
 
     let activated = false;
 
-    // function handleSearch(e) {
-    //     let selectedText = getSelectedText();
-    //     console.log('selected', selectedText);
-    //     setSelectedText(selectedText);
+    function handleShortcut(e) {
+        let selectedText = getSelectedText();
+        setSelectedText(selectedText);
 
-    //     if (!activated && (e.ctrlKey || e.metaKey) && e.keyCode === 83 && selectedText) { 
-    //     // if (!activated && e.keyCode === 83) { 
-    //         e.preventDefault();
-    //         activated = true;
-    //         // this.searchBar.focus();
+        if (!activated && (e.ctrlKey || e.metaKey) && e.keyCode === shorcutKeyCode && selectedText) { 
+        // if (!activated && e.keyCode === 83) { 
+            console.log('recording evidence');
 
-    //         searchCallback(selectedText);
-    //     }
-    // }
+            e.preventDefault();
+            activated = true;
+            // this.searchBar.focus();
+
+            props.callback(selectedText);
+        }
+    }
 
     // listen for shortcut key and highlight
-    // Ctrl + S
     function captureSearch(e) {
         let selectedText = getSelectedText();
-        console.log('selected', selectedText);
         if (selectedText === ''){
             setSelectedText('None');
         } else {
             setSelectedText(selectedText);
         }
 
-        // if (!activated && (e.ctrlKey || e.metaKey) && e.keyCode === 83 && selectedText) { 
-        // // if (!activated && e.keyCode === 83) { 
-        //     e.preventDefault();
-        //     activated = true;
-        //     // this.searchBar.focus();
-
-        //     searchCallback(selectedText);
-        // }
     }
     
     function deactivateShortcut(e) {
@@ -58,12 +50,12 @@ export default function HightlightTools(searchCallback) {
     }
     
     document.onmouseup = captureSearch;
-    // document.onkeydown = captureSearch;
-    // document.onkeyup = deactivateShortcut;
+    document.onkeydown = handleShortcut;
+    document.onkeyup = deactivateShortcut;
 
     return (
         <div>
-            <h4>Highlighted text (Ctrl-S to auto-search): </h4>
+            <h4>Highlighted text (Ctrl-s to auto-search, Ctrl-e to record as evidence): </h4>
             <Box border={1}>{selectedText}</Box>
         </div>
     );

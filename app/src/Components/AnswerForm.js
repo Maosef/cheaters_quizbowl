@@ -56,7 +56,6 @@ class AnswerForm extends React.Component {
                     inputRef={this.textInput}
                     value={this.state.answer} 
                     onChange={this.handleChange} 
-                    id="answer_box" 
                     label={"Answer"} 
                     variant="outlined" 
                 />

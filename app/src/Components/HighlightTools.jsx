@@ -1,5 +1,5 @@
 
-export default function HightlightTools(searchCallback) {
+export default function HightlightTools(callback) {
 
     let activated = false;
 
@@ -7,13 +7,14 @@ export default function HightlightTools(searchCallback) {
     // Ctrl + S
     function captureSearch(e) {
         var selectedText = getSelectedText();
-        if (!activated && (e.ctrlKey || e.metaKey) && e.keyCode === 83 && selectedText) { 
+        console.log('key down');
+        if (!activated && (e.ctrlKey || e.metaKey) && e.keyCode === 83) { 
         // if (!activated && e.keyCode === 83) { 
             e.preventDefault();
             activated = true;
             // this.searchBar.focus();
-
-            searchCallback(selectedText);
+            console.log('searching highlight...');
+            callback(selectedText);
         }
     }
     
@@ -38,7 +39,14 @@ export default function HightlightTools(searchCallback) {
         }
     }
     
-    document.onkeydown = captureSearch;
-    document.onkeyup = deactivateShortcut;
+    window.onkeydown = captureSearch;
+    window.onkeyup = deactivateShortcut;
+
+    // eventTarget.addEventListener("keydown", event => {
+    //     if (event.isComposing || event.keyCode === 229) {
+    //       return;
+    //     }
+    //     // do something
+    //   });
 }
 

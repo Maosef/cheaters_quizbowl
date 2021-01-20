@@ -45,7 +45,8 @@ class DocumentDisplay extends React.Component {
         // typeset math
         window.MathJax.typeset()
         // trigger search
-        $("input[type='search']").val(this.props.searchTerms).trigger("input");
+        // $("input[type='search']").val(this.props.searchTerms).trigger("input");
+        $(this.searchBar).val(this.props.searchTerms).trigger("input");
       }
     }
   }
@@ -123,7 +124,8 @@ class DocumentDisplay extends React.Component {
   display() {
 
     // the input field
-    var $input = $("input[type='search']"),
+    // var $input = $("input[type='search']"),
+    var $input = $("#" + this.props.searchType),
       // clear button
       $clearBtn = $("button[data-search='clear']"),
       // prev button
@@ -131,9 +133,10 @@ class DocumentDisplay extends React.Component {
       // next button
       $nextBtn = $("button[data-search='next']"),
       // the context where to search
-      $content = $(".content"),
+      // $content = $(".content"),
+      $content = $("#content" + this.props.searchType),
       // jQuery object to save <mark> elements
-      $results,
+      $results = [],
       // the class that will be appended to the current
       // focused element
       currentClass = "current",
@@ -142,6 +145,7 @@ class DocumentDisplay extends React.Component {
       // the current index of the focused element
       currentIndex = 0;
 
+    console.log('input', $input);
 
     /**
      * Jumps to the element matching the currentIndex
@@ -167,17 +171,20 @@ class DocumentDisplay extends React.Component {
      */
     $input.on("input", (e)=>{
       {
+
         let searchVal = e.target.value;
         let separateWordSearch = this.props.separateWordSearch;
-        if (searchVal.length >= 3){ // min search length for performance
+        if (searchVal.length >= 3){ // min search length for performance reasons
           // console.log('search vals: ', this.searchVals);
-          // this.searchVals.push(searchVal);
+          console.log('keyword search ', this.props.searchType)
           this.props.recordKeywordSearchTerms(searchVal);
 
+          // clean the text for searching
           if (this.props.cleanText){
             searchVal = cleanText(searchVal);
           }
 
+          // marking
           $content.unmark({
             done: function () {
               $content.mark(searchVal, {
@@ -233,6 +240,7 @@ class DocumentDisplay extends React.Component {
               placeholder="Search keywords (Ctrl-f)" 
               ref={(input) => { this.searchBar = input; }}
               style={{width: "50%"}}
+              id={this.props.searchType}
               // value={this.state.searchTerms}
               // onChange={this.handleInputChange}
                />
@@ -244,6 +252,7 @@ class DocumentDisplay extends React.Component {
 
         {/* content display */}
         <div className="content bordered" 
+            id={"content" + this.props.searchType}
             dangerouslySetInnerHTML={{ __html: this.props.text }}
             style={{ 
               maxHeight: 500, 

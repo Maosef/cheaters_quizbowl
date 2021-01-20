@@ -34,6 +34,7 @@ import useStyles from './Styles';
 import './App.css';
 import HightlightTools from './Components/HighlightToolsComponent';
 
+import TabTool from './Components/TabTool';
 
 // main Dashboard. Load question, handle interrupt, load next question
 // preloaded questions for experiment setting
@@ -49,8 +50,6 @@ class Dashboard extends React.Component {
         this.handleShortcut = this.handleShortcut.bind(this);
         this.handleBuzz = this.handleBuzz.bind(this);
         
-        // this.fetchData = this.fetchData.bind(this);
-        // this.finishQuestion = this.finishQuestion.bind(this);
         this.skipQuestion = this.skipQuestion.bind(this);
         this.updateGameState = this.updateGameState.bind(this);
 
@@ -59,6 +58,7 @@ class Dashboard extends React.Component {
         this.advanceQuestion = this.advanceQuestion.bind(this);
         this.recordKeywordSearchTerms = this.recordKeywordSearchTerms.bind(this);
         this.updateCurrentDocument = this.updateCurrentDocument.bind(this);
+        this.recordEvidence = this.recordEvidence.bind(this);
 
         this.handleShortcut = this.handleShortcut.bind(this);
         this.deactivateShortcut = this.deactivateShortcut.bind(this);
@@ -66,6 +66,7 @@ class Dashboard extends React.Component {
         this.maxAttempts = 1;
 
         this.keywords = {};
+        this.passage_keywords_map = {};
 
         // mutable state
         this.state = {
@@ -171,8 +172,12 @@ class Dashboard extends React.Component {
 
     // advance to next question, record keyword search data
     advanceQuestion(){
-        this.postRequest(`/record_keyword_search`, {'keywords': this.keywords});
+        console.log('keywords: ', this.keywords);
+        this.postRequest(`/record_keyword_search`, {
+            'keywords': this.keywords, 
+            'passage_keywords_map': this.passage_keywords_map});
         this.keywords = {};
+        this.passage_keywords_map = {};
 
         this.postRequest(`/advance_question`).then(data => {
             this.setState({game_state: data, interrupted: false, wordIndex: 0});
@@ -188,20 +193,24 @@ class Dashboard extends React.Component {
     }
 
     // update keywords dict
-    recordKeywordSearchTerms(searchVal: str){
+    recordKeywordSearchTerms(searchVal: str, search_type: str){
         // this.setState({keywords: this.state.keywords + [searchVal]}) # bug: this clears the search box
         
-        let cleaned_searchVal = searchVal.trim()
-        let doc_title = this.state.game_state['cur_doc_selected'];
-        if (!this.keywords.hasOwnProperty(doc_title)){
-            this.keywords[doc_title] = [];
+        let cleaned_searchVal = searchVal.trim();
+        let doc_title = this.state.game_state['cur_doc_selected']['title'];
+        let keywords;
+        if (search_type === 'full') {keywords = this.keywords}
+        else if (search_type === 'passage') {keywords = this.passage_keywords_map}
+
+        if (!keywords.hasOwnProperty(doc_title)){
+            keywords[doc_title] = [];
         }
 
-        let doc_searchVals = this.keywords[this.state.game_state['cur_doc_selected']]
+        let doc_searchVals = keywords[doc_title];
         // check if we're adding a duplicate
         if (cleaned_searchVal !== doc_searchVals[doc_searchVals.length - 1]) {
             doc_searchVals.push(cleaned_searchVal);
-            console.log('keywords: ', this.keywords);
+            // console.log('keywords: ', keywords);
         }
     }
 
@@ -220,9 +229,11 @@ class Dashboard extends React.Component {
     }
 
     updateGameState(gameState) {
-        console.log('updating game state...')
         this.setState({game_state: gameState});
-        console.log('docs', this.state.game_state['documents_selected'])
+    }
+
+    recordEvidence(text) {
+        this.state.game_state['evidence'].push(text);
     }
 
     render() {
@@ -248,6 +259,15 @@ class Dashboard extends React.Component {
             docs_selected = this.state.game_state['documents_selected'].map((query) =>
                 <ListItem button key={query.toString()}>
                     <ListItemText primary={query} />
+                </ListItem>
+            );
+        }
+
+        let evidence_list;
+        if (this.state.game_state['evidence']) {
+            evidence_list = this.state.game_state['evidence'].map((evidence) =>
+                <ListItem button key={evidence.toString()}>
+                    <ListItemText primary={evidence} />
                 </ListItem>
             );
         }
@@ -305,6 +325,15 @@ class Dashboard extends React.Component {
                             </Paper>
                         </Grid>
                         
+                        {/* <TabTool tab1={<Searcher updateGameState={this.updateGameState} 
+                                recordKeywordSearchTerms={this.recordKeywordSearchTerms}
+                                updateCurrentDocument={this.updateCurrentDocument}/>}
+                                
+                                tab2={<SearcherTfidf updateGameState={this.updateGameState} 
+                                recordKeywordSearchTerms={this.recordKeywordSearchTerms}
+                                updateCurrentDocument={this.updateCurrentDocument}/>}
+                                /> */}
+
                         {/* full document search */}
                         <Grid item xs={12}>
                             <Searcher updateGameState={this.updateGameState} 
@@ -342,27 +371,33 @@ class Dashboard extends React.Component {
                                         {question_data['tournament']} {question_data['year']}
                                         
                                     </div>
-                                    
-                                    
                                 : "Waiting"}
 
-                                    <HightlightTools />
+                                    <HightlightTools callback={this.recordEvidence}/>
 
-                                    <h4>Previous queries</h4> 
-
+                                    <h4>Evidence List</h4> 
                                     <List component="nav" aria-label="search results" border={1}
                                         style={{ 
                                             maxHeight: 500, 
                                             overflow: "scroll", 
                                             whiteSpace: "pre-wrap", 
                                             textAlign: "left", 
-                                            
+                                            }}>
+                                        {evidence_list}
+                                    </List>
+
+                                    <h4>Previous queries</h4> 
+                                    <List component="nav" aria-label="search results" border={1}
+                                        style={{ 
+                                            maxHeight: 500, 
+                                            overflow: "scroll", 
+                                            whiteSpace: "pre-wrap", 
+                                            textAlign: "left", 
                                             }}>
                                         {queries}
                                     </List>
                                     
                                     <h4>Previous documents</h4> 
-
                                     <List component="nav" aria-label="search results"
                                         style={{ 
                                             maxHeight: 500, 
@@ -372,8 +407,8 @@ class Dashboard extends React.Component {
                                             }}>
                                         {docs_selected}
                                     </List>
+
                                     <h4>Instructions</h4> 
-                                    
                                     <p>
                                     Try to answer the quizbowl question using as few clues as possible. You may use the internal search engine to search Wikipedia articles.
                                     Using the keyword search is encouraged!
