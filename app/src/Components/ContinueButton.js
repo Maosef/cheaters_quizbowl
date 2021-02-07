@@ -36,8 +36,8 @@ class ContinueButton extends React.Component {
     //       {this.state.isToggleOn ? 'ON' : 'OFF'}
     //     </button>
     //   );
-      return <Button variant="contained" color="secondary" onClick={this.handleClick}>
-         {this.state.label}
+      return <Button variant="contained" color="primary" onClick={this.handleClick}>
+         {"Another Clue"}
              </Button>;
     }
   }

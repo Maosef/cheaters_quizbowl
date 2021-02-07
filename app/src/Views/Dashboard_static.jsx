@@ -16,29 +16,29 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import Navbar from './Components/Navbar'
-import AnswerForm from './Components/AnswerForm';
+import Navbar from '../Components/Navbar'
+import AnswerForm from '../Components/AnswerForm';
 // import Buzzer from './Buzzer';
-import Buzzer from './Components/BuzzerUntimed';
-import Button_React from './Components/Button_React'
-import ContinueButton from './Components/ContinueButton';
-// import QuestionDisplay from './Components/QuestionDisplay';
-import QuestionDisplay from './Components/QuestionDisplaySentence';
+import Buzzer from '../Components/BuzzerUntimed';
+import Button_React from '../Components/Button_React'
+import ContinueButton from '../Components/ContinueButton';
+import QuestionDisplay from '../Components/QuestionDisplay';
+// import QuestionDisplay from '../Components/QuestionDisplaySentence';
 
 
-import Searcher from './Components/Searcher';
-import SearcherTfidf from './Components/SearcherTfidf';
+import Searcher from '../Components/Searcher';
+import SearcherTfidf from '../Components/SearcherTfidf';
 
-import {postRequest} from './utils';
+import {postRequest} from '../utils';
 
 import { withStyles } from '@material-ui/core/styles';
-import useStyles from './Styles';
+import useStyles from '../Styles';
 
-import './App.css';
-import HighlightToolbar from './Components/HighlightToolbar';
-import HighlightTools from './Components/HighlightTools';
+import '../App.css';
+import HighlightToolbar from '../Components/HighlightToolbar';
+import HighlightTools from '../Components/HighlightTools';
 
-import TabTool from './Components/TabTool';
+import TabTool from '../Components/TabTool';
 
 // main Dashboard. Load question, handle interrupt, load next question
 // preloaded questions for experiment setting
@@ -311,11 +311,16 @@ class Dashboard extends React.Component {
             );
         }
 
+        let text;
+        if (question_data) {
+            text = question_data['question'].slice(question_data['tokenizations'][0][0],question_data['tokenizations'][1][1])
+        }
+            
         return (
 
             <div className={classes.root}>
                 
-                <Navbar text="Cheater's Bowl, Sentence Split" />
+                <Navbar text="Cheater's Bowl, Static (2 sentence)"/>
 
                 <div className={classes.body} style={{maxWidth: 1500, margin: "auto"}}>
                     <Grid container spacing={1}
@@ -323,17 +328,17 @@ class Dashboard extends React.Component {
                     >   
                         <Grid container item xs={9}>
                         
-                            
-
                             {/* question display */}
                             <Grid item xs={12}>
                                 <Paper className={classes.paper} style={{ "textAlign": "left" }}>
                                     <h3>Question {this.state.game_state['question_number']}</h3>
                                     {Object.keys(this.state.game_state).length > 0 ?
                                         <QuestionDisplay
-                                            text={this.state.game_state['question_data']['question']}
-                                            tokenizations={this.state.game_state['question_data']['tokenizations']}
-                                            updateSentencePosition={(index) => this.setState({ sentenceIndex: index })} />
+                                            text={text}
+                                            // text={this.state.game_state['question_data']['question']}
+                                            // tokenizations={this.state.game_state['question_data']['tokenizations']}
+                                            // updateSentencePosition={(index) => this.setState({ sentenceIndex: index })}
+                                            />
                                         // <QuestionDisplay
                                         //     text={this.state.game_state['question_data']['question']}
                                         //     interrupted={this.state.interrupted}

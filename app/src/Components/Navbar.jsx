@@ -7,7 +7,10 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
+import { withRouter } from 'react-router';
 import { Redirect } from 'react-router-dom';
+
+import SimpleModal from './Modal';
 
 // import useStyles from './Styles';
 
@@ -23,14 +26,18 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-export default function Navbar() {
+export default function Navbar(props) {
     const classes = useStyles();
 
-    function logout() {
-        window.sessionStorage.clear("token")
+    // function logout() {
+    //     window.sessionStorage.clear("token")
+    //     return <Redirect to="/login" />;
+    // }
+
+    let logout = (e) => {
+        window.sessionStorage.clear("token");
         return <Redirect to="/login" />;
     }
-    
 
     return (
 
@@ -42,9 +49,12 @@ export default function Navbar() {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
-                        Cheater's Quizbowl
-                </Typography>
+                        {props.text}
+                    </Typography>
+
+                    <SimpleModal />
                     <Button onClick={logout} color="inherit">Logout</Button>
+
                 </Toolbar>
             </AppBar>
         </div>

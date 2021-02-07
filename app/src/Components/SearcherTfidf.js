@@ -12,7 +12,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 
 import DocumentSearchBox from './DocumentSearchBox';
-import HighLighter from './Highlighter';
 
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../Styles';
@@ -31,8 +30,9 @@ class SearcherTfidf extends React.Component {
 
         // this.fetchWikiData = this.fetchWikiData.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        
+        this.processShortcut = this.processShortcut.bind(this);
         this.processQuery = this.processQuery.bind(this);
-        // this.handleHighlight = this.handleHighlight.bind(this);
         this.searchDocumentsTfidf = this.searchDocumentsTfidf.bind(this);
         this.getDocumentById = this.getDocumentById.bind(this);
         
@@ -60,7 +60,15 @@ class SearcherTfidf extends React.Component {
 
     componentDidMount() {
         // shortcut to search from highlight
-        // HighlightTools(this.processQuery);
+        HighlightTools(83, this.processShortcut);
+    }
+
+    processShortcut(query) {
+        if (!query){
+            this.textInput.current.focus();
+        } else {
+            this.processQuery(query);
+        }
     }
 
     handleInputChange(event) {
@@ -109,7 +117,7 @@ class SearcherTfidf extends React.Component {
     }
 
     async getDocumentById(id) {
-
+        this.props.updateCurrentDocument(id);
         console.log("doc id: ", id);
         fetch(`/get_document_by_id/${id}`)
             .then(res => res.json())
@@ -127,7 +135,7 @@ class SearcherTfidf extends React.Component {
     }
 
     // display doc content, log title
-    displayText(e, page) {
+    displayText(page) {
         const title = page['title'];
         this.setState({
             curPage: page,
@@ -152,16 +160,31 @@ class SearcherTfidf extends React.Component {
         //     </ListItem>
         // );
         const document_titles = this.state.passages.map((psg) =>
-            <ListItem button onClick={(e) => this.displayText(e, psg)} key={psg['id'].toString()}>
+            <ListItem button onClick={(e) => this.getDocumentById(psg['id'])} key={psg['id'].toString()}>
                 <ListItemText primary={psg['page']} />
             </ListItem>
         );
 
-        // loading icon
-        let loadingIcon;
+        let searchResult;
         if (this.state.isLoading) {
-            loadingIcon = <CircularProgress style={{margin: 20}}/>;
+            searchResult = <CircularProgress style={{margin: 20}}/>;
+        } else {
+            searchResult = <List component="nav" aria-label="search results"
+                                    style={{ 
+                                        maxHeight: 500, 
+                                        overflow: "scroll", 
+                                        whiteSpace: "pre-wrap", 
+                                        textAlign: "left", 
+                                        }}>
+                                    {document_titles}
+                                </List>
         }
+
+        // loading icon
+        // let loadingIcon;
+        // if (this.state.isLoading) {
+        //     loadingIcon = <CircularProgress style={{margin: 20}}/>;
+        // }
         return (
             <Paper className={classes.paperFlexVertical} >
                 <h4>Passage Search</h4>
@@ -177,18 +200,10 @@ class SearcherTfidf extends React.Component {
                                 handleInputChange={this.handleInputChange}/>
                             
                             {/* article, section display */}
-                            <Grid item xs={8}>
-                                {loadingIcon}
+                            <Grid item xs={12}>
+                                {searchResult}
                                 {/* document titles */}
-                                <List component="nav" aria-label="search results"
-                                    style={{ 
-                                        maxHeight: 500, 
-                                        overflow: "scroll", 
-                                        whiteSpace: "pre-wrap", 
-                                        textAlign: "left", 
-                                        }}>
-                                    {document_titles}
-                                </List>
+                                
                             </Grid>
                             
                         </Grid>
@@ -204,39 +219,28 @@ class SearcherTfidf extends React.Component {
                             recordKeywordSearchTerms={(keywords) => this.props.recordKeywordSearchTerms(keywords, 'passage')}
                             separateWordSearch={true}
                             cleanText={true}
-                            searchType={"passageSearch"}/>
+                            searchType={"passageSearch"}
+                            recordHighlight={(startIndex, endIndex) => this.props.recordHighlight(startIndex, endIndex, 'passage')}
+                            />
                         {/* <Highlight_tools /> */}
 
-                                    <Button variant="contained" 
-                                        color="primary" 
-                                        onClick={() => { this.getDocumentById(this.state.curPage['id']-1) }}
-                                        style={{ 
-                                            margin: 10, 
-                                            }}>
-                                        {'<<< Previous Page'}
-                                    </Button>
-                                    <Button variant="contained" 
-                                        color="primary" 
-                                        onClick={() => { this.getDocumentById(this.state.curPage['id']+1) }}
-                                        style={{ 
-                                            margin: 10, 
-                                            }}>
-                                        {'Next Page >>>'}
-                                    </Button>
-
-
+                            <Button variant="contained" 
+                                color="primary" 
+                                onClick={() => { this.getDocumentById(this.state.curPage['id']-1) }}
+                                style={{ 
+                                    margin: 10, 
+                                    }}>
+                                {'<<< Previous Page'}
+                            </Button>
+                            <Button variant="contained" 
+                                color="primary" 
+                                onClick={() => { this.getDocumentById(this.state.curPage['id']+1) }}
+                                style={{ 
+                                    margin: 10, 
+                                    }}>
+                                {'Next Page >>>'}
+                            </Button>
                     </Grid>
-
-                    {/* highlight text */}
-                    {/* <Grid item xs={7} >
-                        <div style={{ maxHeight: 500, overflow: "scroll", whiteSpace: "pre-wrap", textAlign: "left" }}>
-                            <HighLighter
-                                text={this.state.selectedDoc}
-                                selectionHandler={this.handleHighlight}
-                                customClass="highlight-class"
-                            />
-                        </div>
-                    </Grid> */}
 
                 </Grid>
             </Paper>

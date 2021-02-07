@@ -16,29 +16,31 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import Navbar from './Components/Navbar'
-import AnswerForm from './Components/AnswerForm';
+import Navbar from '../Components/Navbar'
+import AnswerForm from '../Components/AnswerForm';
 // import Buzzer from './Buzzer';
-import Buzzer from './Components/BuzzerUntimed';
-import Button_React from './Components/Button_React'
-import ContinueButton from './Components/ContinueButton';
-// import QuestionDisplay from './Components/QuestionDisplay';
-import QuestionDisplay from './Components/QuestionDisplaySentence';
+import Buzzer from '../Components/BuzzerUntimed';
+import Button_React from '../Components/Button_React'
+import ContinueButton from '../Components/ContinueButton';
+// import QuestionDisplay from '../Components/QuestionDisplay';
+// import QuestionDisplay from '../Components/QuestionDisplaySentence';
+import QuestionDisplay from '../Components/QuestionDisplayIncremental';
 
 
-import Searcher from './Components/Searcher';
-import SearcherTfidf from './Components/SearcherTfidf';
 
-import {postRequest} from './utils';
+import Searcher from '../Components/Searcher';
+import SearcherTfidf from '../Components/SearcherTfidf';
+
+import {postRequest} from '../utils';
 
 import { withStyles } from '@material-ui/core/styles';
-import useStyles from './Styles';
+import useStyles from '../Styles';
 
-import './App.css';
-import HighlightToolbar from './Components/HighlightToolbar';
-import HighlightTools from './Components/HighlightTools';
+import '../App.css';
+import HighlightToolbar from '../Components/HighlightToolbar';
+import HighlightTools from '../Components/HighlightTools';
 
-import TabTool from './Components/TabTool';
+import TabTool from '../Components/TabTool';
 
 // main Dashboard. Load question, handle interrupt, load next question
 // preloaded questions for experiment setting
@@ -47,7 +49,7 @@ let server_url = "";
 let num_questions = 20408;
 
 
-class Dashboard extends React.Component {
+class Dashboard_incremental extends React.Component {
     constructor(props) {
         super(props);
         
@@ -315,7 +317,7 @@ class Dashboard extends React.Component {
 
             <div className={classes.root}>
                 
-                <Navbar text="Cheater's Bowl, Sentence Split" />
+                <Navbar text="Cheater's Bowl, Incremental" />
 
                 <div className={classes.body} style={{maxWidth: 1500, margin: "auto"}}>
                     <Grid container spacing={1}
@@ -330,16 +332,16 @@ class Dashboard extends React.Component {
                                 <Paper className={classes.paper} style={{ "textAlign": "left" }}>
                                     <h3>Question {this.state.game_state['question_number']}</h3>
                                     {Object.keys(this.state.game_state).length > 0 ?
-                                        <QuestionDisplay
-                                            text={this.state.game_state['question_data']['question']}
-                                            tokenizations={this.state.game_state['question_data']['tokenizations']}
-                                            updateSentencePosition={(index) => this.setState({ sentenceIndex: index })} />
                                         // <QuestionDisplay
                                         //     text={this.state.game_state['question_data']['question']}
-                                        //     interrupted={this.state.interrupted}
-                                        //     updateSentencePosition={(index) => this.setState({ sentenceIndex: index })}
-                                        //     wordIndex={this.state.wordIndex}
-                                        //     updateWordIndex={() => this.setState({wordIndex: this.state.wordIndex + 1})}/>
+                                        //     tokenizations={this.state.game_state['question_data']['tokenizations']}
+                                        //     updateSentencePosition={(index) => this.setState({ sentenceIndex: index })} />
+                                        <QuestionDisplay
+                                            text={this.state.game_state['question_data']['question']}
+                                            interrupted={this.state.interrupted}
+                                            updateSentencePosition={(index) => this.setState({ sentenceIndex: index })}
+                                            wordIndex={this.state.wordIndex}
+                                            updateWordIndex={() => this.setState({wordIndex: this.state.wordIndex + 1})}/>
                                         : "Loading..."
                                     }
                                 </Paper>
@@ -353,11 +355,11 @@ class Dashboard extends React.Component {
                                         {/* <AnswerForm onSubmit={this.finishQuestion} label="Answer" /> */}
                                         <AnswerForm onSubmit={this.answerQuestion} label="Answer" />
                                     </div>
-                                    {/* <div style={{padding: 10}}>
+                                    <div style={{padding: 10}}>
                                         <Buzzer onClick={this.handleBuzz} 
                                             onTimeout={this.advanceQuestion} 
                                             interrupted={this.state.interrupted}/>
-                                    </div> */}
+                                    </div>
                                     <div style={{padding: 10}}>
                                         <Button variant="contained" color="secondary" onClick={this.advanceQuestion}>
                                             Skip
@@ -460,4 +462,4 @@ class Dashboard extends React.Component {
     }
 }
 
-export default withStyles(useStyles)(Dashboard);
+export default withStyles(useStyles)(Dashboard_incremental);

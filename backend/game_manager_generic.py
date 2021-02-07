@@ -49,10 +49,16 @@ def parse_html_string(html_text):
 # get question API
 def get_question_by_id(question_id: str, dataset_name: str):
 
-    if dataset_name == 'qanta':
+    if 'qanta' in dataset_name:
         qanta_row = db.get_question_by_id(question_id)
+        if dataset_name == 'qanta_2':
+            sentence_tokenizations = qanta_row["tokenizations"]
+            qanta_row["text"] = qanta_row["text"][:sentence_tokenizations[1][1]]
         qanta_row["text"] = qanta_row["text"].replace(chr(160), " ")
-        question_dict = {'id': qanta_row['qanta_id'], 'question': qanta_row['text'], 'answer': qanta_row['page']}
+        question_dict = {'id': qanta_row['qanta_id'], 
+                        'question': qanta_row['text'], 
+                        'answer': qanta_row['page'], 
+                        'tokenizations': qanta_row["tokenizations"]}
     elif dataset_name == 'hotpotqa':
         r = requests.get(f"http://127.0.0.1:8000/hotpotqa/get_row_by_id/{question_id}")
         if r.status_code != requests.codes.ok:
@@ -69,9 +75,11 @@ def get_random_question(dataset_name: str):
         if dataset_name == 'qanta_2':
             sentence_tokenizations = qanta_row["tokenizations"]
             qanta_row["text"] = qanta_row["text"][:sentence_tokenizations[1][1]]
-            
         qanta_row["text"] = qanta_row["text"].replace(chr(160), " ")
-        question_dict = {'id': qanta_row['qanta_id'], 'question': qanta_row['text'], 'answer': qanta_row['page']}
+        question_dict = {'id': qanta_row['qanta_id'], 
+                        'question': qanta_row['text'], 
+                        'answer': qanta_row['page'], 
+                        'tokenizations': qanta_row["tokenizations"]}
     elif dataset_name == 'hotpotqa':
         r = requests.get(f"http://127.0.0.1:8000/hotpotqa/get_random_row")
         if r.status_code != requests.codes.ok:
@@ -107,31 +115,11 @@ class GameManager:
         randomize: whether to give random questions
         '''
         self.config = {
-            'dataset': 'qanta_2',
-            'num_questions': 20,
+            'dataset': 'qanta',
+            'num_questions': 15,
             'multiple_answers': False,
             'randomize': True,
-            # 'question_ids': [16848, 115844, 26626, 53873, 6449, 15469, 102066, 151976, 90037, 181475]
-            'question_ids': ['5adf04c95542993a75d263d5',
-                            '5ae497595542995ad6573db7',
-                            '5ae6914755429908198fa627',
-                            '5ade450b5542997c77adedc5',
-                            '5ae6050f55429929b0807a5e',
-                            '5ade9c9355429975fa854f1b',
-                            '5a8b71915542995d1e6f1393',
-                            '5ae5e881554299546bf82fbb',
-                            '5a8ece2e5542995085b37497',
-                            '5a8e3e9b5542995085b37402',
-                            '5a825a9d55429940e5e1a870',
-                            '5ae0ba1155429924de1b7156',
-                            '5adf744d5542992d7e9f937e',
-                            '5ae685fd5542996d980e7bda',
-                            '5a75a76b5542992db9473697',
-                            '5ac2a399554299218029dada',
-                            '5a7631c05542994ccc91870b',
-                            '5adcb0ab5542994d58a2f69a',
-                            '5a86edcc55429960ec39b6da',
-                            '5a76a0005542993569682c64']
+            'question_ids': [96407, 7531, 52847, 34344, 87631, 140250, 96499, 77839, 58556, 73339, 10033, 35784, 37807, 92228, 88514],
             # 'data_path': "backend/data/"
         }
 
@@ -151,6 +139,9 @@ class GameManager:
 
         self.reset()
         self._file_name = "backend/data/recorded_game_{}.jsonl".format(str(datetime.today().date()))
+
+        self.state['username'] = username
+        self.state['session_token'] = session_token
 
         print("starting new game...")
         # get questions
@@ -179,8 +170,8 @@ class GameManager:
         self.game_history = []
         # state is organized per question, corresponds to rows
         self.state = {
-            'username': self._username,
-            'session_token': self._session_token,
+            'username': None,
+            'session_token': None,
             'time': str(datetime.utcnow()),
             'question_number': 0, 
             'question_id': '', 
@@ -260,6 +251,7 @@ class GameManager:
         self.state['cur_doc_selected'] = ''
         self.state['keyword_searches'] = {}
         self.state['buzz_word_index'] = -1
+        self.state['evidence'] = []
 
         self.state['tfidf_search_map'] = {
                 'queries': [], 
@@ -298,7 +290,7 @@ class GameManager:
         
     # normalize answers, remove punctuation and whitespace. try prompts?
     def answer_match(self, player_answer, ground_truth):
-        print('ANSWERS:', player_answer, ground_truth)
+        print(f'player answer: {player_answer}, ground truth: {ground_truth}')
 
         # if the player answer words overlap with ground truth words
         player_answer_words = map(self.normalize, player_answer.split(' '))
@@ -350,6 +342,10 @@ class GameManager:
         elif search_box == 'passage':
             self.state['tfidf_search_map']['keyword_searches'] = keywords
 
+    def record_evidence(self, evidence: list):
+        # cur_doc = self.state['cur_doc_selected']
+        self.state['evidence'] = evidence
+    
     # old
     def search_documents(self, query: str):
 

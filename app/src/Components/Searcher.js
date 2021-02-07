@@ -18,6 +18,8 @@ import DocumentSearchBox from './DocumentSearchBox';
 // import HighLighter from './Highlighter';
 import DocumentDisplay from './DocumentDisplay';
 import HighlightTools from './HighlightTools';
+import Box from '@material-ui/core/Box';
+
 
 import {getRequest, postRequest} from '../utils';
 
@@ -56,7 +58,7 @@ class Searcher extends React.Component {
 
     componentDidMount() {
         // shortcut to search from highlight
-        HighlightTools(this.processShortcut);
+        HighlightTools(83, this.processShortcut);
     }
 
     handleInputChange(event) {
@@ -109,12 +111,12 @@ class Searcher extends React.Component {
 
     // display doc content, log title
     async getDocument(e, title) {
-        this.props.updateCurrentDocument(title);
-        fetch(`get_document_html?title=${title}`)
-            .then(response => response.json())
+        
+        getRequest(`get_document_html?title=${title}`)
             .then(data => {
                 // console.log(data);
                 this.props.updateGameState(data);
+                // this.props.updateCurrentDocument(title);
                 let doc = data['cur_doc_selected']
                 this.setState({
                     selectedDoc: doc['html'],
@@ -172,14 +174,12 @@ class Searcher extends React.Component {
         }
         return (
             <Paper className={classes.paperFlexVertical} >
-                <h4>Full Document Search</h4>
+                <h3 style={{textAlign:"left"}}>Document Search</h3>
                 <Grid container spacing={3}
                     bgcolor="background.paper"
                 >
-                    
                     {/* document search */}
                     <Grid item xs={4}>
-                        <Grid container spacing={3}>
                             {/* <DocumentSearchBox 
                                 onSubmit={(query) => this.processQuery(query)} 
                                 label="Search Documents (Ctrl-S)" 
@@ -190,19 +190,21 @@ class Searcher extends React.Component {
                                 className={classes.root} 
                                 noValidate 
                                 autoComplete="off" 
-                                style={{"display": "flex", "alignItems": "center"}}>
+                                style={{"display": "flex", "alignItems": "center", "marginBottom": 10}}>
                                 <TextField 
                                     inputRef={this.textInput}
                                     value={this.state.curQuery} 
                                     onChange={this.handleInputChange} 
                                     label="Search Documents (Ctrl-S)" 
                                     variant="outlined" 
+                                    fullWidth
+                                    // margin="normal"
                                     // defaultValue={this.props.curQuery}
                                 />
                             </form>
                             
                             {/* article, section display */}
-                            <Grid item xs={8}>
+                            <Box border={1}>
                                 {loadingIcon}
                                 {/* document titles */}
                                 <List component="nav" aria-label="search results"
@@ -214,7 +216,7 @@ class Searcher extends React.Component {
                                         }}>
                                     {document_titles}
                                 </List>
-                            </Grid>
+                            </Box>
                             
                             {/* document section titles */}
                             {/* <Grid item xs={6}>
@@ -228,7 +230,6 @@ class Searcher extends React.Component {
                                     sections
                                 </List>
                             </Grid> */}
-                        </Grid>
                     </Grid>
                     
                     {/* <Divider orientation="vertical" flexItem /> */}

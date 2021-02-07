@@ -1,11 +1,13 @@
+from fastapi import Depends, HTTPException, status, APIRouter
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from fastapi import Depends, HTTPException
-from fastapi import APIRouter
-from backend.database import Database
+
+from jose import JWTError, jwt
 from passlib.context import CryptContext
-import jwt
-from datetime import datetime, timedelta
 import backend.security_config_dev as security_config
+
+from backend.database import Database
+
+from datetime import datetime, timedelta
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token/")
@@ -16,10 +18,11 @@ router = APIRouter()
 
 def create_access_token(*, data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=60 * 24 * 2 * 7)
+    # if expires_delta:
+    #     expire = datetime.utcnow() + expires_delta
+    # else:
+    #     expire = datetime.utcnow() + timedelta(minutes=60 * 24 * 2 * 7)
+    expire = datetime.utcnow() + timedelta(minutes=60 * 24 * 2 * 7)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(
         to_encode, security_config.SECRET_KEY, algorithm=security_config.ALGORITHM
@@ -46,16 +49,42 @@ def decode_token(token):
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
-    print("Token {}".format(token))
-    user = decode_token(token)
-    if not user:
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return user
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        print("Token {}".format(token))
+        payload = jwt.decode(token, security_config.SECRET_KEY, algorithms=[security_config.ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        # token_data = TokenData(username=username)
+    except JWTError:
+        raise credentials_exception
+    # user = get_user(fake_users_db, username=token_data.username)
+    # if user is None:
+    #     raise credentials_exception
+    return username
 
+# async def get_current_user(token: str = Depends(oauth2_scheme)):
+#     credentials_exception = HTTPException(
+#         status_code=status.HTTP_401_UNAUTHORIZED,
+#         detail="Could not validate credentials",
+#         headers={"WWW-Authenticate": "Bearer"},
+#     )
+#     print("Token {}".format(token))
+#     payload = jwt.decode(token, security_config.SECRET_KEY, algorithms=[security_config.ALGORITHM])
+#     username: str = payload.get("sub")
+#     if username is None:
+#         raise credentials_exception
+#     # token_data = TokenData(username=username)
+
+#     # user = get_user(fake_users_db, username=token_data.username)
+#     # if user is None:
+#     #     raise credentials_exception
+#     return username
 
 @router.get("/users/me")
 async def read_users_me(current_user: str = Depends(get_current_user)):
@@ -77,8 +106,7 @@ def get_access_token(form_data):
     )
 
     if db.insert_session(form_data.username, access_token):
-        print("Authenticated!")
-
+        print("Authenticated!") 
         return {"access_token": access_token, "token_type": "bearer"}
     else:
         print("error storing session")

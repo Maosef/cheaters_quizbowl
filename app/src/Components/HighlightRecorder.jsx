@@ -114,29 +114,20 @@ export default class Highlighter extends Component {
         // console.log(this.props.text);
         if (!this.state.selection) {
             return (
-                // <span
-                //     onMouseUp={this.onMouseUpHandler}>{this.props.text}
-                // </span>
-                <div
+                <span
                     onMouseUp={this.onMouseUpHandler}>{this.props.text}
-                </div>
+                </span>
+                // <div
+                //     onMouseUp={this.onMouseUpHandler}>
+                //     {this.props.text}
+                // </div>
             )
         } else {
             return (
                 <span
                     onMouseUp={this.onMouseUpHandler}>
-                    <span
-                        data-order="first" >
-                        {this.state.first}
-                    </span>
-                    <span
-                        data-order="middle"
-                        className={this.props.customClass || "default"}>
-                        {this.state.middle}
-                    </span>
-                    <span
-                        data-order="last">
-                        {this.state.last}
+                    <span>
+                        {this.props.text}
                     </span>
                 </span>
             )

@@ -1,19 +1,26 @@
 export async function getRequest(url) {
-        
+    let token = window.sessionStorage.getItem("token");
     const response = await fetch(url, {
         method: 'GET',
-        // body: JSON.stringify(data)
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
       });
       return response.json(); // parses JSON response into native JavaScript objects
 }
 
-export async function postRequest(url, body={}) {
-        
+export async function postRequest(url, body={}, headers={}) {
+    let token = window.sessionStorage.getItem("token");
     const response = await fetch(url, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(body)
       });
-      return response.json(); // parses JSON response into native JavaScript objects
+      return response.json();;
 }
 
 

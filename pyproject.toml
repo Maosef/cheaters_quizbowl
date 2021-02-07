@@ -12,11 +12,12 @@ PyJWT = "^1.7.1"
 wikipedia = "^1.4.0"
 uvloop = "^0.14.0"
 uvicorn = "^0.12.2"
-passlib = "^1.7.4"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 python-multipart = "^0.0.5"
 Wikipedia-API = "^0.5.4"
 Unidecode = "^1.1.1"
 pandas = "^1.1.4"
+python-jose = {extras = ["cryptography"], version = "^3.2.0"}
 
 
 [tool.poetry.dev-dependencies]

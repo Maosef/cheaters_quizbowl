@@ -8,6 +8,7 @@ import {postRequest, cleanText} from '../utils';
 
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
+import Highlighter from './HighlightRecorder';
 
 
 // search and highlight keywords
@@ -23,10 +24,12 @@ class DocumentDisplay extends React.Component {
     // this.jumpTo = this.jumpTo.bind(this);
     // this.search = this.search.bind(this);
     this.display = this.display.bind(this);
+    this.handleHighlight = this.handleHighlight.bind(this);
     
     this.searchVals = []
     this.state = {
       searchTerms: "",
+      highlight: {}
     };
   }
 
@@ -120,6 +123,10 @@ class DocumentDisplay extends React.Component {
   //   }
   // }
 
+  handleHighlight(startIndex, endIndex) {
+    // if answer shortcut is used
+    this.setState({highlight: {startIndex:startIndex,endIndex:endIndex}})
+  }
   // jquery display for text search. Temporary
   display() {
 
@@ -171,7 +178,6 @@ class DocumentDisplay extends React.Component {
      */
     $input.on("input", (e)=>{
       {
-
         let searchVal = e.target.value;
         let separateWordSearch = this.props.separateWordSearch;
         if (searchVal.length >= 3){ // min search length for performance reasons
@@ -226,6 +232,12 @@ class DocumentDisplay extends React.Component {
     });
   }
 
+  // onMouseUpHandler(){
+  //   const selectionObj = (window.getSelection && window.getSelection());
+  //   const selection = selectionObj.toString();
+  //   console.log(selection)
+  // }
+
   render() {
     return (
       <Box className="keyword-search" border={1}
@@ -252,19 +264,28 @@ class DocumentDisplay extends React.Component {
 
         {/* content display */}
         <div className="content bordered" 
-            id={"content" + this.props.searchType}
-            dangerouslySetInnerHTML={{ __html: this.props.text }}
-            style={{ 
-              maxHeight: 500, 
-              overflow: "scroll", 
-              whiteSpace: "pre-wrap", 
-              textAlign: "left", 
-              padding: 20
-          }}>
+          id={"content" + this.props.searchType}
+          style={{ 
+            maxHeight: 500, 
+            overflow: "scroll", 
+            whiteSpace: "pre-wrap", 
+            textAlign: "left", 
+            padding: 20
+          }}
+          dangerouslySetInnerHTML={{ __html: this.props.text }}
+          // onMouseUp={this.onMouseUpHandler}
+        >
+              {/* <Highlighter
+                  text={this.props.text}
+                  selectionHandler={this.handleHighlight}
+                  customClass="highlight-class"
+              /> */}
+              {/* {this.props.text} */}
         </div>
       </Box>
       );
     }
   }
+
 
   export default DocumentDisplay;

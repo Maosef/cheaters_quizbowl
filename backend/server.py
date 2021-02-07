@@ -1,10 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from backend.database import Database
 from backend import qanta
 from backend import security
+from backend.security import get_current_user
 from backend import data_server
 
 # from backend.game_manager_utils import GameManager 
@@ -19,13 +20,16 @@ import requests
 
 
 class PlayerRequest(BaseModel):
-    username: Optional[str] = None
-    session_token: Optional[str] = None
+    username: str
+    session_token: str
     # data: Optional[dict] = None
 
 class Keywords(BaseModel):
     keywords: dict
     passage_keywords_map: dict
+
+class Evidence(BaseModel):
+    evidence: list
 
 app = FastAPI()
 origins = [
@@ -50,8 +54,19 @@ app.include_router(data_server.router)
 
 
 # todo: allow managing multiple game sessions at once
-games = dict()
-game_manager = GameManager() 
+game_sessions = dict()
+# game_manager = GameManager() 
+
+def get_game_object(token: str):
+    if token not in game_sessions:
+        game_sessions[token] = GameManager()
+    game_object = game_sessions[token]
+    print(token)
+    return game_sessions[token]
+
+def destroy_game_object(token: str):
+    del game_sessions[token]
+
 
 # endpoints
 
@@ -61,68 +76,83 @@ def read_root():
 
 # start a new game
 @app.post("/start_new_game")
-def start_new_game(player_request: PlayerRequest):
+async def start_new_game(current_user: str = Depends(get_current_user)):
 
-    # print(player_request)
-    game_manager.start_game(player_request.username, player_request.session_token)
+    print('cur user', current_user)
+    game_manager = get_game_object(current_user)
+    game_manager.start_game(current_user, "test token")
     return game_manager.state
 
 @app.post("/buzz")
-def buzz(word_index: int):
+def buzz(word_index: int, current_user: str = Depends(get_current_user)):
+    game_manager = get_game_object(current_user)
     return game_manager.buzz(word_index)
 
 # answer
 @app.post("/answer")
-def answer(answer: str):
+def answer(answer: str, current_user: str = Depends(get_current_user)):
+    game_manager = get_game_object(current_user)
     state = game_manager.process_answer(answer)
     return state
     
 @app.post("/advance_question")
-def advance_question():
+def advance_question(current_user: str = Depends(get_current_user)):
+    game_manager = get_game_object(current_user)
     return game_manager.advance_question()
 
 # get question ids
 @app.get("/get_question_ids")
-def get_question_list():
+def get_question_list(current_user: str = Depends(get_current_user)):
+    game_manager = get_game_object(current_user)
     return game_manager.question_ids
 
 # get document
 @app.get("/get_document_text")
-def get_document_text(title: str):
+def get_document_text(title: str, current_user: str = Depends(get_current_user)):
+    game_manager = get_game_object(current_user)
     return game_manager.get_wiki_document_text(title)
 
 # get document
 @app.get("/get_document_html")
-def get_document_html(title: str):
+def get_document_html(title: str, current_user: str = Depends(get_current_user)):
     print("get doc endpoint")
+    game_manager = get_game_object(current_user)
     return game_manager.get_wiki_document_html(title)
 
 @app.post("/record_keyword_search")
-def record_keyword_search(keywords: Keywords):
+def record_keyword_search(keywords: Keywords, current_user: str = Depends(get_current_user)):
     print(keywords)
-
+    game_manager = get_game_object(current_user)
     game_manager.record_keyword_search(keywords.keywords, 'full')
     game_manager.record_keyword_search(keywords.passage_keywords_map, 'passage')
     return game_manager.state
 
+@app.post("/record_evidence")
+def record_evidence(evidence: Evidence, current_user: str = Depends(get_current_user)):
+    print(evidence)
+    game_manager = get_game_object(current_user)
+    game_manager.record_evidence(evidence.evidence)
+    return game_manager.state
+
+
 # search wikipedia. get titles
 @app.get("/search_wiki_titles")
-def search_wikipedia_titles(query: str, limit=None):
-    
+def search_wikipedia_titles(query: str, limit=None, current_user: str = Depends(get_current_user)):
+    game_manager = get_game_object(current_user)
     return game_manager.search_document_titles(query)
 
 # search wikipedia. get clean html
 @app.get("/search_wiki")
-def search_wikipedia_html(query: str, limit=None):
-    
+def search_wikipedia_html(query: str, limit=None, current_user: str = Depends(get_current_user)):
+    game_manager = get_game_object(current_user)
     pages = game_manager.search_documents(query)
     return {'error': False, 'pages': pages}
 
 
 # TF-IDF index
 @app.get("/search_tfidf")
-def search_tfidf(query: str, limit:int=10):
-    
+def search_tfidf(query: str, limit:int=10, current_user: str = Depends(get_current_user)):
+    game_manager = get_game_object(current_user)
     r = requests.get(f"http://127.0.0.1:5000/search_passages?query={query}&n_docs={limit}")
     if r.status_code != requests.codes.ok:
         print("Error in search")
@@ -133,13 +163,14 @@ def search_tfidf(query: str, limit:int=10):
     return search_results
 
 @app.get("/get_document_by_id/{doc_id}")
-def get_document_by_id(doc_id: int):
-    
+def get_document_by_id(doc_id: int, current_user: str = Depends(get_current_user)):
+    game_manager = get_game_object(current_user)
     r = requests.get(f"http://127.0.0.1:5000/get_document_by_id/{doc_id}")
     if r.status_code != requests.codes.ok:
         print("Error in getting document")
     else:
-        game_manager.state['tfidf_search_map']['documents_selected'].append(doc_id)
+        print("getting doc: ", r.json()['id'])
+        game_manager.state['tfidf_search_map']['documents_selected'].append(r.json())
     return r.json()
 
 

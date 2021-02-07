@@ -1,19 +1,18 @@
 
-export default function HightlightTools(callback) {
+export default function HighlightTools(keyCode, callback) {
 
     let activated = false;
 
     // listen for shortcut key and highlight
-    // Ctrl + S
     function captureSearch(e) {
-        var selectedText = getSelectedText();
-        console.log('key down');
-        if (!activated && (e.ctrlKey || e.metaKey) && e.keyCode === 83) { 
-        // if (!activated && e.keyCode === 83) { 
+        let selectedText = getSelectedText();
+        // console.log('highlighted: ', selectedText);
+        // console.log('key down: ', e.keyCode);
+        if (!activated && (e.ctrlKey || e.metaKey) && e.keyCode === keyCode) { 
             e.preventDefault();
             activated = true;
             // this.searchBar.focus();
-            console.log('searching highlight...');
+            console.log('calling callback with ', selectedText);
             callback(selectedText);
         }
     }
@@ -39,14 +38,10 @@ export default function HightlightTools(callback) {
         }
     }
     
-    window.onkeydown = captureSearch;
-    window.onkeyup = deactivateShortcut;
+    // window.onkeydown = captureSearch;
+    // window.onkeyup = deactivateShortcut;
 
-    // eventTarget.addEventListener("keydown", event => {
-    //     if (event.isComposing || event.keyCode === 229) {
-    //       return;
-    //     }
-    //     // do something
-    //   });
+    window.addEventListener("keydown", event => {captureSearch(event)});
+    window.addEventListener("keyup", event => {deactivateShortcut(event)});
 }
 
