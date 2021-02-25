@@ -48,10 +48,10 @@ export default function SimpleModal() {
     <div style={modalStyle} className={classes.paper}>
         <h2>Instructions</h2> 
         <p>
-        Try to answer the (shortened) Quizbowl questions. You are encouraged to use the provided search engine to search Wikipedia articles. 
+        Try to answer the Quizbowl questions. You are encouraged to use the provided search engine to search Wikipedia articles. 
         Use the evidence tool (<code>Ctrl-e</code>) to save text that helped you answer. 
         Feel free to skip the question if it's too hard. 
-        We recommend familiarizing yourself with the shorcuts. You can always consult this page from the "Help" button (top-right).
+        We recommend familiarizing yourself with the shortcuts. You can always consult this page from the "Help" button (top-right).
         </p>
 
         <h4>Keyboard shortcuts:</h4>

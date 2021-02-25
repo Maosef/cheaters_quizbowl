@@ -19,9 +19,10 @@ import copy
 import requests
 
 
-class PlayerRequest(BaseModel):
+class InitRequest(BaseModel):
     username: str
-    session_token: str
+    session_token: Optional[str] = ''
+    mode: Optional[str] = ''
     # data: Optional[dict] = None
 
 class Keywords(BaseModel):
@@ -30,6 +31,10 @@ class Keywords(BaseModel):
 
 class Evidence(BaseModel):
     evidence: list
+
+class Answer(BaseModel):
+    answer: str
+    sentence_index: int
 
 app = FastAPI()
 origins = [
@@ -57,15 +62,15 @@ app.include_router(data_server.router)
 game_sessions = dict()
 # game_manager = GameManager() 
 
-def get_game_object(token: str):
-    if token not in game_sessions:
-        game_sessions[token] = GameManager()
-    game_object = game_sessions[token]
-    print(token)
-    return game_sessions[token]
+def get_game_object(current_user: str):
+    if current_user not in game_sessions:
+        game_sessions[current_user] = GameManager()
+    game_object = game_sessions[current_user]
+    print('current user: ', current_user)
+    return game_sessions[current_user]
 
-def destroy_game_object(token: str):
-    del game_sessions[token]
+def destroy_game_object(current_user: str):
+    del game_sessions[current_user]
 
 
 # endpoints
@@ -76,11 +81,12 @@ def read_root():
 
 # start a new game
 @app.post("/start_new_game")
-async def start_new_game(current_user: str = Depends(get_current_user)):
+async def start_new_game(request: InitRequest, current_user: str = Depends(get_current_user)):
 
-    print('cur user', current_user)
+    print(f'cur user: {current_user}, mode: {request.mode}')
     game_manager = get_game_object(current_user)
-    game_manager.start_game(current_user, "test token")
+    if 'mode' not in game_manager.state or game_manager.state['mode'] != request.mode:
+        game_manager.start_game(current_user, request.mode)
     return game_manager.state
 
 @app.post("/buzz")
@@ -90,15 +96,17 @@ def buzz(word_index: int, current_user: str = Depends(get_current_user)):
 
 # answer
 @app.post("/answer")
-def answer(answer: str, current_user: str = Depends(get_current_user)):
+def answer(answer: str, sentence_index: int = -1, current_user: str = Depends(get_current_user)):
+    print('answer', answer)
     game_manager = get_game_object(current_user)
-    state = game_manager.process_answer(answer)
+    state = game_manager.process_answer(answer, sentence_index)
     return state
     
 @app.post("/advance_question")
-def advance_question(current_user: str = Depends(get_current_user)):
+def advance_question(player_decision = None, current_user: str = Depends(get_current_user)):
+    print('player_decision', player_decision)
     game_manager = get_game_object(current_user)
-    return game_manager.advance_question()
+    return game_manager.advance_question(player_decision)
 
 # get question ids
 @app.get("/get_question_ids")
@@ -174,6 +182,13 @@ def get_document_by_id(doc_id: int, current_user: str = Depends(get_current_user
     return r.json()
 
 
+@app.get("/get_players")
+def get_players():
+    top_players = {}
+    for user, game_manager in game_sessions.items():
+        top_players[user] = game_manager.state['score']
+    return top_players
+
 # search wikipedia. create html from sections
 # @app.get("/search_wiki_sections")
 # def search_wikipedia_sections(query: str, limit: int=8):
@@ -201,7 +216,3 @@ def get_document_by_id(doc_id: int, current_user: str = Depends(get_current_user
 #             print(title, "PageError")
 #             continue
 #     return {'error': False, 'pages': pages}
-
-
-
-

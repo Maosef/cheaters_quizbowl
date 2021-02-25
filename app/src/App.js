@@ -21,11 +21,10 @@ function App() {
         <Route path="/register">
           <Register />
         </Route>
-        
         <Route path="/incremental">
           <Dashboard_incremental />
         </Route>
-        <Route path="/two_sentence">
+        <Route path="/static">
           <Dashboard_static />
         </Route>
         <Route path="/">

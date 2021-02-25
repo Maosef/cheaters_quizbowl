@@ -25,6 +25,9 @@ const useStyles = ((theme) => ({
         padding: 20,
         // "border-style": "solid"
     },
+    margin: {
+        margin: theme.spacing(1),
+    },
     menuButton: {
         marginRight: theme.spacing(2),
       },

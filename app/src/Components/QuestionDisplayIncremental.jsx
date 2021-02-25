@@ -9,7 +9,7 @@ class QuestionDisplay extends React.Component {
     constructor(props) {
         super(props);
         // this.classes = useStyles();
-        this.read_time_ms = 200;
+        this.read_time_ms = 300;
         this.state = {
             wordIndex: 0, 
             text: "",

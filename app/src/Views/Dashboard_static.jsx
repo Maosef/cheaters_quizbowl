@@ -121,7 +121,7 @@ class Dashboard extends React.Component {
         //       },
         //     // body: JSON.stringify(body)
         // });
-        postRequest('start_new_game', {'username': username, 'session_token': token}).then(data => {
+        postRequest('start_new_game', {'username': username, 'session_token': token, 'mode': 'static'}).then(data => {
             console.log('new game started, ', data);
             this.setState({game_state: data});
         });

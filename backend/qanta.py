@@ -4,7 +4,7 @@ from backend.database import Database
 # import backend.security as security
 # import time
 from pydantic import BaseModel
-
+import random
 
 class Answer(BaseModel):
     session_id: str
@@ -18,6 +18,9 @@ class Answer(BaseModel):
 db = Database()
 router = APIRouter()
 
+@router.get("/api/qanta/v1/random_ids")
+def get_ids(k=20):
+    return random.choices(db._all_qanta_ids, k=k)
 
 @router.get("/api/qanta/v1/random")
 def get_random_question():

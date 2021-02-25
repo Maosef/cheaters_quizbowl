@@ -59,11 +59,11 @@ class AnswerForm extends React.Component {
                     label={"Answer"} 
                     variant="outlined" 
                 />
-                {/* <div style={{padding: 20}}>
+                <div style={{padding: 20}}>
                     <Button variant="contained" color="primary" onClick={this.handleSubmit}>
                         Submit
                     </Button>
-                </div> */}
+                </div>
             </form>
 
         );

@@ -31,14 +31,16 @@ import SearcherTfidf from './Components/SearcherTfidf';
 
 import {postRequest} from './utils';
 
-import { withStyles } from '@material-ui/core/styles';
-import useStyles from './Styles';
-
 import './App.css';
 import HighlightToolbar from './Components/HighlightToolbar';
 import HighlightTools from './Components/HighlightTools';
 
 import TabTool from './Components/TabTool';
+
+import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import useStyles from './Styles';
+import { green, purple } from '@material-ui/core/colors';
+
 
 // main Dashboard. Load question, handle interrupt, load next question
 // preloaded questions for experiment setting
@@ -121,7 +123,7 @@ class Dashboard extends React.Component {
         //       },
         //     // body: JSON.stringify(body)
         // });
-        postRequest('start_new_game', {'username': username, 'session_token': token}).then(data => {
+        postRequest('start_new_game', {'username': username, 'session_token': token, 'mode': 'sentence'}).then(data => {
             console.log('new game started, ', data);
             this.setState({game_state: data});
         });
@@ -137,13 +139,17 @@ class Dashboard extends React.Component {
 
     // keyboard shortcut to buzz
     handleShortcut(e) {
-        // if ((e.ctrlKey || e.metaKey) && e.keyCode === 32 && this.state.isToggled === false) {
+        // console.log(e.keyCode, this.state.answerStatus)
         if (e.keyCode === 32 && this.state.shortcutToggled === false && document.activeElement.tagName == 'BODY') {
           this.setState({shortcutToggled: true});
           
           e.preventDefault();
           this.handleBuzz();
           console.log('buzzed, ', this.shortcutToggled);
+        } else if (e.keyCode === 219 && this.state.answerStatus !== null) {
+            this.advanceQuestion(true);
+        } else if (e.keyCode === 221 && this.state.answerStatus !== null) {
+            this.advanceQuestion(false);
         }
     }
 
@@ -174,31 +180,37 @@ class Dashboard extends React.Component {
     }
 
     answerQuestion(answer) {
-        postRequest(`/answer?answer=${answer}`).then(data => {
+        postRequest(`/answer?answer=${answer}&sentence_index=${this.state.sentenceIndex}`).then(data => {
             this.setState({game_state: data});
             let game_state = data;
 
             // parse answer for correctness
-            if (game_state['answer_correct']) {
-                // let new_points = 10 * (state.tokenizations.length - state.sentenceIndex);
-                alert("Correct. Answer is " + game_state['answer'] + ". Score: " + game_state['score']);
-                this.advanceQuestion();
-            } else { // wrong answer
-                // console.log("Attempts", this.state.numAttempts, this.maxAttempts)
-                if (this.state.numAttempts < this.maxAttempts) {
-                    alert(`Incorrect. Tries left: ${this.maxAttempts-this.state.numAttempts}`);
-                    this.setState({numAttempts: this.state.numAttempts + 1});
-                    return;
-                } else {
-                    alert("Incorrect. Answer is " + game_state['answer']);
-                    this.advanceQuestion();
-                }
+            if (game_state['answer_correct']){
+                this.setState({answerStatus: "correct"});
+            } else {
+                this.setState({answerStatus: "incorrect"});
             }
+            
+
+            // if (game_state['answer_correct']) {
+            //     alert("Correct. Answer is " + game_state['answer'] + ". Score: " + game_state['score']);
+            //     this.advanceQuestion();
+            // } else { // wrong answer
+            //     // console.log("Attempts", this.state.numAttempts, this.maxAttempts)
+            //     if (this.state.numAttempts < this.maxAttempts) {
+            //         alert(`Incorrect. Tries left: ${this.maxAttempts-this.state.numAttempts}`);
+            //         this.setState({numAttempts: this.state.numAttempts + 1});
+            //         return;
+            //     } else {
+            //         alert("Incorrect. Answer is " + game_state['answer']);
+            //         this.advanceQuestion();
+            //     }
+            // }
         });
     }
 
     // advance to next question
-    advanceQuestion(){
+    advanceQuestion(player_decision=null){
         // record keyword search data
         console.log('keywords: ', this.keywords);
         postRequest(`/record_keyword_search`, {
@@ -207,8 +219,9 @@ class Dashboard extends React.Component {
         this.keywords = {};
         this.passage_keywords_map = {};
 
-        postRequest(`/advance_question`).then(data => {
-            this.setState({game_state: data, interrupted: false, wordIndex: 0});
+        postRequest(`/advance_question?player_decision=${player_decision}`).then(data => {
+            // reset state
+            this.setState({game_state: data, interrupted: false, wordIndex: 0, sentenceIndex: 0, answerStatus: null});
 
             let game_state = this.state.game_state;
             //load the next question
@@ -277,10 +290,14 @@ class Dashboard extends React.Component {
 
     render() {
 
+        const { classes } = this.props;
+
+        // const greenTheme = createMuiTheme({ palette: { primary: green } })
+        // const blueTheme = createMuiTheme({ palette: { primary: red } })
+
         if (window.sessionStorage.getItem("token") == null) {
             return <Redirect to="/login" />;
         }
-        const { classes } = this.props;
 
         let question_data = this.state.game_state['question_data'];
 
@@ -311,6 +328,26 @@ class Dashboard extends React.Component {
             );
         }
 
+        let override_window;
+        if (this.state.answerStatus != null) {
+            override_window = <div>
+                <p>We judged the answer as {this.state.answerStatus} (Our answer is {this.state.game_state.question_data['answer'].replace("_"," ")}). Please confirm or override. </p>
+                <Button variant="contained" color="default" onClick={() => this.advanceQuestion(true)} className={classes.margin}>
+                    I was right ([)
+                </Button>
+                <Button variant="contained" color="default" onClick={() => this.advanceQuestion(false)} className={classes.margin}>
+                    I was wrong (])
+                </Button>
+            </div>
+        }
+
+        {/* <ThemeProvider theme={greenTheme}>
+                                    <Button variant="contained" color="primary" className={classes.margin}>
+                                    Theme Provider
+                                    </Button>
+                                </ThemeProvider> */}
+        
+
         return (
 
             <div className={classes.root}>
@@ -322,8 +359,31 @@ class Dashboard extends React.Component {
                         bgcolor="background.paper"
                     >   
                         <Grid container item xs={9}>
-                        
-                            
+
+                            {/* answer form */}
+                            <Grid item xs={12}>
+                                <div className="flex-container" style={{"display": "flex", "alignItems": "center", " justifyContent": "space-between"}}>
+                                    <div style={{padding: 10}}>
+                                        {/* <AnswerForm onSubmit={this.finishQuestion} label="Answer" /> */}
+                                        <AnswerForm onSubmit={(answer)=>{this.answerQuestion(answer); document.activeElement.blur()}} label="Answer" />
+                                    </div>
+                                    {/* <div style={{padding: 10}}>
+                                        <Buzzer onClick={this.handleBuzz} 
+                                            onTimeout={this.advanceQuestion} 
+                                            interrupted={this.state.interrupted}/>
+                                    </div> */}
+                                    <div style={{padding: 10}}>
+                                        <Button variant="contained" color="secondary" onClick={this.advanceQuestion}>
+                                            Skip Question
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                {override_window}
+                          
+                            </Grid>
+                            {/* <Grid item xs={4}></Grid>
+                            <Grid item xs={4}></Grid> */}
 
                             {/* question display */}
                             <Grid item xs={12}>
@@ -345,27 +405,7 @@ class Dashboard extends React.Component {
                                 </Paper>
                             </Grid>
                             
-                            {/* answer form */}
-                            <Grid item xs={12}>
-                                
-                                <div className="flex-container" style={{"display": "flex", "alignItems": "center"}}>
-                                    <div style={{padding: 10}}>
-                                        {/* <AnswerForm onSubmit={this.finishQuestion} label="Answer" /> */}
-                                        <AnswerForm onSubmit={this.answerQuestion} label="Answer" />
-                                    </div>
-                                    {/* <div style={{padding: 10}}>
-                                        <Buzzer onClick={this.handleBuzz} 
-                                            onTimeout={this.advanceQuestion} 
-                                            interrupted={this.state.interrupted}/>
-                                    </div> */}
-                                    <div style={{padding: 10}}>
-                                        <Button variant="contained" color="secondary" onClick={this.advanceQuestion}>
-                                            Skip
-                                        </Button>
-                                    </div>
-                                </div>
-                                                            
-                            </Grid>
+                            
                         {/* <TabTool tab1={<Searcher updateGameState={this.updateGameState} 
                                 recordKeywordSearchTerms={this.recordKeywordSearchTerms}
                                 updateCurrentDocument={this.updateCurrentDocument}/>}

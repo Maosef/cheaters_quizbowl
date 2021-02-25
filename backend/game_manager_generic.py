@@ -116,10 +116,13 @@ class GameManager:
         '''
         self.config = {
             'dataset': 'qanta',
-            'num_questions': 15,
+            'num_questions': 20,
             'multiple_answers': False,
-            'randomize': True,
+            'randomize': False,
             'question_ids': [96407, 7531, 52847, 34344, 87631, 140250, 96499, 77839, 58556, 73339, 10033, 35784, 37807, 92228, 88514],
+            'qids_1': [107440,153381,124015,22343,52682,106517,60955,88688,50838,88742,105855,35593,127908,50875,5419,146615,75323,84162,111095,140679],
+            'qids_2': [140050,37738,49763,116356,88983,22586,143578,106706,40113,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
+            'qids_3': [107,74066,31599,50870,121638,146675,5524,53483,6405,125257,77213,105925,95072,988,89697,108671,73219,48673,71049,144507]
             # 'data_path': "backend/data/"
         }
 
@@ -135,16 +138,23 @@ class GameManager:
         self.game_history = []
 
     # resets, then starts a new game
-    def start_game(self, username: str, session_token: str):
+    def start_game(self, username: str, mode: str):
 
         self.reset()
         self._file_name = "backend/data/recorded_game_{}.jsonl".format(str(datetime.today().date()))
 
         self.state['username'] = username
-        self.state['session_token'] = session_token
+        self.state['mode'] = mode
 
         print("starting new game...")
         # get questions
+        if mode == "sentence":
+            self._question_ids = self.config["qids_1"]
+        elif mode == "incremental":
+            self._question_ids = self.config["qids_2"]
+        elif mode == "static":
+            self._question_ids = self.config["qids_3"]
+
         if self.config['randomize']:
             pass
         else:
@@ -171,7 +181,7 @@ class GameManager:
         # state is organized per question, corresponds to rows
         self.state = {
             'username': None,
-            'session_token': None,
+            'mode': None,
             'time': str(datetime.utcnow()),
             'question_number': 0, 
             'question_id': '', 
@@ -194,19 +204,24 @@ class GameManager:
             },
 
             'buzz_word_index': -1,
+            'buzz_sentence_number': -1,
             'player_answer': '', 
             'answer': '',
             'answer_correct': None, 
             'score': 0,
             'game_over': False,
+            'player_decision': None
         }
         return True
 
     # get next question, advance state
-    def advance_question(self):
+    def advance_question(self, player_decision=None):
 
         print('keywords:', self.state['keyword_searches'])
         
+        if player_decision != None:
+            self.state['player_decision'] = player_decision
+
         if self.state['question_number'] > 0: # record the current state
             # if not os.path.exists(self._file_name):
             #     print('creating new file for today: ', self._file_name)
@@ -251,6 +266,7 @@ class GameManager:
         self.state['cur_doc_selected'] = ''
         self.state['keyword_searches'] = {}
         self.state['buzz_word_index'] = -1
+        self.state['buzz_sentence_number'] = -1
         self.state['evidence'] = []
 
         self.state['tfidf_search_map'] = {
@@ -261,13 +277,15 @@ class GameManager:
                 'keyword_searches': {},
             }
 
+        self.state['player_decision'] = None
+
         return self.state
 
     def buzz(self, word_index):
         self.state['buzz_word_index'] = word_index
         return True
 
-    def process_answer(self, player_answer):
+    def process_answer(self, player_answer, sentence_number):
         question_id = self.state['question_id']
         ground_truth = self.state['question_data']['answer']
 
@@ -280,8 +298,16 @@ class GameManager:
         self.state['player_answer'] = player_answer
         self.state['answer'] = ground_truth
 
+        num_sentences = len(self.state['question_data']['tokenizations'])
+        points = 0
+        print(f'sentence number: {sentence_number}, num sentences: {num_sentences}')
+        self.state['buzz_sentence_number'] = sentence_number
+        
         if answer_correct:
-            self.state['score'] += 10
+            points += 10
+            points += 5 * (num_sentences - sentence_number)
+        print(f'points awarded: {points}')
+        self.state['score'] += points
 
         return self.state
 

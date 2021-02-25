@@ -147,7 +147,7 @@ class Searcher extends React.Component {
 
         // articles, sections
         let document_titles;
-        if (this.state.titles.length === 0) {
+        if (typeof this.state.titles === "undefined" || this.state.titles.length === 0) {
             document_titles = <ListItem>
                 <ListItemText primary={'No Results'} />
             </ListItem>
