@@ -118,7 +118,7 @@ class GameManager:
             'dataset': 'qanta',
             'num_questions': 20,
             'multiple_answers': False,
-            'randomize': False,
+            'randomize': True,
             'question_ids': [96407, 7531, 52847, 34344, 87631, 140250, 96499, 77839, 58556, 73339, 10033, 35784, 37807, 92228, 88514],
             'qids_1': [107440,153381,124015,22343,52682,106517,60955,88688,50838,88742,105855,35593,127908,50875,5419,146615,75323,84162,111095,140679],
             'qids_2': [140050,37738,49763,116356,88983,22586,143578,106706,40113,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
@@ -187,6 +187,7 @@ class GameManager:
             'question_id': '', 
             'cur_question': '', 
             'question_data': {},
+            'skipped': False,
 
             'queries': [], 
             'query_results_map': {}, # map of query to doc search results
@@ -210,17 +211,26 @@ class GameManager:
             'answer_correct': None, 
             'score': 0,
             'game_over': False,
-            'player_decision': None
+            'override_decision': None, # if player challenges decision
+
+            'actions': []
         }
         return True
 
+    def record_action(self, action_name: str, data=None):
+        action = {'time': int(datetime.utcnow().timestamp()), 'name': action_name}
+        if data:
+            action['data'] = data
+        print(action)
+        self.state['actions'].append(action)
+
     # get next question, advance state
-    def advance_question(self, player_decision=None):
+    def advance_question(self, override_decision=None, skip=False):
 
         print('keywords:', self.state['keyword_searches'])
         
-        if player_decision != None:
-            self.state['player_decision'] = player_decision
+        if override_decision != None:
+            self.state['override_decision'] = override_decision
 
         if self.state['question_number'] > 0: # record the current state
             # if not os.path.exists(self._file_name):
@@ -233,6 +243,8 @@ class GameManager:
             #     print('saved state')
             
             # clean state
+            if skip:
+                self.state['skipped'] = True
             self.state['cur_doc_selected'] = None
             self.save_state()
 
@@ -277,7 +289,8 @@ class GameManager:
                 'keyword_searches': {},
             }
 
-        self.state['player_decision'] = None
+        self.state['override_decision'] = None
+        self.state['actions'] = []
 
         return self.state
 
@@ -334,6 +347,9 @@ class GameManager:
         results = wikipedia.search(query)
         self.state['queries'].append(query)
         self.state['query_results_map'][query] = results
+
+        self.record_action('search_documents', query)
+
         return self.state
 
     # def search_documents_tfidf(self, query: str):
@@ -353,6 +369,8 @@ class GameManager:
         self.state['documents_selected'].append(page_title)
         self.state['cur_doc_selected'] = page_dict
 
+        self.record_action('select_document', page.title)
+
         return self.state
 
     def get_wiki_document_text(self, page_title: str):
@@ -365,8 +383,10 @@ class GameManager:
         # cur_doc = self.state['cur_doc_selected']
         if search_box == 'full':
             self.state['keyword_searches'] = keywords
+            self.record_action('search_keywords', keywords)
         elif search_box == 'passage':
             self.state['tfidf_search_map']['keyword_searches'] = keywords
+        return True
 
     def record_evidence(self, evidence: list):
         # cur_doc = self.state['cur_doc_selected']

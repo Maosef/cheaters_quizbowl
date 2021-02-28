@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 
-
+// detects selections, 
 export default function HightlightToolbar(props) {
 
     const [selectedText, setSelectedText] = useState('None');
@@ -52,9 +53,16 @@ export default function HightlightToolbar(props) {
     document.onkeydown = handleShortcut;
     document.onkeyup = deactivateShortcut;
 
+    let record_evidence_button;
+    if (selectedText !== 'None') {
+        record_evidence_button = <Button variant="contained" color="primary" style={{margin: 10}} onClick={() => {props.callback(getSelectedText())}}>
+            Record as evidence (Ctrl-e)
+        </Button>
+    }
+
     return (
         <div>
-            <h4>Highlighted text (Ctrl-s to auto-search, Ctrl-space to record answer, Ctrl-e to record evidence): </h4>
+            <h4>Highlighted text: </h4>
             <Box border={1} 
                 style={{ 
                     maxHeight: 500, 
@@ -65,7 +73,11 @@ export default function HightlightToolbar(props) {
                 {selectedText}
             </Box>
 
-            {/* <Button onClick={logout} color="inherit">Logout</Button> */}
+            {/* <Button onClick={search}>Search as query</Button> */}
+            {/* <Button onClick={search}>Answer</Button> */}
+            {record_evidence_button}
+
+            Ctrl-s to auto-search, Ctrl-space to record answer
         </div>
     );
 }

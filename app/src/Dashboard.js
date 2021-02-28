@@ -91,6 +91,7 @@ class Dashboard extends React.Component {
             year: -1,
             tournament: "",
 
+            answerStatus: null,
             interrupted: false,
             numSeen: 0,
             score: 0,
@@ -110,19 +111,6 @@ class Dashboard extends React.Component {
         let username = window.sessionStorage.getItem("username");
         let token = window.sessionStorage.getItem("token");
         
-        // console.log('username and token: ', username, token);
-        // this.postRequest('start_new_game', {'username': username, 'session_token': token}).then(data => {
-        //     console.log('new game started, ', data);
-        //     this.setState({game_state: data});
-        // });
-        // const response = await fetch('start_new_game', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': `Bearer ${token}`
-        //       },
-        //     // body: JSON.stringify(body)
-        // });
         postRequest('start_new_game', {'username': username, 'session_token': token, 'mode': 'sentence'}).then(data => {
             console.log('new game started, ', data);
             this.setState({game_state: data});
@@ -131,25 +119,26 @@ class Dashboard extends React.Component {
         // console.log('new game started, ', response.json());
         // this.setState({game_state: response.json()});
 
+        // buzzer shortcut
         window.addEventListener("keydown", this.handleShortcut);
         window.addEventListener("keyup", this.deactivateShortcut);
 
-        HighlightTools(81, this.answerQuestion);
+        // answer shortcut
+        // HighlightTools(81, this.answerQuestion);
+        HighlightTools(81, this.answerQuestion, true);
     }
 
     // keyboard shortcut to buzz
     handleShortcut(e) {
         // console.log(e.keyCode, this.state.answerStatus)
-        if (e.keyCode === 32 && this.state.shortcutToggled === false && document.activeElement.tagName == 'BODY') {
+        if (this.state.answerStatus !== null) {
+            this.advanceQuestion();
+        } else if (e.keyCode === 32 && this.state.shortcutToggled === false && document.activeElement.tagName == 'BODY') {
           this.setState({shortcutToggled: true});
           
           e.preventDefault();
           this.handleBuzz();
           console.log('buzzed, ', this.shortcutToggled);
-        } else if (e.keyCode === 219 && this.state.answerStatus !== null) {
-            this.advanceQuestion(true);
-        } else if (e.keyCode === 221 && this.state.answerStatus !== null) {
-            this.advanceQuestion(false);
         }
     }
 
@@ -179,8 +168,10 @@ class Dashboard extends React.Component {
         return response.json(); // parses JSON response into native JavaScript objects
     }
 
-    answerQuestion(answer) {
-        postRequest(`/answer?answer=${answer}&sentence_index=${this.state.sentenceIndex}`).then(data => {
+    answerQuestion(answer, expanded_answer) {
+
+        console.log(`expanded answer: ${expanded_answer}`)
+        postRequest(`/answer?answer=${answer}&context=${expanded_answer}&sentence_index=${this.state.sentenceIndex}`).then(data => {
             this.setState({game_state: data});
             let game_state = data;
 
@@ -286,6 +277,7 @@ class Dashboard extends React.Component {
         postRequest(`/record_evidence`, {
             'evidence': this.state.game_state['evidence']
         });
+        this.forceUpdate()
     }
 
     render() {
@@ -303,8 +295,8 @@ class Dashboard extends React.Component {
 
         let queries;
         if (this.state.game_state['queries']) {
-            queries = this.state.game_state['queries'].map((query) =>
-                <ListItem button key={query.toString()}>
+            queries = this.state.game_state['queries'].map((query, index) =>
+                <ListItem key={index}>
                     <ListItemText primary={query} />
                 </ListItem>
             );
@@ -312,8 +304,8 @@ class Dashboard extends React.Component {
 
         let docs_selected;
         if (this.state.game_state['documents_selected']) {
-            docs_selected = this.state.game_state['documents_selected'].map((query) =>
-                <ListItem button key={query.toString()}>
+            docs_selected = this.state.game_state['documents_selected'].map((query, index) =>
+                <ListItem key={index}>
                     <ListItemText primary={query} />
                 </ListItem>
             );
@@ -321,8 +313,8 @@ class Dashboard extends React.Component {
 
         let evidence_list;
         if (this.state.game_state['evidence']) {
-            evidence_list = Object.values(this.state.game_state['evidence']).map((evidence) =>
-                <ListItem button key={evidence.toString()}>
+            evidence_list = Object.values(this.state.game_state['evidence']).map((evidence, index) =>
+                <ListItem key={index}>
                     <ListItemText primary={evidence} />
                 </ListItem>
             );
@@ -331,12 +323,13 @@ class Dashboard extends React.Component {
         let override_window;
         if (this.state.answerStatus != null) {
             override_window = <div>
-                <p>We judged the answer as {this.state.answerStatus} (Our answer is {this.state.game_state.question_data['answer'].replace("_"," ")}). Please confirm or override. </p>
-                <Button variant="contained" color="default" onClick={() => this.advanceQuestion(true)} className={classes.margin}>
-                    I was right ([)
+                <p>We judged the answer as {this.state.answerStatus} (Our answer is {this.state.game_state.question_data['answer'].replaceAll("_"," ")}). 
+                Press any key to continue, or override. </p>
+                <Button variant="contained" color="primary" onClick={() => this.advanceQuestion()} className={classes.margin}>
+                    Continue (any key)
                 </Button>
-                <Button variant="contained" color="default" onClick={() => this.advanceQuestion(false)} className={classes.margin}>
-                    I was wrong (])
+                <Button variant="contained" color="secondary" onClick={() => this.advanceQuestion(true)} className={classes.margin}>
+                    Override decision
                 </Button>
             </div>
         }
@@ -362,7 +355,7 @@ class Dashboard extends React.Component {
 
                             {/* answer form */}
                             <Grid item xs={12}>
-                                <div className="flex-container" style={{"display": "flex", "alignItems": "center", " justifyContent": "space-between"}}>
+                                <div className="flex-container" style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between"}}>
                                     <div style={{padding: 10}}>
                                         {/* <AnswerForm onSubmit={this.finishQuestion} label="Answer" /> */}
                                         <AnswerForm onSubmit={(answer)=>{this.answerQuestion(answer); document.activeElement.blur()}} label="Answer" />

@@ -2,6 +2,8 @@ import React from 'react';
 import useStyles from '../Styles';
 import ContinueButton from './ContinueButton';
 
+import {postRequest} from '../utils';
+
 
 // question card: reads a question word by word. can be interrupted by buzzer
 // option: pause after each sentence, until continue button is clicked
@@ -68,6 +70,8 @@ class QuestionDisplay extends React.Component {
         this.setState({
             readerID: readerID
         });
+
+        postRequest(`/record_action?name=next_sentence`);
     }
 
     //add word to text, display

@@ -4,7 +4,7 @@ import $ from 'jquery';
 import "mark.js"
 import "mark.js/src/jquery.js"
 
-import {postRequest, cleanText} from '../utils';
+import {postRequest, cleanText, stripHtml} from '../utils';
 
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
@@ -25,11 +25,22 @@ class DocumentDisplay extends React.Component {
     // this.search = this.search.bind(this);
     this.display = this.display.bind(this);
     this.handleHighlight = this.handleHighlight.bind(this);
+    this.onMouseUpHandler = this.onMouseUpHandler.bind(this);
     
     this.searchVals = []
     this.state = {
       searchTerms: "",
-      highlight: {}
+      highlight: {},
+
+      isDirty: false,
+      selection: '',
+      anchorNode: '?',
+      focusNode: '?',
+      selectionStart: '?',
+      selectionEnd: '?',
+      first: '',
+      middle: '',
+      last: ''
     };
   }
 
@@ -232,11 +243,61 @@ class DocumentDisplay extends React.Component {
     });
   }
 
-  // onMouseUpHandler(){
-  //   const selectionObj = (window.getSelection && window.getSelection());
-  //   const selection = selectionObj.toString();
-  //   console.log(selection)
-  // }
+
+  onMouseUpHandler(e) {
+    const selectionObj = (window.getSelection && window.getSelection());
+    const selection = selectionObj.toString();
+    const anchorNode = selectionObj.anchorNode;
+    const focusNode = selectionObj.focusNode;
+    const anchorOffset = selectionObj.anchorOffset;
+    const focusOffset = selectionObj.focusOffset;
+    const position = anchorNode.compareDocumentPosition(focusNode);
+    let forward = false;
+
+    const expandOffset = 50;
+    console.log(`selection: ${selection}`);
+    let range = new Range();
+    range.setStart(anchorNode, Math.max(anchorOffset-expandOffset, 0));
+    range.setEnd(focusNode, Math.min(focusOffset+expandOffset, focusNode.length));
+    console.log(`range: ${range}`);
+
+
+    // if (position === anchorNode.DOCUMENT_POSITION_FOLLOWING) {
+    //   forward = true;
+    // } else if (position === 0) {
+    //     forward = (focusOffset - anchorOffset) > 0;
+    // }
+
+    // let selectionStart = forward ? anchorOffset : focusOffset;
+
+    // if (forward) {
+    //     if (anchorNode.parentNode.getAttribute('data-order')
+    //         && anchorNode.parentNode.getAttribute('data-order') === 'middle') {
+    //         selectionStart += this.state.selectionStart;
+    //     }
+    //     if (anchorNode.parentNode.getAttribute('data-order')
+    //         && anchorNode.parentNode.getAttribute('data-order') === 'last') {
+    //         selectionStart += this.state.selectionEnd;
+    //     }
+    // } else {
+    //     if (focusNode.parentNode.getAttribute('data-order')
+    //         && focusNode.parentNode.getAttribute('data-order') === 'middle') {
+    //         selectionStart += this.state.selectionStart;
+    //     }
+    //     if (focusNode.parentNode.getAttribute('data-order')
+    //         && focusNode.parentNode.getAttribute('data-order') === 'last') {
+    //         selectionStart += this.state.selectionEnd;
+    //     }
+    // }
+
+    // let strippedHtml = stripHtml(this.props.text);
+
+    // const selectionEnd = selectionStart + selection.length;
+    // const middle = strippedHtml.slice(selectionStart, selectionEnd);
+    // console.log(`start: ${selectionStart}, end: ${selectionEnd}`);
+    // console.log(`sliced stripped HTML: ${middle}`);
+
+  }
 
   render() {
     return (

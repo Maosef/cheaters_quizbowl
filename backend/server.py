@@ -85,6 +85,7 @@ async def start_new_game(request: InitRequest, current_user: str = Depends(get_c
 
     print(f'cur user: {current_user}, mode: {request.mode}')
     game_manager = get_game_object(current_user)
+    # remember the state of the game
     if 'mode' not in game_manager.state or game_manager.state['mode'] != request.mode:
         game_manager.start_game(current_user, request.mode)
     return game_manager.state
@@ -96,7 +97,7 @@ def buzz(word_index: int, current_user: str = Depends(get_current_user)):
 
 # answer
 @app.post("/answer")
-def answer(answer: str, sentence_index: int = -1, current_user: str = Depends(get_current_user)):
+def answer(answer: str, context: str, sentence_index: int = -1, current_user: str = Depends(get_current_user)):
     print('answer', answer)
     game_manager = get_game_object(current_user)
     state = game_manager.process_answer(answer, sentence_index)
@@ -188,6 +189,13 @@ def get_players():
     for user, game_manager in game_sessions.items():
         top_players[user] = game_manager.state['score']
     return top_players
+
+@app.post("/record_action")
+def record_action(name: str, current_user: str = Depends(get_current_user)):
+    game_manager = get_game_object(current_user)
+    game_manager.record_action(name)
+
+    return True
 
 # search wikipedia. create html from sections
 # @app.get("/search_wiki_sections")

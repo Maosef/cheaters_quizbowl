@@ -24,6 +24,12 @@ export async function postRequest(url, body={}, headers={}) {
 }
 
 
+export function stripHtml(html) {
+  let tmp = document.createElement("DIV");
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || "";
+}
+
 export function KeyboardShortcutHandler(keyCode, searchCallback) {
 
   let activated = false;
@@ -65,4 +71,5 @@ export function cleanText(str) {
     }
     return(res.join(' '))
 }
+
 
