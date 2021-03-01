@@ -54,15 +54,19 @@ export default function HightlightToolbar(props) {
     document.onkeyup = deactivateShortcut;
 
     let record_evidence_button;
-    if (selectedText !== 'None') {
+    let search_documents_button;
+    if (selectedText != 'None') {
         record_evidence_button = <Button variant="contained" color="primary" style={{margin: 10}} onClick={() => {props.callback(getSelectedText())}}>
-            Record as evidence (Ctrl-e)
-        </Button>
+                                    Record as evidence (Ctrl-e)
+                                </Button>
+        search_documents_button = <Button variant="contained" color="primary" style={{margin: 10}} onClick={() => {props.searchDocuments(getSelectedText())}}>
+                                    Search as query (Ctrl-s)
+                                </Button>
     }
 
     return (
         <div>
-            <h4>Highlighted text: </h4>
+            <h3>Highlighted text: </h3>
             <Box border={1} 
                 style={{ 
                     maxHeight: 500, 
@@ -70,14 +74,13 @@ export default function HightlightToolbar(props) {
                     // whiteSpace: "pre-wrap",  
                     // textAlign: "left", 
                     }}>
-                {selectedText}
+                <h4>{selectedText}</h4>
             </Box>
 
-            {/* <Button onClick={search}>Search as query</Button> */}
-            {/* <Button onClick={search}>Answer</Button> */}
             {record_evidence_button}
-
-            Ctrl-s to auto-search, Ctrl-space to record answer
+            {search_documents_button}
+            <br/>
+            Ctrl-space to submit as answer
         </div>
     );
 }

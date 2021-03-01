@@ -14,7 +14,6 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from '../Styles';
 
-import DocumentSearchBox from './DocumentSearchBox';
 // import HighLighter from './Highlighter';
 import DocumentDisplay from './DocumentDisplay';
 import HighlightTools from './HighlightTools';
@@ -32,7 +31,7 @@ class Searcher extends React.Component {
 
         // this.fetchWikiData = this.fetchWikiData.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
-        this.processQuery = this.processQuery.bind(this);
+        // this.processQuery = this.processQuery.bind(this);
         this.processShortcut = this.processShortcut.bind(this);
         
         // this.handleHighlight = this.handleHighlight.bind(this);
@@ -61,6 +60,16 @@ class Searcher extends React.Component {
         HighlightTools(83, this.processShortcut);
     }
 
+    componentDidUpdate(prevProps) {
+        // reset state if question changed
+        if (prevProps.currentQuery !== this.props.currentQuery){
+            console.log('query changed');
+            this.setState({
+                curQuery: this.props.currentQuery
+            });
+        }
+    }
+    
     handleInputChange(event) {
         this.setState({ curQuery: event.target.value });
     }
@@ -69,45 +78,45 @@ class Searcher extends React.Component {
         if (!query){
             this.textInput.current.focus();
         } else {
-            this.processQuery(query);
+            this.props.processQuery(query);
         }
     }
     // fetch data and log query
-    processQuery(query) {
-        if (!query){
-            return
-        }
-        this.setState({
-            curQuery: query,
-            isLoading: true
-        })
-        // this.queryData.set(query, new Map());
+    // processQuery(query) {
+    //     if (!query){
+    //         return
+    //     }
+    //     this.setState({
+    //         curQuery: query,
+    //         isLoading: true
+    //     })
+    //     // this.queryData.set(query, new Map());
 
-        // this.fetchWikiData(query);
-        this.searchDocuments(query);
-    }
+    //     // this.fetchWikiData(query);
+    //     this.searchDocuments(query);
+    // }
 
-    // fetch document titles, update game state
-    async searchDocuments(query) {
+    // // fetch document titles, update game state
+    // async searchDocuments(query) {
 
-        console.log("querying: ", query);
-        getRequest(`/search_wiki_titles?query=${query}`)
-            .then(
-                (result) => {
-                    // console.log('search results: ', result);
-                    this.props.updateGameState(result);
-                    let titles = result['query_results_map'][query]
-                    console.log('titles: ', titles);
-                    this.setState({
-                        titles: titles,
-                        isLoading: false,
-                    });
-                },
-                (error) => {
-                    console.log('Error', error)
-                }
-            )
-    }
+    //     console.log("querying: ", query);
+    //     getRequest(`/search_wiki_titles?query=${query}`)
+    //         .then(
+    //             (result) => {
+    //                 // console.log('search results: ', result);
+    //                 this.props.updateGameState(result);
+    //                 let titles = result['query_results_map'][query]
+    //                 console.log('titles: ', titles);
+    //                 this.setState({
+    //                     titles: titles,
+    //                     isLoading: false,
+    //                 });
+    //             },
+    //             (error) => {
+    //                 console.log('Error', error)
+    //             }
+    //         )
+    // }
 
     // display doc content, log title
     async getDocument(e, title) {
@@ -126,15 +135,6 @@ class Searcher extends React.Component {
             });
     }
 
-    // handleHighlight(selection) {
-    //     //do something with selection
-    //     console.log(selection);
-    //     // console.log(this);
-
-    //     this.queryData.get(this.state.curQuery).get(this.state.curTitle).push(selection);
-    //     this.props.sendData(this.queryData);
-    //     // console.log(this.queryData);
-    // }
 
     scrollToSection(section_title) {
         let section_element = document.getElementById(section_title);
@@ -147,29 +147,22 @@ class Searcher extends React.Component {
 
         // articles, sections
         let document_titles;
-        if (typeof this.state.titles === "undefined" || this.state.titles.length === 0) {
+        if (typeof this.props.retrievedTitles === "undefined" || this.props.retrievedTitles.length === 0) {
             document_titles = <ListItem>
                 <ListItemText primary={'No Results'} />
             </ListItem>
         } else {
-            document_titles = this.state.titles.map((title) =>
+            document_titles = this.props.retrievedTitles.map((title) =>
                 <ListItem button onClick={(e) => this.getDocument(e, title)} key={title.toString()}>
                     <ListItemText primary={title} />
                 </ListItem>
             );
         } 
 
-        //const sections = this.state.curPage.sections.map((section) =>
-            // <a href={"#" + section['title'] }>{section['title']}</a>
-          //  <ListItem button onClick={(e) => this.scrollToSection(section['title'])} 
-            //    key={section['title'].toString()}>
-              //  <ListItemText primary={section['title']} />
-            //</ListItem>
-        //)
 
         // loading icon
         let loadingIcon;
-        if (this.state.isLoading) {
+        if (this.props.searchLoading) {
             loadingIcon = <CircularProgress style={{margin: 20}}/>;
         }
         return (
@@ -180,13 +173,8 @@ class Searcher extends React.Component {
                 >
                     {/* document search */}
                     <Grid item xs={4}>
-                            {/* <DocumentSearchBox 
-                                onSubmit={(query) => this.processQuery(query)} 
-                                label="Search Documents (Ctrl-S)" 
-                                curQuery={this.state.curQuery}
-                                handleInputChange={this.handleInputChange}
-                                handleKeyboardShortcut={true}/> */}
-                            <form onSubmit={(event) => {event.preventDefault(); this.processQuery(this.state.curQuery)}}
+
+                            <form onSubmit={(event) => {event.preventDefault(); this.props.processQuery(this.state.curQuery)}}
                                 className={classes.root} 
                                 noValidate 
                                 autoComplete="off" 
@@ -218,18 +206,6 @@ class Searcher extends React.Component {
                                 </List>
                             </Box>
                             
-                            {/* document section titles */}
-                            {/* <Grid item xs={6}>
-                                <List component="nav" aria-label="search results"
-                                    style={{ 
-                                        maxHeight: 500, 
-                                        overflow: "scroll", 
-                                        whiteSpace: "pre-wrap", 
-                                        textAlign: "left", 
-                                        }}>
-                                    sections
-                                </List>
-                            </Grid> */}
                     </Grid>
                     
                     {/* <Divider orientation="vertical" flexItem /> */}

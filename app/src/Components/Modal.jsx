@@ -46,12 +46,21 @@ export default function SimpleModal() {
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
+        <h2>Welcome to Cheater's Bowl!</h2> 
+        This is a trivia game with a focus on <b>how you answer.</b> You're given a search engine to Wikipedia, but a limited number of clues and time.
+
         <h2>Instructions</h2> 
         <p>
-        Try to answer the Quizbowl questions. You are encouraged to use the provided search engine to search Wikipedia articles. 
-        Use the evidence tool (<code>Ctrl-e</code>) to save text that helped you answer. 
+        Try to answer the questions: each is a set of clues, starting with the first one revealed. <b>You get 10 points for answering each question correctly, and 5 points for every clue you don't reveal.</b> 
+        <br/>
+        You are encouraged to use the document searcher to search Wikipedia articles, and the keyword searcher.
+        <br/>
+        Highlight and record <b>evidence</b> using the evidence tool (on the right toolbar, or <code>Ctrl-e</code>). We define evidence as <b>any text which helped you answer</b>. 
+        <br/>
+        After you submit your answer (you get one attempt per question), we'll tell you the correct answer. You're given a chance to override our decision.
+        <br/>
         Feel free to skip the question if it's too hard. 
-        We recommend familiarizing yourself with the shortcuts. You can always consult this page from the "Help" button (top-right).
+        <b>We recommend familiarizing yourself with the keyboard shortcuts.</b> You can always consult this page from the "Help" button (top-right).
         </p>
 
         <h4>Keyboard shortcuts:</h4>
@@ -64,8 +73,6 @@ export default function SimpleModal() {
             <li>Answer from highlight: <code>Ctrl-space</code></li>                              
             </ul>
         
-        Type <code>Enter</code> to submit your answer. You get one attempt per question.
-
         </div>
     </div>
   );

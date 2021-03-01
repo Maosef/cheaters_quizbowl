@@ -71,7 +71,7 @@ class QuestionDisplay extends React.Component {
             readerID: readerID
         });
 
-        postRequest(`/record_action?name=next_sentence`);
+        postRequest(`/record_next_sentence?name=next_sentence&sentence_index=${this.state.sentenceIndex}`);
     }
 
     //add word to text, display

@@ -190,10 +190,10 @@ def get_players():
         top_players[user] = game_manager.state['score']
     return top_players
 
-@app.post("/record_action")
-def record_action(name: str, current_user: str = Depends(get_current_user)):
+@app.post("/record_next_sentence")
+def record_next_sentence(name: str, sentence_index: int, current_user: str = Depends(get_current_user)):
     game_manager = get_game_object(current_user)
-    game_manager.record_action(name)
+    game_manager.record_action(name, sentence_index)
 
     return True
 

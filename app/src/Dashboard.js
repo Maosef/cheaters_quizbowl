@@ -26,10 +26,10 @@ import ContinueButton from './Components/ContinueButton';
 import QuestionDisplay from './Components/QuestionDisplaySentence';
 
 
-import Searcher from './Components/Searcher';
+import Searcher from './Components/SearcherControlled';
 import SearcherTfidf from './Components/SearcherTfidf';
 
-import {postRequest} from './utils';
+import {postRequest, getRequest} from './utils';
 
 import './App.css';
 import HighlightToolbar from './Components/HighlightToolbar';
@@ -48,14 +48,16 @@ import { green, purple } from '@material-ui/core/colors';
 let server_url = "";
 let num_questions = 20408;
 
+const MAX_HEIGHT = 250;
 
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
-        
+
         this.handleShortcut = this.handleShortcut.bind(this);
         this.handleBuzz = this.handleBuzz.bind(this);
-        
+
+        this.processQuery = this.processQuery.bind(this);
         this.skipQuestion = this.skipQuestion.bind(this);
         this.updateGameState = this.updateGameState.bind(this);
 
@@ -76,20 +78,22 @@ class Dashboard extends React.Component {
         this.keywords = {};
         this.passage_keywords_map = {};
 
-        // mutable state
         this.state = {
 
-            game_state: {},
+            game_state: {}, // game state used by server
 
-            sessionToken: "",
-            question_id: -1,
-            question_idx: 0,
-            question: "",
-            category: "",
-            page: "",
-            tokenizations: [], //list of lists
-            year: -1,
-            tournament: "",
+            currentQuery: '',
+            searchLoading: false,
+            retrievedTitles: [],
+            // sessionToken: "",
+            // question_id: -1,
+            // question_idx: 0,
+            // question: "",
+            // category: "",
+            // page: "",
+            // tokenizations: [], //list of lists
+            // year: -1,
+            // tournament: "",
 
             answerStatus: null,
             interrupted: false,
@@ -154,19 +158,49 @@ class Dashboard extends React.Component {
         });
     }
 
-    async postRequest(url, body={}) {
+    // async postRequest(url, body={}) {
         
-        let token = window.sessionStorage.getItem("token");
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(body)
-        });
-        return response.json(); // parses JSON response into native JavaScript objects
+    //     let token = window.sessionStorage.getItem("token");
+    //     const response = await fetch(url, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Authorization': `Bearer ${token}`
+    //         },
+    //         body: JSON.stringify(body)
+    //     });
+    //     return response.json(); // parses JSON response into native JavaScript objects
+    // }
+
+    // fetch data and log query
+    async processQuery(query) {
+        console.log(`query: ${query}`);
+        if (!query){
+            return
+        }
+        this.setState({
+            searchLoading: true,
+            currentQuery: query
+        })
+
+        getRequest(`/search_wiki_titles?query=${query}`)
+            .then(
+                (result) => {
+                    // console.log('search results: ', result);
+                    this.updateGameState(result);
+                    let titles = result['query_results_map'][query]
+                    console.log('titles: ', titles);
+                    this.setState({
+                        retrievedTitles: titles,
+                        searchLoading: false,
+                    });
+                },
+                (error) => {
+                    console.log('Error', error)
+                }
+            )
     }
+
 
     answerQuestion(answer, expanded_answer) {
 
@@ -351,7 +385,7 @@ class Dashboard extends React.Component {
                     <Grid container spacing={1}
                         bgcolor="background.paper"
                     >   
-                        <Grid container item xs={9}>
+                        <Grid item xs={9} style={{'justifyContent': 'flex-start'}}>
 
                             {/* answer form */}
                             <Grid item xs={12}>
@@ -398,19 +432,15 @@ class Dashboard extends React.Component {
                                 </Paper>
                             </Grid>
                             
-                            
-                        {/* <TabTool tab1={<Searcher updateGameState={this.updateGameState} 
-                                recordKeywordSearchTerms={this.recordKeywordSearchTerms}
-                                updateCurrentDocument={this.updateCurrentDocument}/>}
-                                
-                                tab2={<SearcherTfidf updateGameState={this.updateGameState} 
-                                recordKeywordSearchTerms={this.recordKeywordSearchTerms}
-                                updateCurrentDocument={this.updateCurrentDocument}/>}
-                                /> */}
 
                         {/* full document search */}
                         <Grid item xs={12}>
-                            <Searcher updateGameState={this.updateGameState} 
+                            <Searcher 
+                                currentQuery={this.state.currentQuery}
+                                processQuery={this.processQuery}
+                                searchLoading={this.state.searchLoading}
+                                retrievedTitles={this.state.retrievedTitles}
+                                updateGameState={this.updateGameState} 
                                 recordKeywordSearchTerms={this.recordKeywordSearchTerms}
                                 updateCurrentDocument={this.updateCurrentDocument}
                                 recordHighlight={this.recordHighlight}
@@ -440,21 +470,27 @@ class Dashboard extends React.Component {
                             <Paper className={classes.paper}>
                                 {Object.keys(this.state.game_state).length > 0 ?
                                     <div >                                        
-                                            {/* Answer: {this.state.page} <br /> */}
+                                        <h2>
                                         Score: {this.state.game_state['score']} <br />
-                                        Question Number: {this.state.game_state['question_number']} <br />
-                                        Question ID: {this.state.game_state['question_id']} <br />
+                                        </h2>
+                                        {/* Answer: {this.state.page} <br /> */}
+                                        {/* Question Number: {this.state.game_state['question_number']} <br />
+                                        Question ID: {this.state.game_state['question_id']} <br /> */}
                                         {/* Category: {this.state.game_state['question_data']['category']} <br />
                                         {question_data['tournament']} {question_data['year']} */}
                                     </div>
                                 : "Waiting"}
 
-                                    <HighlightToolbar shortcutKey={69} callback={this.recordEvidence}/>
+                                    <HighlightToolbar 
+                                        shortcutKey={69} 
+                                        callback={this.recordEvidence}
+                                        searchDocuments={this.processQuery}
+                                    />
 
                                     <h4>Evidence</h4> 
                                     <List component="nav" aria-label="search results" border={1}
                                         style={{ 
-                                            maxHeight: 500, 
+                                            maxHeight: MAX_HEIGHT, 
                                             overflow: "scroll", 
                                             whiteSpace: "pre-wrap", 
                                             textAlign: "left", 
@@ -465,7 +501,7 @@ class Dashboard extends React.Component {
                                     <h4>Previous queries</h4> 
                                     <List component="nav" aria-label="search results" border={1}
                                         style={{ 
-                                            maxHeight: 500, 
+                                            maxHeight: MAX_HEIGHT, 
                                             overflow: "scroll", 
                                             whiteSpace: "pre-wrap", 
                                             textAlign: "left", 
@@ -476,7 +512,7 @@ class Dashboard extends React.Component {
                                     <h4>Previous documents</h4> 
                                     <List component="nav" aria-label="search results"
                                         style={{ 
-                                            maxHeight: 500, 
+                                            maxHeight: MAX_HEIGHT, 
                                             overflow: "scroll", 
                                             whiteSpace: "pre-wrap", 
                                             textAlign: "left", 
