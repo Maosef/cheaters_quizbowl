@@ -107,7 +107,7 @@ class QuestionDisplay extends React.Component {
             var button = <ContinueButton onClick={this.read} style={{flex: 1}}/>
         }
         return (
-            <div style={{ "maxWidth": "600px", "margin": "auto"}}>
+            <div id="questionText" style={{ "maxWidth": "600px", "margin": "auto"}}>
                 <p>{this.state.text}</p>
                 {button}
 

@@ -118,8 +118,8 @@ class GameManager:
             'dataset': 'qanta',
             'num_questions': 20,
             'multiple_answers': False,
-            'randomize': True,
-            'question_ids': [96407, 7531, 52847, 34344, 87631, 140250, 96499, 77839, 58556, 73339, 10033, 35784, 37807, 92228, 88514],
+            'randomize': False,
+            'question_ids': [95072,988,89697,108671,73219,48673,71049,144507,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
             'qids_1': [107440,153381,124015,22343,52682,106517,60955,88688,50838,88742,105855,35593,127908,50875,5419,146615,75323,84162,111095,140679],
             'qids_2': [140050,37738,49763,116356,88983,22586,143578,106706,40113,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
             'qids_3': [107,74066,31599,50870,121638,146675,5524,53483,6405,125257,77213,105925,95072,988,89697,108671,73219,48673,71049,144507]
@@ -148,12 +148,13 @@ class GameManager:
 
         print("starting new game...")
         # get questions
-        if mode == "sentence":
-            self._question_ids = self.config["qids_1"]
-        elif mode == "incremental":
-            self._question_ids = self.config["qids_2"]
-        elif mode == "static":
-            self._question_ids = self.config["qids_3"]
+        self._question_ids = self.config["question_ids"]
+        # if mode == "sentence":
+        #     self._question_ids = self.config["qids_1"]
+        # elif mode == "incremental":
+        #     self._question_ids = self.config["qids_2"]
+        # elif mode == "static":
+        #     self._question_ids = self.config["qids_3"]
 
         if self.config['randomize']:
             pass
@@ -182,7 +183,7 @@ class GameManager:
         self.state = {
             'username': None,
             'mode': None,
-            'time': str(datetime.utcnow()),
+            'start_time': str(datetime.utcnow()),
             'question_number': 0, 
             'question_id': '', 
             'cur_question': '', 
@@ -243,10 +244,11 @@ class GameManager:
             #     print('saved state')
             
             # clean state
+            self.state['cur_doc_selected'] = None
             if skip:
                 self.state['skipped'] = True
-            self.state['cur_doc_selected'] = None
-            self.save_state()
+            else:
+                self.save_state()
 
         cur_question_number = self.state['question_number'] + 1
 
@@ -383,14 +385,14 @@ class GameManager:
         # cur_doc = self.state['cur_doc_selected']
         if search_box == 'full':
             self.state['keyword_searches'] = keywords
-            self.record_action('search_keywords', keywords)
         elif search_box == 'passage':
             self.state['tfidf_search_map']['keyword_searches'] = keywords
         return True
 
-    def record_evidence(self, evidence: list):
+    def record_evidence(self, evidence: str):
         # cur_doc = self.state['cur_doc_selected']
-        self.state['evidence'] = evidence
+        self.state['evidence'].append(evidence)
+        self.record_action('record_evidence', evidence)
     
     # old
     def search_documents(self, query: str):

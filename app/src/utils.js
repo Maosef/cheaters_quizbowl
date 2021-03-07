@@ -7,6 +7,9 @@ export async function getRequest(url) {
             'Authorization': `Bearer ${token}`
         },
       });
+      if (response.detail === 'Not authenticated') {
+        alert('Authentication error. Please login and try again.');
+        }
       return response.json(); // parses JSON response into native JavaScript objects
 }
 
@@ -19,8 +22,11 @@ export async function postRequest(url, body={}, headers={}) {
             'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(body)
-      });
-      return response.json();;
+    });
+    if (response.detail === 'Not authenticated') {
+        alert('Authentication error. Please login and try again.');
+    }
+    return response.json();;
 }
 
 

@@ -104,10 +104,10 @@ def answer(answer: str, context: str, sentence_index: int = -1, current_user: st
     return state
     
 @app.post("/advance_question")
-def advance_question(player_decision = None, current_user: str = Depends(get_current_user)):
+def advance_question(player_decision = None, skip = False, current_user: str = Depends(get_current_user)):
     print('player_decision', player_decision)
     game_manager = get_game_object(current_user)
-    return game_manager.advance_question(player_decision)
+    return game_manager.advance_question(player_decision, skip)
 
 # get question ids
 @app.get("/get_question_ids")
@@ -137,10 +137,10 @@ def record_keyword_search(keywords: Keywords, current_user: str = Depends(get_cu
     return game_manager.state
 
 @app.post("/record_evidence")
-def record_evidence(evidence: Evidence, current_user: str = Depends(get_current_user)):
+def record_evidence(evidence: str, current_user: str = Depends(get_current_user)):
     print(evidence)
     game_manager = get_game_object(current_user)
-    game_manager.record_evidence(evidence.evidence)
+    game_manager.record_evidence(evidence)
     return game_manager.state
 
 

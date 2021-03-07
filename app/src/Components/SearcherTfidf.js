@@ -20,6 +20,7 @@ import DocumentDisplay from './DocumentDisplay';
 import HighlightTools from './HighlightTools';
 
 import TextField from '@material-ui/core/TextField';
+import { getRequest, postRequest } from '../utils';
 
 //search bar, and display results
 
@@ -95,43 +96,56 @@ class SearcherTfidf extends React.Component {
     async searchDocumentsTfidf(query) {
 
         console.log("querying: ", query);
-        fetch(`/search_tfidf?query=${query}`)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    console.log('search results: ', result);
+        const result = await getRequest(`/search_tfidf?query=${query}`);
+        console.log('search results: ', result);
                     
-                    this.setState({
-                        titles: result.map(e => e['page']),
-                        passages: result,
-                        isLoading: false,
-                    });
-                },
-                (error) => {
-                    console.log('error');
-                    this.setState({
-                        error
-                    });
-                }
-            )
+        this.setState({
+            titles: result.map(e => e['page']),
+            passages: result,
+            isLoading: false,
+        });
+        // fetch(`/search_tfidf?query=${query}`)
+        //     .then(res => res.json())
+        //     .then(
+        //         (result) => {
+        //             console.log('search results: ', result);
+                    
+        //             this.setState({
+        //                 titles: result.map(e => e['page']),
+        //                 passages: result,
+        //                 isLoading: false,
+        //             });
+        //         },
+        //         (error) => {
+        //             console.log('error');
+        //             this.setState({
+        //                 error
+        //             });
+        //         }
+        //     )
     }
 
     async getDocumentById(id) {
         this.props.updateCurrentDocument(id);
         console.log("doc id: ", id);
-        fetch(`/get_document_by_id/${id}`)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    // console.log('doc results: ', result);
-                    this.setState({
-                        curPage: result,
-                    });
-                },
-                (error) => {
-                    console.log('error');
-                }
-            )
+
+        const result = await getRequest(`/get_document_by_id/${id}`);
+        this.setState({
+            curPage: result,
+        });
+        // fetch(`/get_document_by_id/${id}`)
+        //     .then(res => res.json())
+        //     .then(
+        //         (result) => {
+        //             // console.log('doc results: ', result);
+        //             this.setState({
+        //                 curPage: result,
+        //             });
+        //         },
+        //         (error) => {
+        //             console.log('error');
+        //         }
+        //     )
     }
 
     // display doc content, log title
@@ -187,7 +201,7 @@ class SearcherTfidf extends React.Component {
         // }
         return (
             <Paper className={classes.paperFlexVertical} >
-                <h4>Passage Search</h4>
+                <h3 style={{textAlign:"left"}}>Passage Search</h3>
                 <Grid container spacing={3}
                     bgcolor="background.paper"
                 >

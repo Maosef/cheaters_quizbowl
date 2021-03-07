@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as s from "./App.css";
-import Dashboard from './Dashboard';
+import Dashboard from './Views/Dashboard';
 import Dashboard_incremental from './Views/Dashboard_incremental';
 import Dashboard_static from './Views/Dashboard_static';
-
+import Dashboard_passage from './Views/Dashboard_passage';
 
 
 import Login from "./Login_dummy";
@@ -21,8 +21,8 @@ function App() {
         <Route path="/register">
           <Register />
         </Route>
-        <Route path="/incremental">
-          <Dashboard_incremental />
+        <Route path="/passage">
+          <Dashboard_passage />
         </Route>
         <Route path="/static">
           <Dashboard_static />

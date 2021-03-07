@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 class AnswerForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { answer: '' };
+        this.state = { answer: '', error: false, helperText: ''};
 
         this.textInput = React.createRef();
         this.isToggled = false;
@@ -31,8 +31,18 @@ class AnswerForm extends React.Component {
     handleSubmit(event) {
         // alert('You submitted: ' + this.state.answer);
         event.preventDefault();
+        // console.log(`evidence: `, this.props.evidence)
+        // if (this.props.evidence.length === 0) {
+        //     this.setState({error: true, helperText: "You must record at least once piece of evidence."});
+        // } else {
+        //     this.setState({error: false, helperText: ''});
+        //     this.setState({answer: ''});
+        //     this.props.onSubmit(this.state.answer);
+        // }
+        this.setState({error: false, helperText: ''});
         this.setState({answer: ''});
         this.props.onSubmit(this.state.answer);
+        
     }
 
     // keyboard shortcut to focus
@@ -50,6 +60,13 @@ class AnswerForm extends React.Component {
     render() {
         const { classes } = this.props;
         return (
+            // answerForm = <TextField
+            //                 error
+            //                 id="standard-error-helper-text"
+            //                 label="Error"
+            //                 defaultValue="Hello World"
+            //                 helperText="We at least once piece of evidence."
+            //             />
             <form onSubmit={this.handleSubmit} className={classes.root} noValidate autoComplete="off" 
                 style={{"display": "flex", "alignItems": "center"}}>
                 <TextField 
@@ -58,6 +75,8 @@ class AnswerForm extends React.Component {
                     onChange={this.handleChange} 
                     label={"Answer"} 
                     variant="outlined" 
+                    error={this.state.error}
+                    helperText={this.state.helperText}
                 />
                 <div style={{padding: 20}}>
                     <Button variant="contained" color="primary" onClick={this.handleSubmit}>

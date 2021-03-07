@@ -49,17 +49,21 @@ export default function SimpleModal() {
         <h2>Welcome to Cheater's Bowl!</h2> 
         This is a trivia game with a focus on <b>how you answer.</b> You're given a search engine to Wikipedia, but a limited number of clues and time.
 
-        <h2>Instructions</h2> 
+        <h2>Instructions (Please Read!)</h2> 
         <p>
         Try to answer the questions: each is a set of clues, starting with the first one revealed. <b>You get 10 points for answering each question correctly, and 5 points for every clue you don't reveal.</b> 
         <br/>
         You are encouraged to use the document searcher to search Wikipedia articles, and the keyword searcher.
         <br/>
-        Highlight and record <b>evidence</b> using the evidence tool (on the right toolbar, or <code>Ctrl-e</code>). We define evidence as <b>any text which helped you answer</b>. 
+        <br/>
+        Select and record <b>evidence</b> using the evidence tool (pops up on highlight, or <code>Ctrl-e</code>). 
+        We define evidence as "any sentences which helped you answer." <b>You must select as least one piece of evidence per question.</b>
+        <br/>
         <br/>
         After you submit your answer (you get one attempt per question), we'll tell you the correct answer. You're given a chance to override our decision.
+         Feel free to skip the question if it's too hard. 
         <br/>
-        Feel free to skip the question if it's too hard. 
+        <br/>
         <b>We recommend familiarizing yourself with the keyboard shortcuts.</b> You can always consult this page from the "Help" button (top-right).
         </p>
 

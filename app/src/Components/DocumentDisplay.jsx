@@ -193,7 +193,7 @@ class DocumentDisplay extends React.Component {
         let separateWordSearch = this.props.separateWordSearch;
         if (searchVal.length >= 3){ // min search length for performance reasons
           // console.log('search vals: ', this.searchVals);
-          console.log('keyword search ', this.props.searchType)
+          // console.log('keyword search ', this.props.searchType)
           this.props.recordKeywordSearchTerms(searchVal);
 
           // clean the text for searching
