@@ -52,7 +52,7 @@ export default function Navbar(props) {
                         {props.text}
                     </Typography>
 
-                    <SimpleModal />
+                    {/* <SimpleModal /> */}
                     <Button onClick={logout} color="inherit">Logout</Button>
 
                 </Toolbar>

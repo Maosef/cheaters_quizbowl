@@ -63,7 +63,7 @@ class Searcher extends React.Component {
     componentDidUpdate(prevProps) {
         // reset state if question changed
         if (prevProps.currentQuery !== this.props.currentQuery){
-            console.log('query changed');
+            // console.log('query changed');
             this.setState({
                 curQuery: this.props.currentQuery
             });
@@ -118,21 +118,16 @@ class Searcher extends React.Component {
     //         )
     // }
 
-    // display doc content, log title
-    async getDocument(e, title) {
-        
-        getRequest(`get_document_html?title=${title}`)
-            .then(data => {
-                // console.log(data);
-                this.props.updateGameState(data);
-                // this.props.updateCurrentDocument(title);
-                let doc = data['cur_doc_selected']
-                this.setState({
-                    selectedDoc: doc['html'],
-                    curPage: doc,
-                    curTitle: doc['title']
-                });
-            });
+
+    async getDocumentById(id) {
+        this.props.updateCurrentDocument(id);
+        console.log("doc id: ", id);
+
+        const result = await getRequest(`/get_document_by_id/${id}`);
+        this.setState({
+            curPage: result,
+        });
+
     }
 
 
@@ -147,16 +142,16 @@ class Searcher extends React.Component {
 
         // articles, sections
         let document_titles;
-        if (typeof this.props.retrievedTitles === "undefined" || this.props.retrievedTitles.length === 0) {
+        if (typeof this.props.passages === "undefined" || this.props.passages.length === 0) {
             document_titles = <ListItem>
                 <ListItemText primary={'No Results'} />
             </ListItem>
         } else {
-            document_titles = this.props.retrievedTitles.map((title) =>
-                <ListItem button onClick={(e) => this.getDocument(e, title)} key={title.toString()}>
-                    <ListItemText primary={title} />
-                </ListItem>
-            );
+            document_titles = this.props.passages.map((psg) =>
+            <ListItem button onClick={(e) => this.getDocumentById(psg['id'])} key={psg['id'].toString()}>
+                <ListItemText primary={psg['page']} />
+            </ListItem>
+        );
         } 
 
 
@@ -215,7 +210,7 @@ class Searcher extends React.Component {
                     {/* text display, keyword search */}
                     <Grid item xs={8} >
                         <DocumentDisplay 
-                            text={this.state.selectedDoc} 
+                            text={this.state.curPage['text']} 
                             searchTerms={this.state.curQuery} 
                             recordKeywordSearchTerms={(keywords) => this.props.recordKeywordSearchTerms(keywords, 'passage')}
                             separateWordSearch={true}

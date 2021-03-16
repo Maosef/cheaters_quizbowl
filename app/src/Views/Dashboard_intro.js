@@ -36,6 +36,10 @@ import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material
 import useStyles from '../Styles';
 import { green, purple } from '@material-ui/core/colors';
 
+import { Steps, Hints } from 'intro.js-react';
+import introJs from 'intro.js';
+import 'intro.js/introjs.css';
+
 
 // main Dashboard. Load question, handle interrupt, load next question
 // preloaded questions for experiment setting
@@ -66,6 +70,9 @@ class Dashboard extends React.Component {
 
         this.handleShortcut = this.handleShortcut.bind(this);
         this.deactivateShortcut = this.deactivateShortcut.bind(this);
+
+        this.onExit = this.onExit.bind(this);
+
 
         this.maxAttempts = 1;
 
@@ -100,6 +107,39 @@ class Dashboard extends React.Component {
             keywords: [],
             shortcutToggled: false,
             wordIndex: 0,
+
+            stepsEnabled: true,
+            initialStep: 0,
+            steps: [
+            {
+                intro: "Welcome to Cheater's Quizbowl! The goal of this task is to answer trivia questions, with a twist."
+                },
+              {
+                element: "#questionText",
+                intro: `The goal is to answer this question. You can click 'Another Clue' to display another clue. 
+                You get more points for answering early.`
+              },
+              {
+                element: "#answerBox",
+                intro: "Answer here. You're given a chance to override, if you think we judged your answer wrong."
+              },
+              {
+                element: "#searcher",
+                intro: "You can search and read Wikipedia passages here. Once you open a document, you can also search for keywords."
+              },
+              {
+                element: "#searcher",
+                intro: `One important task is recording evidence. We define evidence as "sentences which helped lead you to the answer."
+                To do this, highlight some text in a document to bring up the tooltip. You can choose to record it as evidence (or do other things).`
+              },
+              {
+                element: "#toolbar",
+                intro: "The toolbar displays your score, evidence, and previous actions."
+              },
+              {
+                intro: "You can access this tutorial any time from the navbar. Have fun!"
+              }
+            ],
         }
     }
 
@@ -121,6 +161,7 @@ class Dashboard extends React.Component {
         window.addEventListener("keydown", this.handleShortcut);
         window.addEventListener("keyup", this.deactivateShortcut);
 
+        introJs().start();
         // answer shortcut
         // HighlightTools(81, this.answerQuestion);
         HighlightTools(81, this.answerQuestion);
@@ -298,6 +339,13 @@ class Dashboard extends React.Component {
         this.forceUpdate()
     }
 
+    startTutorial() {
+        this.setState(() => ({ stepsEnabled: true }));
+    }
+    onExit() {
+        this.setState(() => ({ stepsEnabled: false }));
+    }
+
     render() {
 
         const { classes } = this.props;
@@ -360,11 +408,23 @@ class Dashboard extends React.Component {
                                     </Button>
                                 </ThemeProvider> */}
         
+        const {
+            stepsEnabled,
+            steps,
+            initialStep,
+            } = this.state;
 
         return (
 
             <div className={classes.root}>
                 
+                <Steps
+                    enabled={stepsEnabled}
+                    steps={steps}
+                    initialStep={initialStep}
+                    onExit={this.onExit}
+                />
+
                 <Navbar text="Cheater's Bowl, Sentence Split" />
 
                 <div className={classes.body} style={{maxWidth: 1500, margin: "auto"}}>
@@ -376,12 +436,13 @@ class Dashboard extends React.Component {
                             {/* answer form */}
                             <Grid item xs={12}>
                                 <div className="flex-container" style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between"}}>
-                                    <div style={{padding: 10}}>
+                                    <div style={{padding: 10}} id="answerBox">
                                         {/* <AnswerForm onSubmit={this.finishQuestion} label="Answer" /> */}
                                         <AnswerForm 
                                             evidence={this.state.game_state['evidence']}
                                             onSubmit={(answer)=>{this.answerQuestion(answer); document.activeElement.blur()}} 
-                                            label="Answer" />
+                                            label="Answer" 
+                                            />
                                     </div>
                                     {/* <div style={{padding: 10}}>
                                         <Buzzer onClick={this.handleBuzz} 
@@ -402,14 +463,18 @@ class Dashboard extends React.Component {
                             <Grid item xs={4}></Grid> */}
 
                             {/* question display */}
-                            <Grid item xs={12}>
+                            <Grid item xs={12} id="questionText" >
                                 <Paper className={classes.paper} style={{ "textAlign": "left" }}>
                                     <h3>Question {this.state.game_state['question_number']}</h3>
                                     {Object.keys(this.state.game_state).length > 0 ?
-                                        <QuestionDisplay
+                                        <div>
+                                            <QuestionDisplay
                                             text={this.state.game_state['question_data']['question']}
                                             tokenizations={this.state.game_state['question_data']['tokenizations']}
-                                            updateSentencePosition={(index) => this.setState({ sentenceIndex: index })} />
+                                            updateSentencePosition={(index) => this.setState({ sentenceIndex: index })} 
+                                            />
+                                        </div>
+                                        
                                         // <QuestionDisplay
                                         //     text={this.state.game_state['question_data']['question']}
                                         //     interrupted={this.state.interrupted}
@@ -437,7 +502,7 @@ class Dashboard extends React.Component {
                         </Grid> */}
 
                         {/* passage search */}
-                        <Grid item xs={12}>
+                        <Grid item xs={12} id="searcher">
                             {/* <SearcherTfidf updateGameState={this.updateGameState} 
                                 recordKeywordSearchTerms={this.recordKeywordSearchTerms}
                                 updateCurrentDocument={this.updateCurrentDocument}
@@ -460,7 +525,7 @@ class Dashboard extends React.Component {
                     </Grid>
 
                     {/* Toolbar */}
-                        <Grid item xs={3}>
+                        <Grid item xs={3} id="toolbar">
                             <Paper className={classes.paper}>
                                 {Object.keys(this.state.game_state).length > 0 ?
                                     <div >                                        

@@ -33,7 +33,8 @@ export default function HighlightToolbar(props) {
     // listen for shortcut key and highlight
     function captureSearch(e) {
 
-        if (e.target.parentNode.id === 'questionText' || e.target.closest('#contentfullSearch') !== null) {
+        if (e.target.parentNode.id === 'questionText' || e.target.closest('#contentfullSearch') !== null
+        || e.target.closest('#contentpassageSearch') !== null) {
             if (e.target.parentNode.id === 'questionText') {
                 setTextElement('questionText');
             } else {
@@ -45,8 +46,8 @@ export default function HighlightToolbar(props) {
             setSelectedText(selectedText);
             setX(e.clientX);
             setY(Math.min(e.clientY, window.innerHeight-300)); // prevent exceeding bottom of page
-        } else { // close tooltip
-            setSelectedText('');
+        } else { // close tooltip. bug, because then clicking on button fails
+            // setSelectedText('');
         }
         
 
@@ -86,10 +87,10 @@ export default function HighlightToolbar(props) {
                 Answer as "{selected_text}" (Ctrl-a)
             </Button>
         }
-        search_documents_button = 
-        <Button variant="contained" color="primary" style={{margin: 10}} onClick={() => {props.searchDocuments(selected_text)}}>
+        search_documents_button = <Button variant="contained" color="primary" style={{margin: 10}} onClick={() => {props.searchDocuments(selected_text)}}>
                                     Search as query (Ctrl-s)
                                 </Button>
+
         tooltip = <Box border={1} style={{
             'position':'absolute',
             'top': y, 

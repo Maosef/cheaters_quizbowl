@@ -211,6 +211,7 @@ class GameManager:
             'answer': '',
             'answer_correct': None, 
             'score': 0,
+            'evidence_score': 0,
             'game_over': False,
             'override_decision': None, # if player challenges decision
 
@@ -279,8 +280,10 @@ class GameManager:
         self.state['documents_selected'] = []
         self.state['cur_doc_selected'] = ''
         self.state['keyword_searches'] = {}
+
         self.state['buzz_word_index'] = -1
         self.state['buzz_sentence_number'] = -1
+
         self.state['evidence'] = []
 
         self.state['tfidf_search_map'] = {
@@ -392,7 +395,11 @@ class GameManager:
     def record_evidence(self, evidence: str):
         # cur_doc = self.state['cur_doc_selected']
         self.state['evidence'].append(evidence)
+        self.state['evidence_score'] += 10
+
         self.record_action('record_evidence', evidence)
+
+        return self.state
     
     # old
     def search_documents(self, query: str):
