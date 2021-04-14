@@ -25,6 +25,7 @@ from sqlalchemy.orm.scoping import ScopedSession
 from backend.log import get_logger
 # from log import get_logger
 
+PLAYS_TABLE_NAME = 'plays_dev_2'
 
 log = get_logger(__name__)
 
@@ -46,6 +47,15 @@ class Database:
                 self._all_qanta_ids = [
                     r[0] for r in session.query(Question.qanta_id).all()
                 ]
+
+        meta = MetaData()
+        self.plays = Table(
+            PLAYS_TABLE_NAME, meta, 
+            Column('username', String, primary_key = True), 
+            Column('question_id', String, primary_key = True),
+            Column('start_datetime', String, primary_key = True), 
+            Column('data', String),
+        )
 
     def create_all(self):
         Base.metadata.create_all(self._engine, checkfirst=True)
@@ -84,6 +94,24 @@ class Database:
             question = session.query(Question).filter_by(qanta_id=qanta_id).first()
             return question.to_dict()
 
+
+    def insert_question_play(self, question_play: dict):
+
+        try:
+            serialized = json.dumps(question_play)
+            insert_params = {
+                'username': question_play['username'], 
+                'question_id': question_play['question_id'], 
+                'start_datetime': question_play['start_datetime'],
+                'data': serialized}
+
+            ins = self.plays.insert()
+            ins = self.plays.insert().values(**insert_params)
+            conn = self._engine.connect()
+            result = conn.execute(ins)
+        
+        except Exception as e:
+            print(f'error while writing question play: {e}')
 
     # def write_questions(self, questions: Dict[str, Any]):
     #     start = time.time()

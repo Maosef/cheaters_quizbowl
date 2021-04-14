@@ -18,6 +18,7 @@ from typing import Optional
 import copy
 import requests
 
+DRQA_RETRIEVER_URL = 'http://127.0.0.1:5000'
 
 class InitRequest(BaseModel):
     username: str
@@ -35,6 +36,9 @@ class Evidence(BaseModel):
 class Answer(BaseModel):
     answer: str
     sentence_index: int
+
+class ActionRecord(BaseModel):
+    data: dict
 
 app = FastAPI()
 origins = [
@@ -97,15 +101,15 @@ def buzz(word_index: int, current_user: str = Depends(get_current_user)):
 
 # answer
 @app.post("/answer")
-def answer(answer: str, context: str, sentence_index: int = -1, current_user: str = Depends(get_current_user)):
+def answer(answer: str, sentence_index: int = -1, current_user: str = Depends(get_current_user)):
     print('answer', answer)
     game_manager = get_game_object(current_user)
     state = game_manager.process_answer(answer, sentence_index)
     return state
     
 @app.post("/advance_question")
-def advance_question(player_decision = None, skip = False, current_user: str = Depends(get_current_user)):
-    print('player_decision', player_decision)
+def advance_question(player_decision = None, skip: bool = False, current_user: str = Depends(get_current_user)):
+    print(f'player_decision: {player_decision}, skipped: {skip}')
     game_manager = get_game_object(current_user)
     return game_manager.advance_question(player_decision, skip)
 
@@ -162,24 +166,24 @@ def search_wikipedia_html(query: str, limit=None, current_user: str = Depends(ge
 @app.get("/search_tfidf")
 def search_tfidf(query: str, limit:int=10, current_user: str = Depends(get_current_user)):
     game_manager = get_game_object(current_user)
-    r = requests.get(f"http://127.0.0.1:5000/search_passages?query={query}&n_docs={limit}")
+    r = requests.get(f"{DRQA_RETRIEVER_URL}/search_passages?query={query}&n_docs={limit}")
+    search_results = r.json()
     if r.status_code != requests.codes.ok:
         print("Error in search")
     else:
-        search_results = r.json()
         game_manager.state['tfidf_search_map']['queries'].append(query)
         game_manager.state['tfidf_search_map']['query_results_map'][query] = [(res['id'], res['page']) for res in search_results]
     return search_results
 
-@app.get("/get_document_by_id/{doc_id}")
-def get_document_by_id(doc_id: int, current_user: str = Depends(get_current_user)):
+@app.get("/get_document_passages/{page_title}")
+def get_document_passages(page_title: str, current_user: str = Depends(get_current_user)):
     game_manager = get_game_object(current_user)
-    r = requests.get(f"http://127.0.0.1:5000/get_document_by_id/{doc_id}")
+    r = requests.get(f"{DRQA_RETRIEVER_URL}/get_document_passages/{page_title}")
     if r.status_code != requests.codes.ok:
         print("Error in getting document")
-    else:
-        print("getting doc: ", r.json()['id'])
-        game_manager.state['tfidf_search_map']['documents_selected'].append(r.json())
+
+    # print("getting doc: ", r.json()['id'])
+    # game_manager.state['tfidf_search_map']['documents_selected'].append(r.json())
     return r.json()
 
 
@@ -190,10 +194,17 @@ def get_players():
         top_players[user] = game_manager.state['score']
     return top_players
 
-@app.post("/record_next_sentence")
-def record_next_sentence(name: str, sentence_index: int, current_user: str = Depends(get_current_user)):
+# @app.post("/record_next_sentence")
+# def record_next_sentence(name: str, sentence_index: int, current_user: str = Depends(get_current_user)):
+#     game_manager = get_game_object(current_user)
+#     game_manager.record_action(name, sentence_index)
+
+#     return True
+
+@app.post("/record_action")
+def record_action(name: str, action: ActionRecord, current_user: str = Depends(get_current_user)):
     game_manager = get_game_object(current_user)
-    game_manager.record_action(name, sentence_index)
+    game_manager.record_action(name, action.data)
 
     return True
 

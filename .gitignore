@@ -2,3 +2,5 @@
 app/node_modules/
 backend/data/
 backend/__pycache__/
+app/package-lock.json
+build

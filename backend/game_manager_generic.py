@@ -16,6 +16,18 @@ import copy
 
 from backend.database import Database
 
+SKIP_RECORD_ON_SKIP = True
+CONFIG = {
+            'dataset': 'qanta',
+            'num_questions': 20,
+            'multiple_answers': False,
+            'randomize': True,
+            'question_ids': [95072,988,89697,108671,73219,48673,71049,144507,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
+            'qids_1': [107440,153381,124015,22343,52682,106517,60955,88688,50838,88742,105855,35593,127908,50875,5419,146615,75323,84162,111095,140679],
+            'qids_2': [140050,37738,49763,116356,88983,22586,143578,106706,40113,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
+            'qids_3': [107,74066,31599,50870,121638,146675,5524,53483,6405,125257,77213,105925,95072,988,89697,108671,73219,48673,71049,144507]
+            # 'data_path': "backend/data/"
+        }
 
 db = Database()
 
@@ -114,17 +126,7 @@ class GameManager:
         multiple_answers: when answer is a list of valid answers, used for NQ
         randomize: whether to give random questions
         '''
-        self.config = {
-            'dataset': 'qanta',
-            'num_questions': 20,
-            'multiple_answers': False,
-            'randomize': False,
-            'question_ids': [95072,988,89697,108671,73219,48673,71049,144507,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
-            'qids_1': [107440,153381,124015,22343,52682,106517,60955,88688,50838,88742,105855,35593,127908,50875,5419,146615,75323,84162,111095,140679],
-            'qids_2': [140050,37738,49763,116356,88983,22586,143578,106706,40113,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
-            'qids_3': [107,74066,31599,50870,121638,146675,5524,53483,6405,125257,77213,105925,95072,988,89697,108671,73219,48673,71049,144507]
-            # 'data_path': "backend/data/"
-        }
+        self.config = CONFIG
 
         self._num_questions = self.config['num_questions']
         self._randomize = self.config['randomize']
@@ -166,14 +168,17 @@ class GameManager:
         
         return self.advance_question()
 
-    def save_state(self):
+    def save_state(self, state):
         # df = pd.DataFrame([self.state])
         # df.to_csv(self._file_name, mode='a', header=False)
 
-        with open(self._file_name, mode='a+') as outfile:
-            json.dump(self.state, outfile)
-            outfile.write('\n')
-        print("saved state to {}".format(self._file_name))
+        # with open(self._file_name, mode='a+') as outfile:
+        #     json.dump(self.state, outfile)
+        #     outfile.write('\n')
+        # print("saved state to {}".format(self._file_name))
+
+        db.insert_question_play(state)
+        print('saved state to db')
 
     def reset(self):
         print("resetting...")
@@ -183,7 +188,7 @@ class GameManager:
         self.state = {
             'username': None,
             'mode': None,
-            'start_time': str(datetime.utcnow()),
+            'start_datetime': str(datetime.utcnow()),
             'question_number': 0, 
             'question_id': '', 
             'cur_question': '', 
@@ -244,12 +249,16 @@ class GameManager:
             #     self.save_state()
             #     print('saved state')
             
-            # clean state
-            self.state['cur_doc_selected'] = None
             if skip:
                 self.state['skipped'] = True
+                print('skipping record...')
             else:
-                self.save_state()
+                # clean state
+                del self.state['cur_doc_selected']
+                del self.state['cur_question']
+                del self.state['question_data']
+                print('saving state...')
+                self.save_state(self.state)
 
         cur_question_number = self.state['question_number'] + 1
 
@@ -357,13 +366,9 @@ class GameManager:
 
         return self.state
 
-    # def search_documents_tfidf(self, query: str):
+    # def search_documents_DrQA(self, query: str):
 
-    #     r = requests.get(f"http://127.0.0.1:5000/search_passages?query={query}")
-    #     if r.status_code != requests.codes.ok:
-    #         print("Error")
-    #     self.state['tfidf_results'] = r.json()
-    #     return self.state
+        
 
     def get_wiki_document_html(self, page_title: str):
         page = wiki_html.page(page_title)
