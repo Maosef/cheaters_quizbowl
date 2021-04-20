@@ -1,6 +1,6 @@
 *.ipynb
-app/node_modules/
+frontend/node_modules/
 backend/data/
 backend/__pycache__/
-app/package-lock.json
+frontend/package-lock.json
 build

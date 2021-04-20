@@ -9,6 +9,7 @@ import json
 import unidecode
 import string
 import requests
+import random
 # import pandas as pd
 
 from typing import Optional
@@ -22,10 +23,12 @@ CONFIG = {
             'num_questions': 20,
             'multiple_answers': False,
             'randomize': True,
+            'hard_questions': True,
+            'hard_questions_path': 'backend/data/hard_qanta.json',
             'question_ids': [95072,988,89697,108671,73219,48673,71049,144507,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
-            'qids_1': [107440,153381,124015,22343,52682,106517,60955,88688,50838,88742,105855,35593,127908,50875,5419,146615,75323,84162,111095,140679],
-            'qids_2': [140050,37738,49763,116356,88983,22586,143578,106706,40113,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
-            'qids_3': [107,74066,31599,50870,121638,146675,5524,53483,6405,125257,77213,105925,95072,988,89697,108671,73219,48673,71049,144507]
+            # 'qids_1': [107440,153381,124015,22343,52682,106517,60955,88688,50838,88742,105855,35593,127908,50875,5419,146615,75323,84162,111095,140679],
+            # 'qids_2': [140050,37738,49763,116356,88983,22586,143578,106706,40113,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
+            # 'qids_3': [107,74066,31599,50870,121638,146675,5524,53483,6405,125257,77213,105925,95072,988,89697,108671,73219,48673,71049,144507]
             # 'data_path': "backend/data/"
         }
 
@@ -131,6 +134,8 @@ class GameManager:
         self._num_questions = self.config['num_questions']
         self._randomize = self.config['randomize']
         self._question_ids = self.config['question_ids']
+        if self.config['hard_questions']:
+            self._hard_question_ids = list(json.load(open(self.config['hard_questions_path'])).keys())
         self._file_name = "backend/data/recorded_game_{}.jsonl".format(str(datetime.today().date()))
 
         self._username = None
@@ -240,15 +245,6 @@ class GameManager:
             self.state['override_decision'] = override_decision
 
         if self.state['question_number'] > 0: # record the current state
-            # if not os.path.exists(self._file_name):
-            #     print('creating new file for today: ', self._file_name)
-            #     df = pd.DataFrame([self.state])
-            #     print(df)
-            #     df.to_csv(self._file_name)
-            # else:
-            #     self.save_state()
-            #     print('saved state')
-            
             if skip:
                 self.state['skipped'] = True
                 print('skipping record...')
@@ -267,7 +263,10 @@ class GameManager:
             self.state['game_over'] = True
             return self.state
         
-        if self.config['randomize']:
+        if self.config['hard_questions']:
+            cur_question_id = random.choice(self._hard_question_ids)
+            cur_question = get_question_by_id(cur_question_id, 'qanta')
+        elif self.config['randomize']:
             q = get_random_question(self.config['dataset'])
             # only get questions that have a page field
             while not q['answer']:

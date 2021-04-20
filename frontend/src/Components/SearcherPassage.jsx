@@ -33,6 +33,7 @@ class Searcher extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         // this.processQuery = this.processQuery.bind(this);
         this.processShortcut = this.processShortcut.bind(this);
+        this.addIntersectionEvent = this.addIntersectionEvent.bind(this);
         
         // this.handleHighlight = this.handleHighlight.bind(this);
         this.textInput = React.createRef();
@@ -92,14 +93,15 @@ class Searcher extends React.Component {
         
         const result = await getRequest(`/get_document_passages/${page_title}`);
         let text = '';
+        let passage_id_list = [];
         for (const passage of result) {
-            text += `<div id=${passage.id}>${passage.text}</div>`
-            // text += `<div class=${passage.text}></div>`
+            text += `<div id=${passage.id}>${passage.text}</div>`;
+            passage_id_list.push(passage.id)
         }
         // console.log("full document: ", text);
 
         this.setState({
-            curPage: {text: text, passage_id: passage_id},
+            curPage: {text: text, passage_id: passage_id, passage_id_list: passage_id_list},
         });
         this.forceUpdate();
     }
@@ -108,6 +110,10 @@ class Searcher extends React.Component {
     scrollToSection(section_title) {
         let section_element = document.getElementById(section_title);
         section_element.parentNode.scrollTop = section_element.offsetTop - section_element.parentNode.offsetTop;
+    }
+
+    addIntersectionEvent(intersectionEvent) {
+        this.props.addIntersectionEvent(intersectionEvent)
     }
 
     
@@ -123,13 +129,13 @@ class Searcher extends React.Component {
         } else {
             document_titles = this.props.passages.map((psg) =>
             <ListItem button onClick={(e) => {
-                this.props.updateCurrentDocument(psg['id']);
-                postRequest(`/record_action?name=select_document`, {data: {passage_id: psg['id'], page_title: psg['page']}});
+                this.props.updateCurrentDocument(psg['page']);
+                postRequest(`/record_action?name=select_document`, {data: {passage_id: psg['id'], page_title: psg['page'], dom_time: performance.now()}});
                 // this.getPassageById(psg['id']);
                 this.getFullDocument(psg['page'], psg['id']);
-                if (document.getElementById(psg.id)) {
-                    document.getElementById(psg.id).scrollIntoView();
-                }
+                // if (document.getElementById(psg.id)) {
+                //     document.getElementById(psg.id).scrollIntoView();
+                // }
 
             }} key={psg['id'].toString()}>
                 <ListItemText primary={psg['page']} />
@@ -201,10 +207,12 @@ class Searcher extends React.Component {
                             searchType={"passageSearch"}
                             recordHighlight={(startIndex, endIndex) => this.props.recordHighlight(startIndex, endIndex, 'passage')}
                             passage_id={this.state.curPage.passage_id}
+                            passage_id_list={this.state.curPage.passage_id_list}
+                            addIntersectionEvent={this.addIntersectionEvent}
                             />
                         {/* <Highlight_tools /> */}
 
-                            <Button variant="contained" 
+                            {/* <Button variant="contained" 
                                 color="primary" 
                                 onClick={() => { this.getPassageById(this.state.curPage['id']-1) }}
                                 style={{ 
@@ -219,7 +227,7 @@ class Searcher extends React.Component {
                                     margin: 10, 
                                     }}>
                                 {'Next Passage >>>'}
-                            </Button>
+                            </Button> */}
                     </Grid>
 
                 </Grid>

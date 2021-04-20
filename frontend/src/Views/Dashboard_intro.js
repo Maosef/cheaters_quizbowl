@@ -30,8 +30,6 @@ import '../App.css';
 import HighlightTool from '../Components/HighlightTool';
 import HighlightAnswerTool from '../Components/HighlightRecorder';
 
-import TabTool from '../Components/TabTool';
-
 import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import useStyles from '../Styles';
 import { green, purple } from '@material-ui/core/colors';
@@ -74,6 +72,8 @@ class Dashboard extends React.Component {
 
         this.onExit = this.onExit.bind(this);
 
+        this.addIntersectionEvent = this.addIntersectionEvent.bind(this);
+        this.intersectionEvents = [];
 
         this.maxAttempts = 1;
 
@@ -87,15 +87,7 @@ class Dashboard extends React.Component {
             currentQuery: '',
             searchLoading: false,
             retrievedTitles: [],
-            // sessionToken: "",
-            // question_id: -1,
-            // question_idx: 0,
-            // question: "",
-            // category: "",
-            // page: "",
-            // tokenizations: [], //list of lists
-            // year: -1,
-            // tournament: "",
+            curDocumentInfo: {},
 
             answerStatus: null,
             interrupted: false,
@@ -137,9 +129,9 @@ class Dashboard extends React.Component {
                 element: "#toolbar",
                 intro: "The toolbar displays your score, evidence, and previous actions."
               },
-              {
-                intro: "You can access this tutorial any time from the navbar. Have fun!"
-              }
+            //   {
+            //     intro: "You can access this tutorial any time from the navbar. Have fun!"
+            //   }
             ],
         }
     }
@@ -195,7 +187,7 @@ class Dashboard extends React.Component {
 
 
     // fetch data and log query
-    async processQuery(query, origin='none', selectedPassageId=-1) {
+    async processQuery(query, origin='none', selectedPassageId=-1, context) {
         console.log(`query: ${query}`);
         if (!query){
             return
@@ -206,7 +198,7 @@ class Dashboard extends React.Component {
             currentQuery: query
         })
 
-        postRequest(`/record_action?name=search_documents`, {data: {query: query, origin: origin, passage_id: selectedPassageId}})
+        postRequest(`/record_action?name=search_documents`, {data: {query: query, origin: origin, passage_id: selectedPassageId, context: context}})
 
         if (SEARCH_TYPE === 'page') {
             getRequest(`/search_wiki_titles?query=${query}`)
@@ -238,9 +230,9 @@ class Dashboard extends React.Component {
     
     }
 
-    answerQuestion(answer, origin='none', selectedPassageId) {
+    answerQuestion(answer, origin='none', selectedPassageId, context) {
 
-        postRequest(`/record_action?name=answer`, {data: {answer: answer, origin: origin, passage_id: selectedPassageId}})
+        postRequest(`/record_action?name=answer`, {data: {answer: answer, origin: origin, passage_id: selectedPassageId, context: context, dom_time: performance.now()}})
 
         // console.log(`expanded answer: ${expanded_answer}`)
         postRequest(`/answer?answer=${answer}&sentence_index=${this.state.sentenceIndex}`).then(data => {
@@ -254,36 +246,26 @@ class Dashboard extends React.Component {
                 this.setState({answerStatus: "incorrect"});
             }
             
-            // if (game_state['answer_correct']) {
-            //     alert("Correct. Answer is " + game_state['answer'] + ". Score: " + game_state['score']);
-            //     this.advanceQuestion();
-            // } else { // wrong answer
-            //     // console.log("Attempts", this.state.numAttempts, this.maxAttempts)
-            //     if (this.state.numAttempts < this.maxAttempts) {
-            //         alert(`Incorrect. Tries left: ${this.maxAttempts-this.state.numAttempts}`);
-            //         this.setState({numAttempts: this.state.numAttempts + 1});
-            //         return;
-            //     } else {
-            //         alert("Incorrect. Answer is " + game_state['answer']);
-            //         this.advanceQuestion();
-            //     }
-            // }
         });
     }
 
     // advance to next question
     advanceQuestion(player_decision=null, skip=false){
-        // record keyword search data
+        // record keyword search data and intersection events
         console.log('keywords: ', this.keywords);
         postRequest(`/record_keyword_search`, {
             'keywords': this.keywords, 
             'passage_keywords_map': this.passage_keywords_map});
+        postRequest(`/record_action?name=document_scroll_events`, {data: {events: this.intersectionEvents}});
+        // reset data structures
         this.keywords = {};
         this.passage_keywords_map = {};
 
+        this.intersectionEvents = [];
+
         postRequest(`/advance_question?player_decision=${player_decision}&skip=${skip}`).then(data => {
             // reset state
-            this.setState({game_state: data, interrupted: false, wordIndex: 0, sentenceIndex: 0, answerStatus: null});
+            this.setState({game_state: data, interrupted: false, wordIndex: 0, sentenceIndex: 0, answerStatus: null, curDocumentInfo: {}});
 
             let game_state = this.state.game_state;
             //load the next question
@@ -300,8 +282,10 @@ class Dashboard extends React.Component {
         // this.setState({keywords: this.state.keywords + [searchVal]}) # bug: this clears the search box
         
         let cleaned_searchVal = searchVal.trim();
-        let doc_title = this.state.game_state['cur_doc_selected']['title'];
+        // let doc_title = this.state.game_state['cur_doc_selected']['title'];
+        let doc_title = this.state.curDocumentInfo['title'];
         // console.log('doc title: ', doc_title)
+
         let keywords;
         if (search_type === 'full') {keywords = this.keywords}
         else if (search_type === 'passage') {keywords = this.passage_keywords_map}
@@ -323,9 +307,10 @@ class Dashboard extends React.Component {
         this.state.game_state['highlight']['endIndex'] = endIndex;
     }
 
-    updateCurrentDocument(doc: Object){
+    updateCurrentDocument(title){
         // console.log('keywords: ', this.keywords);
-        this.state.game_state['cur_doc_selected'] = doc;
+        // this.state.game_state['cur_doc_selected'] = doc;
+        this.setState({curDocumentInfo: {title: title}})
     }
 
     updateGameState(gameState) {
@@ -341,15 +326,15 @@ class Dashboard extends React.Component {
         this.forceUpdate()
     }
 
-    highlightToolCallback(action, text, selectedElement, selectedPassageId) {
-        console.log('highlightToolCallback', action, text, selectedElement, selectedPassageId);
+    highlightToolCallback(action, text, selectedElement, selectedPassageId, context) {
+        console.log('highlightToolCallback', action, text, selectedElement, selectedPassageId, context);
 
         if (action === 'record evidence') {
             this.recordEvidence(text, selectedPassageId);
         } else if (action === 'search documents') {
-            this.processQuery(text, selectedElement, selectedPassageId);
+            this.processQuery(text, selectedElement, selectedPassageId, context);
         } else if (action === 'answer') {
-            this.answerQuestion(text, selectedElement, selectedPassageId);
+            this.answerQuestion(text, selectedElement, selectedPassageId, context);
         }
     }
 
@@ -358,6 +343,10 @@ class Dashboard extends React.Component {
     }
     onExit() {
         this.setState(() => ({ stepsEnabled: false }));
+    }
+
+    addIntersectionEvent(intersectionEvent) {
+        this.intersectionEvents.push(intersectionEvent);
     }
 
     render() {
@@ -533,6 +522,7 @@ class Dashboard extends React.Component {
                                 recordKeywordSearchTerms={this.recordKeywordSearchTerms}
                                 updateCurrentDocument={this.updateCurrentDocument}
                                 recordHighlight={this.recordHighlight}
+                                addIntersectionEvent={this.addIntersectionEvent}
                                 />
                         </Grid>
 

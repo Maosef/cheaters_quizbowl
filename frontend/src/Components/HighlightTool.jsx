@@ -80,6 +80,39 @@ export default function HighlightTool(props) {
         return text;
     }
     
+    function getExpandedText() {
+        const selectionObj = (window.getSelection && window.getSelection());
+        const selection = selectionObj.toString();
+        const anchorNode = selectionObj.anchorNode;
+        const focusNode = selectionObj.focusNode;
+        const anchorOffset = selectionObj.anchorOffset;
+        const focusOffset = selectionObj.focusOffset;
+        const position = anchorNode.compareDocumentPosition(focusNode);
+        let forward = false;
+        
+        if (position === anchorNode.DOCUMENT_POSITION_FOLLOWING) {
+            forward = true;
+        } else if (position === 0) {
+            forward = (focusOffset - anchorOffset) > 0;
+        }
+        // let selectionStart = forward ? anchorOffset : focusOffset;
+
+        const expandOffset = 10;
+        let range = new Range();
+        // selectionObj.getRangeAt(0).cloneContents()
+        if (forward) {
+            range.setStart(anchorNode, Math.max(anchorOffset-expandOffset, 0));
+            range.setEnd(focusNode, Math.min(focusOffset+expandOffset, focusNode.length));
+        } else {
+            range.setStart(focusNode, Math.max(focusOffset-expandOffset, 0));
+            range.setEnd(anchorNode, Math.min(anchorOffset+expandOffset, anchorNode.length));
+        }
+        
+        // console.log(`expanded range: ${range}`);
+    
+        return range.toString();
+    }
+
     document.onmouseup = captureSearch;
     document.onkeydown = handleShortcut;
     document.onkeyup = deactivateShortcut;
@@ -96,11 +129,11 @@ export default function HighlightTool(props) {
                                     Record as evidence (Ctrl-e)
                                 </Button>
             answer_button = 
-            <Button variant="contained" color="secondary" style={{margin: 10}} onClick={() => {props.callback('answer', selected_text, textElement, selectedPassageId)}}>
+            <Button variant="contained" color="secondary" style={{margin: 10}} onClick={() => {props.callback('answer', selected_text, textElement, selectedPassageId, getExpandedText())}}>
                 Answer as "{selected_text}" (Ctrl-a)
             </Button>
         }
-        search_documents_button = <Button variant="contained" color="primary" style={{margin: 10}} onClick={() => {props.callback('search documents', selected_text, textElement, selectedPassageId)}}>
+        search_documents_button = <Button variant="contained" color="primary" style={{margin: 10}} onClick={() => {props.callback('search documents', selected_text, textElement, selectedPassageId, getExpandedText())}}>
                                     Search as query (Ctrl-s)
                                 </Button>
 
