@@ -42,7 +42,6 @@ class Searcher extends React.Component {
         this.state = {
             // pages: [],
             curPage: {},
-
             curQuery: "",
             titles: [],
             
@@ -64,6 +63,11 @@ class Searcher extends React.Component {
             this.setState({
                 curQuery: this.props.currentQuery
             });
+        }
+
+        // question id changed, clear screen
+        if (prevProps.currentQuestionId !== this.props.currentQuestionId) {
+            this.setState({curPage: {}, curQuery: "", titles: []})
         }
     }
     
@@ -133,9 +137,6 @@ class Searcher extends React.Component {
                 postRequest(`/record_action?name=select_document`, {data: {passage_id: psg['id'], page_title: psg['page'], dom_time: performance.now()}});
                 // this.getPassageById(psg['id']);
                 this.getFullDocument(psg['page'], psg['id']);
-                // if (document.getElementById(psg.id)) {
-                //     document.getElementById(psg.id).scrollIntoView();
-                // }
 
             }} key={psg['id'].toString()}>
                 <ListItemText primary={psg['page']} />
@@ -159,7 +160,6 @@ class Searcher extends React.Component {
                 >
                     {/* document search */}
                     <Grid item xs={4}>
-
                             <form onSubmit={(event) => {event.preventDefault(); this.props.processQuery(this.state.curQuery)}}
                                 className={classes.root} 
                                 noValidate 
@@ -198,6 +198,7 @@ class Searcher extends React.Component {
 
                     {/* text display, keyword search */}
                     <Grid item xs={8} >
+                        <h3>{this.props.curDocumentInfo.title}</h3>
                         <DocumentDisplay 
                             text={this.state.curPage['text']} 
                             searchTerms={this.state.curQuery} 
@@ -206,9 +207,11 @@ class Searcher extends React.Component {
                             cleanText={true}
                             searchType={"passageSearch"}
                             recordHighlight={(startIndex, endIndex) => this.props.recordHighlight(startIndex, endIndex, 'passage')}
+
                             passage_id={this.state.curPage.passage_id}
                             passage_id_list={this.state.curPage.passage_id_list}
                             addIntersectionEvent={this.addIntersectionEvent}
+                            // currentQuestionId={this.props.currentQuestionId}
                             />
                         {/* <Highlight_tools /> */}
 

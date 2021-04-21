@@ -73,12 +73,14 @@ class Dashboard extends React.Component {
         this.onExit = this.onExit.bind(this);
 
         this.addIntersectionEvent = this.addIntersectionEvent.bind(this);
-        this.intersectionEvents = [];
+        // this.intersectionEvents = [];
 
         this.maxAttempts = 1;
 
-        this.keywords = {};
-        this.passage_keywords_map = {};
+        // this.keywords = {};
+        // this.passage_keywords_map = {};
+        this.curDocumentInfo = {'title': null, 'keyword_matches': [], 'intersectionEvents': []};
+
 
         this.state = {
 
@@ -87,7 +89,6 @@ class Dashboard extends React.Component {
             currentQuery: '',
             searchLoading: false,
             retrievedTitles: [],
-            curDocumentInfo: {},
 
             answerStatus: null,
             interrupted: false,
@@ -232,7 +233,7 @@ class Dashboard extends React.Component {
 
     answerQuestion(answer, origin='none', selectedPassageId, context) {
 
-        postRequest(`/record_action?name=answer`, {data: {answer: answer, origin: origin, passage_id: selectedPassageId, context: context, dom_time: performance.now()}})
+        postRequest(`/record_action?name=answer`, {data: {answer: answer, origin: origin, passage_id: selectedPassageId, context: context, time: Date.now()}})
 
         // console.log(`expanded answer: ${expanded_answer}`)
         postRequest(`/answer?answer=${answer}&sentence_index=${this.state.sentenceIndex}`).then(data => {
@@ -253,19 +254,18 @@ class Dashboard extends React.Component {
     advanceQuestion(player_decision=null, skip=false){
         // record keyword search data and intersection events
         console.log('keywords: ', this.keywords);
-        postRequest(`/record_keyword_search`, {
-            'keywords': this.keywords, 
-            'passage_keywords_map': this.passage_keywords_map});
-        postRequest(`/record_action?name=document_scroll_events`, {data: {events: this.intersectionEvents}});
+        // postRequest(`/record_keyword_search`, {
+        //     'keywords': this.keywords, 
+        //     'passage_keywords_map': this.passage_keywords_map});
+        postRequest(`/record_action?name=document_actions`, {data: {documentActions: this.curDocumentInfo}});
         // reset data structures
-        this.keywords = {};
-        this.passage_keywords_map = {};
-
-        this.intersectionEvents = [];
+        this.curDocumentInfo = {'title': null, 'keyword_matches': [], 'intersectionEvents': []};
+        // this.keywords = {};
+        // this.passage_keywords_map = {};
 
         postRequest(`/advance_question?player_decision=${player_decision}&skip=${skip}`).then(data => {
             // reset state
-            this.setState({game_state: data, interrupted: false, wordIndex: 0, sentenceIndex: 0, answerStatus: null, curDocumentInfo: {}});
+            this.setState({game_state: data, interrupted: false, wordIndex: 0, sentenceIndex: 0, answerStatus: null, passages: []});
 
             let game_state = this.state.game_state;
             //load the next question
@@ -283,12 +283,13 @@ class Dashboard extends React.Component {
         
         let cleaned_searchVal = searchVal.trim();
         // let doc_title = this.state.game_state['cur_doc_selected']['title'];
-        let doc_title = this.state.curDocumentInfo['title'];
-        // console.log('doc title: ', doc_title)
+        let curDoc = this.curDocumentInfo;
+        let doc_title = curDoc['title'];
+        console.log('doc: ', curDoc)
 
-        let keywords;
-        if (search_type === 'full') {keywords = this.keywords}
-        else if (search_type === 'passage') {keywords = this.passage_keywords_map}
+        let keywords = curDoc.keyword_matches
+        // if (search_type === 'full') {keywords = curDoc.keywords}
+        // else if (search_type === 'passage') {keywords = curDoc.passage_keywords_map}
 
         if (!keywords.hasOwnProperty(doc_title)){
             keywords[doc_title] = [];
@@ -310,7 +311,9 @@ class Dashboard extends React.Component {
     updateCurrentDocument(title){
         // console.log('keywords: ', this.keywords);
         // this.state.game_state['cur_doc_selected'] = doc;
-        this.setState({curDocumentInfo: {title: title}})
+        // this.setState({curDocumentInfo: {title: title}})
+        postRequest(`/record_action?name=document_actions`, {data: {documentActions: this.curDocumentInfo}}); // record actions of prev doc
+        this.curDocumentInfo.title = title
     }
 
     updateGameState(gameState) {
@@ -318,7 +321,7 @@ class Dashboard extends React.Component {
     }
 
     async recordEvidence(text, selectedPassageId) {
-        this.state.game_state['evidence'].push(text);
+        this.state.game_state['evidence'].push(text); // TODO: make immutable update
         // let cur_doc_selected = this.state.game_state['cur_doc_selected']
         // this.state.game_state['evidence'][cur_doc_selected] = text;
         let game_state = await postRequest(`/record_evidence?evidence=${text}`);
@@ -346,7 +349,7 @@ class Dashboard extends React.Component {
     }
 
     addIntersectionEvent(intersectionEvent) {
-        this.intersectionEvents.push(intersectionEvent);
+        this.curDocumentInfo.intersectionEvents.push(intersectionEvent);
     }
 
     render() {
@@ -523,6 +526,8 @@ class Dashboard extends React.Component {
                                 updateCurrentDocument={this.updateCurrentDocument}
                                 recordHighlight={this.recordHighlight}
                                 addIntersectionEvent={this.addIntersectionEvent}
+                                currentQuestionId={this.state.game_state.question_id}
+                                curDocumentInfo={this.curDocumentInfo}
                                 />
                         </Grid>
 

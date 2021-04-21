@@ -30,6 +30,8 @@ class DocumentDisplay extends React.Component {
     
     this.searchVals = [];
     this.matchActions = [];
+    this.observe_target_ids = new Set();
+
     this.state = {
       searchTerms: "",
       highlight: {},
@@ -66,8 +68,15 @@ class DocumentDisplay extends React.Component {
     entries.forEach(entry => {
       // console.log('intersection: ', entry.target.id, entry.isIntersecting)
       // console.log('intersection: ', entry)
-      this.props.addIntersectionEvent({'passage_id': entry.target.id, 'time': entry.time, 'is_visible': entry.isIntersecting})
 
+      // ignore event the first time
+      let passage_id = entry.target.id;
+      if (this.observe_target_ids.has(passage_id)) {
+        this.props.addIntersectionEvent({'passage_id': passage_id, 'time': Math.round(entry.time), 'is_visible': entry.isIntersecting});
+      } else if (entry.isIntersecting) {
+        this.observe_target_ids.add(passage_id);
+        this.props.addIntersectionEvent({'passage_id': passage_id, 'time': Math.round(entry.time), 'is_visible': entry.isIntersecting});
+      }
     });
   };
   // when query or document changes, update terms in keyword search box, trigger search
@@ -83,29 +92,39 @@ class DocumentDisplay extends React.Component {
         $(this.searchBar).val(this.props.searchTerms).trigger("input");
         
       }
-      // scroll to element
+      // passage changed, scroll to element, highlight
       if (prevProps.passage_id !== this.props.passage_id) {
-        document.getElementById(this.props.passage_id).scrollIntoView();
+        const passage_element = document.getElementById(this.props.passage_id);
+        if (passage_element) {
+          passage_element.scrollIntoView();
+          passage_element.setAttribute("style", "background-color: #99ff99;");
+        }
         // remove previous highlight
-        if (prevProps.passage_id && document.getElementById(prevProps.passage_id)) document.getElementById(prevProps.passage_id).setAttribute("style", "background-color: none;"); 
-        document.getElementById(this.props.passage_id).setAttribute("style", "background-color: #99ff99;");
+        if (prevProps.passage_id && document.getElementById(prevProps.passage_id)) {
+          document.getElementById(prevProps.passage_id).setAttribute("style", "background-color: none;"); 
+        }
       }
 
-      // watch the passages for intersection
+      // list of passages changed, watch the passages for intersection
       if (prevProps.passage_id_list !== this.props.passage_id_list) {
-        if (prevProps.passage_id_list) {
+        if (prevProps.passage_id_list) { // delete old passages
           for (const passage_id of prevProps.passage_id_list) {
-            if (document.getElementById(passage_id)) this.intersectionObserver.unobserve(document.getElementById(passage_id));
+            if (document.getElementById(passage_id)) {
+              this.intersectionObserver.unobserve(document.getElementById(passage_id));
+              this.observe_target_ids.delete(passage_id)
+            }
           }
         }
         
-        for (const passage_id of this.props.passage_id_list) {
-          // let target = document.querySelector(`#${passage_id}`);
-          let target = document.getElementById(passage_id)
-          this.intersectionObserver.observe(target);
+        if (this.props.passage_id_list) {
+          for (const passage_id of this.props.passage_id_list) {
+            // let target = document.querySelector(`#${passage_id}`);
+            let target = document.getElementById(passage_id)
+            this.intersectionObserver.observe(target);
+          }
         }
       }
-      
+
     }
   }
 
@@ -140,21 +159,21 @@ class DocumentDisplay extends React.Component {
   /**
      * Jumps to the element matching the currentIndex
      */
-  jumpTo() {
+  // jumpTo() {
 
-    if (this.$results.length) {
-      var position,
-        $current = this.$results.eq(this.currentIndex);
-      this.$results.removeClass(this.currentClass);
-      if ($current.length) {
-        $current.addClass(this.currentClass);
-        position = $current.offset().top - this.offsetTop;
-        // console.log(position, $content.parent());
-        $current[0].scrollIntoView({block: 'nearest'});
-        // $content.parent()[0].scrollTo(0, position);
-      }
-    }
-  }
+  //   if (this.$results.length) {
+  //     var position,
+  //       $current = this.$results.eq(this.currentIndex);
+  //     this.$results.removeClass(this.currentClass);
+  //     if ($current.length) {
+  //       $current.addClass(this.currentClass);
+  //       position = $current.offset().top - this.offsetTop;
+  //       // console.log(position, $content.parent());
+  //       $current[0].scrollIntoView({block: 'nearest'});
+  //       // $content.parent()[0].scrollTo(0, position);
+  //     }
+  //   }
+  // }
 
   // search for terms, highlight, jump to
   // search(searchVal) {    
@@ -229,7 +248,7 @@ class DocumentDisplay extends React.Component {
               {'action': 'advance', 
               'text': $current[0].textContent, 
               'passage_id': $current[0].parentElement.id, 
-              'time': performance.now()}})
+              'dom_time': Math.round(performance.now())}})
           }
         }
       }
