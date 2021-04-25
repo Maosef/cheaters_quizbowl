@@ -2,6 +2,8 @@ import * as React from "react";
 import * as s from "./App.css";
 // import Dashboard from './Views/Dashboard';
 import Dashboard from './Views/Dashboard_intro';
+import Home from './Views/Home';
+
 
 import Dashboard_incremental from './Views/Dashboard_incremental';
 import Dashboard_static from './Views/Dashboard_static';
@@ -24,13 +26,16 @@ function App() {
         <Route path="/register">
           <Register />
         </Route>
-        <Route path="/passage">
+        {/* <Route path="/passage">
           <Dashboard_passage />
         </Route>
         <Route path="/static">
           <Dashboard_static />
-        </Route>
+        </Route> */}
         <Route path="/">
+          <Home />
+        </Route>
+        <Route path="/play">
           <Dashboard />
         </Route>
       </Switch>

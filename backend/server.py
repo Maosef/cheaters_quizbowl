@@ -186,9 +186,22 @@ def get_document_passages(page_title: str, current_user: str = Depends(get_curre
     # game_manager.state['tfidf_search_map']['documents_selected'].append(r.json())
     return r.json()
 
+@app.get("/get_leaderboard")
+def get_leaderboard():
+    top_players = {}
+    for user, game_manager in game_sessions.items():
+        top_players[user] = game_manager.state
+    return top_players
 
 @app.get("/get_players")
 def get_players():
+    top_players = {}
+    for user, game_manager in game_sessions.items():
+        top_players[user] = game_manager.state
+    return top_players
+
+@app.get("/get_top_scores")
+def get_top_scores():
     top_players = {}
     for user, game_manager in game_sessions.items():
         top_players[user] = game_manager.state['score']
