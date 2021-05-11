@@ -134,7 +134,7 @@ class Searcher extends React.Component {
             document_titles = this.props.passages.map((psg) =>
             <ListItem button onClick={(e) => {
                 this.props.updateCurrentDocument(psg['page']);
-                postRequest(`/record_action?name=select_document`, {data: {passage_id: psg['id'], page_title: psg['page'], dom_time: performance.now()}});
+                postRequest(`/record_action?name=select_document`, {data: {passage_id: psg['id'], page_title: psg['page']}});
                 // this.getPassageById(psg['id']);
                 this.getFullDocument(psg['page'], psg['id']);
 

@@ -13,12 +13,12 @@ class QuestionDisplay extends React.Component {
     constructor(props) {
         super(props);
         // this.classes = useStyles();
-        this.READ_DELAY_MS = 20;
+        this.READ_DELAY_MS = 200;
         this.state = {
+            text: "", 
             wordIndex: 0, 
             sentenceIndex: 0, 
-            words: [], 
-            text: "", 
+            words: [], // list of words for the current sentence
             isReading: false,
             sentences: [],
             readerID: 0,
@@ -30,11 +30,28 @@ class QuestionDisplay extends React.Component {
 
     componentDidMount() {
         let sentences = this.props.tokenizations.map(span => this.props.text.slice(...span));
-        this.setState({
-            sentences: sentences,
-            words: sentences[0].trim().split(" ")
-        });
-        this.read();
+        let savedSentenceIndex = parseInt(window.sessionStorage.getItem( 'sentenceIndex'));
+        let savedText = window.sessionStorage.getItem( 'savedText');
+
+        // console.log('savedSentenceIndex', savedSentenceIndex)
+        if (!savedSentenceIndex) {
+            savedSentenceIndex = 0;
+            this.setState({
+                sentenceIndex: 0,
+                sentences: sentences,
+                words: sentences[0].trim().split(" "),
+            }, ()=>this.read(savedSentenceIndex));
+        } else {
+            this.setState({
+                sentences: sentences,
+                sentenceIndex: savedSentenceIndex,
+                text: savedText,
+                words: sentences[savedSentenceIndex + 1].trim().split(" ")
+            }, ()=>this.read(savedSentenceIndex));
+        }
+        
+        // this.state.text = savedText
+        // this.read(savedSentenceIndex);
     }
 
     componentDidUpdate(prevProps) {
@@ -52,18 +69,18 @@ class QuestionDisplay extends React.Component {
             });
             // reset the reader or else there will be two
             clearInterval(this.state.readerID);
-            this.read();
+            this.read(0);
         }
     }
     
     // read a sentence, then pause
-    read() {
+    read(sentenceIndex) {
         this.setState({
             wordIndex: 0, isReading: true
         });
 
         let readerID = setInterval(
-            () => this.readWords(this.state.sentenceIndex),
+            () => this.readWords(sentenceIndex),
             this.READ_DELAY_MS
         );
 
@@ -72,7 +89,13 @@ class QuestionDisplay extends React.Component {
         });
 
         // postRequest(`/record_next_sentence?name=next_sentence&sentence_index=${this.state.sentenceIndex}`);
-        postRequest(`/record_action?name=next_sentence`, {data: {sentence_index: this.state.sentenceIndex}});
+        postRequest(`/record_action?name=next_sentence`, {data: {sentence_index: sentenceIndex}});
+        // save state
+        // console.log('new sentenceIndex', sentenceIndex)
+        window.sessionStorage.setItem( 'sentenceIndex', sentenceIndex );
+        // console.log('new savedText', this.state.text)
+        window.sessionStorage.setItem( 'savedText', this.state.text );
+        
     }
 
     //add word to text, display
@@ -105,7 +128,7 @@ class QuestionDisplay extends React.Component {
 
     render() {
         if (!this.state.isReading) {
-            var button = <ContinueButton onClick={this.read} style={{flex: 1}}/>
+            var button = <ContinueButton onClick={() => this.read(this.state.sentenceIndex)} style={{flex: 1}}/>
         }
         return (
             <div id="questionText" style={{ "maxWidth": "600px", "margin": "auto"}}>

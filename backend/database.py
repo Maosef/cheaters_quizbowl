@@ -55,6 +55,32 @@ class Database:
             Column('start_datetime', String, primary_key = True), 
             Column('data', String),
         )
+        self.playing_times = Table(
+            'playing_times', meta, 
+            Column('start_datetime', String), 
+            Column('end_datetime', String),
+        )
+        self.spring_novice_data = Table(
+            'spring_novice_data', meta, 
+            Column('id', Integer, primary_key = True), 
+            Column('question', String),
+            Column('answer', String), 
+            Column('sentence_tokenizations', String),
+            Column('packet_num', Integer),
+            Column('question_num', Integer),
+            Column('other_data', String),
+        )
+
+        with self._session_scope as session:
+            self._spring_novice_ids = [
+                r[0] for r in session.query(self.spring_novice_data.c.id).all()
+            ]
+    
+    def get_playing_times(self):
+        s = self.playing_times.select()
+        conn = self._engine.connect()
+        res = conn.execute(s)
+        return [time for time in res]
 
     def create_all(self):
         Base.metadata.create_all(self._engine, checkfirst=True)
@@ -92,6 +118,27 @@ class Database:
         with self._session_scope as session:
             question = session.query(Question).filter_by(qanta_id=qanta_id).first()
             return question.to_dict()
+
+    def get_question_by_id_custom(self, q_id: int):
+        s = self.spring_novice_data.select().where(self.spring_novice_data.c.id==q_id)
+        conn = self._engine.connect()
+        result = conn.execute(s)
+        row = list(result)[0]
+        return row
+
+    def get_table_ids(self):
+        s = self.spring_novice_data.select()
+        conn = self._engine.connect()
+        result = conn.execute(s)
+        return [res[0] for res in result]
+    
+    def get_packet_questions(self, packet):
+        s = self.spring_novice_data.select().where(self.spring_novice_data.c.packet_num == packet)
+        conn = self._engine.connect()
+        result = conn.execute(s)
+        result = [res[0] for res in result]
+        return result
+    
 
 
     def insert_question_play(self, question_play: dict):
@@ -132,7 +179,24 @@ class Database:
                 Record, [answer_data]
             )
             return True
-        
+    
+    ### user ###
+    def insert_user_game_data(self, user_id, game_data):
+        with self._session_scope as session:
+            session.query(User).filter(User.user_id == user_id).update({User.game_data: game_data}, synchronize_session = False)
+
+    def get_user_state(self, user_id):
+        with self._session_scope as session:
+            res = session.query(User).filter(User.user_id == user_id).first()
+            session.commit()
+            data = res.game_data
+            if not data: return {}
+            # data = list(res).game_data
+            print('game data', data)
+            return json.loads(data)
+
+    ### authentication ###
+
     def get_password(self, email):
         with self._session_scope as session:
             results = session.query(User).filter(User.email == email).first()
@@ -141,11 +205,11 @@ class Database:
             return None
 
     # registration
-    def insert_email_password(self, email, password):
+    def insert_user_email_password(self, username, password):
         with self._session_scope as session:
-            if not session.query(User).filter(User.email == email).first():
+            if not session.query(User).filter(User.user_id == username).first():
                 session.bulk_insert_mappings(
-                    User, [{"email": email, "password": password}]
+                    User, [{"user_id": username, "email": username, "password": password}]
                 )
                 return True
             return False
@@ -221,8 +285,12 @@ class Question(Base):
 class User(Base):
     __tablename__ = "users"
     user_id = Column(String, primary_key=True)
+    email = Column(String, primary_key=True)
     password = Column(String)
     sessions = relationship('Session')
+    # score = Column(Integer)
+    game_data = Column(String)
+
 
     def __str__(self):
         return self.user_id

@@ -10,8 +10,11 @@ import Dashboard_static from './Views/Dashboard_static';
 import Dashboard_passage from './Views/Dashboard_passage';
 
 
-import Login from "./Login_dummy";
-import Register from "./Components/Register";
+// import Login from "./Login_dummy";
+import Login from "./Login";
+// import Register from "./Views/Register";
+import Register from "./Views/RegisterEmail";
+
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 
@@ -32,11 +35,14 @@ function App() {
         <Route path="/static">
           <Dashboard_static />
         </Route> */}
+        {/* <Route path="/play">
+          <Dashboard />
+        </Route> */}
+        <Route path="/dev">
+          <Dashboard />
+        </Route>
         <Route path="/">
           <Home />
-        </Route>
-        <Route path="/play">
-          <Dashboard />
         </Route>
       </Switch>
     </Router>

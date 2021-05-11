@@ -10,29 +10,40 @@ import unidecode
 import string
 import requests
 import random
-# import pandas as pd
-
+import editdistance
+from nltk.corpus import stopwords 
+  
 from typing import Optional
 import copy
 
 from backend.database import Database
 
+db = Database()
+
 SKIP_RECORD_ON_SKIP = True
 CONFIG = {
-            'dataset': 'qanta',
-            'num_questions': 20,
+            'dataset': 'spring_novice',
+            # 'dataset': 'qanta',
+            'packet_nums': [1,2,5,7],
+            'num_questions': 24,
             'multiple_answers': False,
-            'randomize': True,
-            'hard_questions': True,
+            'randomize': False,
+            'hard_questions': False,
             'hard_questions_path': 'backend/data/hard_qanta.json',
-            'question_ids': [95072,988,89697,108671,73219,48673,71049,144507,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
+            # 'question_ids': db.get_table_ids(),
+            'question_ids': [],
+
+            'tutorial_ids': [95072],
+            # 'question_ids': [95072,988,89697,108671,73219,48673,71049,144507,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
             # 'qids_1': [107440,153381,124015,22343,52682,106517,60955,88688,50838,88742,105855,35593,127908,50875,5419,146615,75323,84162,111095,140679],
             # 'qids_2': [140050,37738,49763,116356,88983,22586,143578,106706,40113,25205,27716,37764,122767,2271,62353,48232,126245,120918,69613,12329],
             # 'qids_3': [107,74066,31599,50870,121638,146675,5524,53483,6405,125257,77213,105925,95072,988,89697,108671,73219,48673,71049,144507]
             # 'data_path': "backend/data/"
         }
 
-db = Database()
+print('config: ', CONFIG)
+STOP_WORDS = set(stopwords.words('english')) 
+
 
 wiki_wiki = wikipediaapi.Wikipedia('en')
 wiki_html = wikipediaapi.Wikipedia(
@@ -81,6 +92,16 @@ def get_question_by_id(question_id: str, dataset_name: str):
         hotpotqa_row = r.json()
         print('hotpotqa_row', hotpotqa_row)
         question_dict = hotpotqa_row
+    elif dataset_name == 'spring_novice':
+        row = db.get_question_by_id_custom(question_id)
+        return {'id': row[0], 
+            'question': row[1], 
+            'answer': row[2], 
+            'tokenizations': json.loads(row[3]), 
+            'packet_num': row[4],
+            'question_num': row[5],
+            'other_data': row[6]
+            }
     return question_dict
 
 def get_random_question(dataset_name: str):
@@ -115,10 +136,7 @@ def get_random_question(dataset_name: str):
 ## Game manager: # manages the game, records data
 
 class GameManager:
-    def __init__(self):
-        self.question_data = dict()
-        self.documents = []
-
+    def __init__(self, username):
         '''
         dataset:
         - qanta
@@ -133,50 +151,57 @@ class GameManager:
 
         self._num_questions = self.config['num_questions']
         self._randomize = self.config['randomize']
-        self._question_ids = self.config['question_ids']
-        if self.config['hard_questions']:
-            self._hard_question_ids = list(json.load(open(self.config['hard_questions_path'])).keys())
-        self._file_name = "backend/data/recorded_game_{}.jsonl".format(str(datetime.today().date()))
+        # self.state['question_ids'] = self.config['question_ids']
+        # if self.config['hard_questions']:
+        #     self._hard_question_ids = list(json.load(open(self.config['hard_questions_path'])).keys())
+        # self._file_name = "backend/data/recorded_game_{}.jsonl".format(str(datetime.today().date()))
 
-        self._username = None
-        self._session_token = None
-        self.state = {} # changes for each question
+        self.state = {} # game state
 
-        self.game_history = []
+        # initialize game state
+        self.reset()
+        self.state['username'] = username
+        # get questions, packet scores
+        if self.config['dataset'] == 'spring_novice':
+            self.state['packet_scores'] = [0] * len(self.config['packet_nums'])
+ 
+
+    def load(self, state):
+        print("loading game...")
+        self.state = state
 
     # resets, then starts a new game
     def start_game(self, username: str, mode: str):
 
         self.reset()
-        self._file_name = "backend/data/recorded_game_{}.jsonl".format(str(datetime.today().date()))
+        # self._file_name = "backend/data/recorded_game_{}.jsonl".format(str(datetime.today().date()))
 
         self.state['username'] = username
         self.state['mode'] = mode
 
         print("starting new game...")
-        # get questions
-        self._question_ids = self.config["question_ids"]
-        # if mode == "sentence":
-        #     self._question_ids = self.config["qids_1"]
-        # elif mode == "incremental":
-        #     self._question_ids = self.config["qids_2"]
-        # elif mode == "static":
-        #     self._question_ids = self.config["qids_3"]
-
-        if self.config['randomize']:
-            pass
-        else:
-            for question_id in self._question_ids:
-                question_dict = get_question_by_id(question_id, self.config['dataset'])
-                
-                self.question_data[question_id] = question_dict
         
+        # get questions, packet scores
+        if self.config['dataset'] == 'spring_novice':
+            for packet_num in self.config['packet_nums']:
+                self.state['question_ids'] += db.get_packet_questions(packet_num)[:3]
+                # self.state['packet_scores'][packet_num] = 0
+            self.state['packet_scores'] = [0] * len(self.config['packet_nums'])
+        else:
+            self.state['question_ids'] = self.config["question_ids"]
+        
+        print('question_ids:', self.state['question_ids'])
+        # if mode == "sentence":
+        #     self.state['question_ids'] = self.config["qids_1"]
+        # elif mode == "incremental":
+        #     self.state['question_ids'] = self.config["qids_2"]
+        # elif mode == "static":
+        #     self.state['question_ids'] = self.config["qids_3"]
+
+
         return self.advance_question()
 
-    def save_state(self, state):
-        # df = pd.DataFrame([self.state])
-        # df.to_csv(self._file_name, mode='a', header=False)
-
+    def save_play(self, state):
         # with open(self._file_name, mode='a+') as outfile:
         #     json.dump(self.state, outfile)
         #     outfile.write('\n')
@@ -188,23 +213,24 @@ class GameManager:
     def reset(self):
         print("resetting...")
 
-        self.game_history = []
         # state is organized per question, corresponds to rows
         self.state = {
             'username': None,
             'mode': None,
             'start_datetime': str(datetime.utcnow()),
+            'question_ids': [],
+            'packet_number': self.config['packet_nums'][0],
             'question_number': 0, 
             'question_id': '', 
             'cur_question': '', 
             'question_data': {},
             'skipped': False,
 
-            'queries': [], 
-            'query_results_map': {}, # map of query to doc search results
-            'documents_selected': [],
-            'cur_doc_selected': '',
-            'keyword_searches': {}, # map of doc to searches
+            # 'queries': [], 
+            # 'query_results_map': {}, # map of query to doc search results
+            # 'documents_selected': [],
+            # 'cur_doc_selected': '',
+            # 'keyword_searches': {}, # map of doc to searches
             'evidence': [], # list of highlighted spans
 
             'tfidf_search_map': {
@@ -225,7 +251,10 @@ class GameManager:
             'game_over': False,
             'override_decision': None, # if player challenges decision
 
-            'actions': []
+            'actions': [],
+
+            'packet_scores': [],
+            # 'total_score': 0
         }
         return True
 
@@ -238,8 +267,6 @@ class GameManager:
 
     # get next question, advance state
     def advance_question(self, override_decision=None, skip=False):
-
-        print('keywords:', self.state['keyword_searches'])
         
         if override_decision != None:
             self.state['override_decision'] = override_decision
@@ -249,23 +276,36 @@ class GameManager:
                 self.state['skipped'] = True
                 print('skipping record...')
             else:
-                # clean state
-                del self.state['cur_doc_selected']
-                del self.state['cur_question']
-                del self.state['question_data']
-                print('saving state...')
-                self.save_state(self.state)
+                # save play, extract keys
+                print('saving play...')
+                keys = {'username','start_datetime','packet_number','question_number','question_id','skipped','evidence','tfidf_search_map',
+                    'buzz_sentence_number',
+                    'player_answer',
+                    'answer',
+                    'answer_correct',
+                    'score',
+                    'evidence_score',
+                    'override_decision',
+                    'actions',
+                }
+                play = {k:self.state[k] for k in keys if k in self.state}
+                self.save_play(play)
+                # save state for loading
+                db.insert_user_game_data(self.state['username'], json.dumps(self.state))
+
 
         cur_question_number = self.state['question_number'] + 1
 
+        # game over?
         if cur_question_number > self._num_questions:
             print('game finished')
             self.state['game_over'] = True
             return self.state
         
-        if self.config['hard_questions']:
+        if self.config['dataset'] == 'qanta_hard':
             cur_question_id = random.choice(self._hard_question_ids)
             cur_question = get_question_by_id(cur_question_id, 'qanta')
+        
         elif self.config['randomize']:
             q = get_random_question(self.config['dataset'])
             # only get questions that have a page field
@@ -274,8 +314,17 @@ class GameManager:
             cur_question_id = q['id']
             cur_question = q
         else:
-            cur_question_id = self._question_ids[cur_question_number - 1]
-            cur_question = self.question_data[cur_question_id]
+            cur_question_id = self.state['question_ids'][cur_question_number - 1]
+            cur_question = get_question_by_id(cur_question_id, self.config['dataset'])
+        
+        # if packet changed, update user data
+        if self.config['dataset'] == 'spring_novice':
+            if cur_question['packet_num'] != self.state['packet_number']:
+                old_packet = self.state['packet_number']
+                self.state['packet_scores'].append(self.state['score'])
+                self.state['packet_number'] = cur_question['packet_num']
+                self.state['packet_finished'] = True
+                # db.insert_user_game_data(self.state['username'], json.dumps(self.state))
 
         # update state
         self.state['question_number'] = cur_question_number
@@ -283,11 +332,11 @@ class GameManager:
         self.state['cur_question'] = cur_question['question']
         self.state['question_data'] = cur_question
 
-        self.state['queries'] = []
-        self.state['query_results_map'] = {}
-        self.state['documents_selected'] = []
-        self.state['cur_doc_selected'] = ''
-        self.state['keyword_searches'] = {}
+        # self.state['queries'] = []
+        # self.state['query_results_map'] = {}
+        # self.state['documents_selected'] = []
+        # self.state['cur_doc_selected'] = ''
+        # self.state['keyword_searches'] = {}
 
         self.state['buzz_word_index'] = -1
         self.state['buzz_sentence_number'] = -1
@@ -325,68 +374,81 @@ class GameManager:
         self.state['answer'] = ground_truth
 
         num_sentences = len(self.state['question_data']['tokenizations'])
-        points = 0
         print(f'sentence number: {sentence_number}, num sentences: {num_sentences}')
         self.state['buzz_sentence_number'] = sentence_number
-        
+
+        points = 0
         if answer_correct:
             points += 10
-            points += 5 * (num_sentences - sentence_number)
+            points += 10 * (num_sentences - sentence_number)
         print(f'points awarded: {points}')
         self.state['score'] += points
 
         return self.state
 
-    def normalize(self, s):
-        return unidecode.unidecode(s).lower().translate(str.maketrans('', '', string.punctuation))
+    def normalize(self, text): # lowercase, remove punctuation, stopwords
+        text = unidecode.unidecode(text).lower().translate(str.maketrans('', '', string.punctuation))
+        words = text.split(' ')
+        return [w for w in words if not w in STOP_WORDS] 
+
         
-    # normalize answers, remove punctuation and whitespace. try prompts?
+    # match answers
     def answer_match(self, player_answer, ground_truth):
         print(f'player answer: {player_answer}, ground truth: {ground_truth}')
 
         # if the player answer words overlap with ground truth words
-        player_answer_words = map(self.normalize, player_answer.split(' '))
+        # player_answer_words = list(map(self.normalize, player_answer.split(' ')))
+        # config = self.config['dataset']
+        # if 'qanta' in config:
+        #     ground_truth_words = list(map(self.normalize, ground_truth.replace('_',' ')))
+        # else:
+        #     ground_truth_words = list(map(self.normalize, ground_truth.split(' ')))
+        player_answer_words = self.normalize(player_answer)
         config = self.config['dataset']
         if 'qanta' in config:
-            ground_truth_words = map(self.normalize, ground_truth.split('_'))
+            ground_truth_words = self.normalize(ground_truth.replace('_',' '))
         else:
-            ground_truth_words = map(self.normalize, ground_truth.split(' '))
+            ground_truth_words = self.normalize(ground_truth)
 
         # print(len(set(player_answer_words)), len(set(ground_truth_words)))
-        return len(set(player_answer_words) & set(ground_truth_words)) > 0
+        # return len(set(player_answer_words) & set(ground_truth_words)) > 0
 
-    def search_document_titles(self, query: str):
-        print('searching documents...')
-        results = wikipedia.search(query)
-        self.state['queries'].append(query)
-        self.state['query_results_map'][query] = results
+        # custom match: if any "important" word (not a stop word) is a fuzzy match
+        for p_word in player_answer_words:
+            for gt_word in ground_truth_words:
+                if editdistance.eval(p_word, gt_word) <= 2: # fuzzy match
+                    return True
+        return False
 
-        self.record_action('search_documents', query)
+    # def search_document_titles(self, query: str):
+    #     print('searching documents...')
+    #     results = wikipedia.search(query)
+    #     self.state['queries'].append(query)
+    #     self.state['query_results_map'][query] = results
 
-        return self.state
+    #     self.record_action('search_documents', query)
 
-    # def search_documents_DrQA(self, query: str):
+    #     return self.state
 
+
+    # def get_wiki_document_html(self, page_title: str):
+    #     page = wiki_html.page(page_title)
+    #     html, sections = parse_html_string(page.text)
         
+    #     # html = page.summary + html
+    #     page_dict = {"title": page.title, "html":html, "sections":sections}
+    #     self.state['documents_selected'].append(page_title)
+    #     self.state['cur_doc_selected'] = page_dict
 
-    def get_wiki_document_html(self, page_title: str):
-        page = wiki_html.page(page_title)
-        html, sections = parse_html_string(page.text)
+    #     self.record_action('select_document', page.title)
+
+    #     return self.state
+
+    # def get_wiki_document_text(self, page_title: str):
+    #     page = wiki_wiki.page(page_title)
         
-        # html = page.summary + html
-        page_dict = {"title": page.title, "html":html, "sections":sections}
-        self.state['documents_selected'].append(page_title)
-        self.state['cur_doc_selected'] = page_dict
-
-        self.record_action('select_document', page.title)
-
-        return self.state
-
-    def get_wiki_document_text(self, page_title: str):
-        page = wiki_wiki.page(page_title)
-        
-        page_dict = {"title": page.title, "text": page.text}
-        return page_dict
+    #     page_dict = {"title": page.title, "text": page.text}
+    #     return page_dict
 
     def record_keyword_search(self, keywords, search_box: str):
         # cur_doc = self.state['cur_doc_selected']
@@ -418,5 +480,4 @@ class GameManager:
             page_dict = {"title": page.title, "html":html, "sections":sections}
             pages.append(page_dict)
 
-        self.documents = pages
         return pages

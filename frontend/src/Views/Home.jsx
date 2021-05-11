@@ -1,37 +1,26 @@
 // Home, start game, leaderboard
 
-import React, { useState, useEffect  } from 'react';
-import { Redirect } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import { Redirect } from "react-router-dom";
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 
 import Navbar from '../Components/Navbar'
-import AnswerForm from '../Components/AnswerForm';
-import Buzzer from '../Components/BuzzerUntimed';
-// import QuestionDisplay from './Components/QuestionDisplay';
-import QuestionDisplay from '../Components/QuestionDisplaySentence';
 
-
-// import Searcher from '../Components/SearcherControlled';
-// import SearcherTfidf from '../Components/SearcherTfidf';
-import SearcherPassage from '../Components/SearcherPassage';
-
-import { postRequest, getRequest } from '../utils';
+import { postRequest, getRequest, getScheduleInfo } from '../utils';
 
 import '../App.css';
-// import HighlightTool from '../Components/HighlightTool';
-// import HighlightAnswerTool from '../Components/HighlightRecorder';
-
 import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import useStyles from '../Styles';
 // import { green, purple } from '@material-ui/core/colors';
@@ -45,74 +34,107 @@ import { DataGrid } from '@material-ui/data-grid';
 
 
 export default withStyles(useStyles)(function Home(props) {
+
     // Declare a new state variable, which we'll call "count"
-    const [count, setCount] = useState(0);
+    const [leaderboard, setLeaderboard] = useState("Loading Leaderboard...");
+    const [playerData, setPlayerData] = useState("Loading Player Statistics...");
+    const [schedule, setSchedule] = useState("Loading Schedule...")
+    const [roundInProgress, setRoundInProgress] = useState(false)
 
     const { classes } = props;
 
-    const columns = [
-        { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'firstName', headerName: 'First name', width: 130 },
-        { field: 'lastName', headerName: 'Last name', width: 130 },
-        {
-            field: 'age',
-            headerName: 'Age',
-            type: 'number',
-            width: 90,
-        },
-        {
-            field: 'fullName',
-            headerName: 'Full name',
-            description: 'This column has a value getter and is not sortable.',
-            sortable: false,
-            width: 160,
-            valueGetter: (params) =>
-            `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
-        },
-        ];
-    
-        const rows = [
-        { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-        { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-        { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-        { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-        { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-        { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-        { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-        { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-        { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-        ];
+    const leaderboard_columns = [
+        { field: 'username', headerName: 'Username', width: 130 },
+        { field: 'score', headerName: 'Total Score', width: 130 },
+        { field: 'num_questions', headerName: 'Questions Answered', width: 200 },
+        { field: 'score1', headerName: 'Packet 1 Score', width: 150},
+        { field: 'score2', headerName: 'Packet 2 Score', width: 150 },
+        { field: 'score3', headerName: 'Packet 3 Score', width: 150 },
+        { field: 'score4', headerName: 'Packet 4 Score', width: 150 },
 
-    let leaderboard;
+    ]
+
+    const game_time_columns = [
+        { field: 'start_datetime', headerName: 'Start Time (EST)', width: 200 },
+        { field: 'end_datetime', headerName: 'End Time (EST)', width: 200 },
+    ]
+
+    // let is_valid_playing_time;
+    let playing_times;
+
+    // leaderboard = DataTable(rows, columns)
     // Similar to componentDidMount and componentDidUpdate:
     useEffect(() => {
         async function fetchData() {
-          // You can await here
-            const resp = await getRequest(`/get_leaderboard`);
-            console.log('leaderboard', resp)
-            // leaderboard = <div>{resp}</div>
-            leaderboard = DataTable(rows, columns)
-          // ...
+            const player_info = await getRequest(`/get_player_info`);
+            console.log('player info', player_info);
+            setPlayerData(player_info);
+
+            const rows = await getRequest(`/get_leaderboard`);
+            console.log('leaderboard', rows)
+            // setPlayerData(<div>{resp}</div>)
+            setLeaderboard(DataTable(rows, leaderboard_columns))
+
+            const resp = await getScheduleInfo();
+            console.log('resp', resp)
+            setRoundInProgress(resp['is_valid_playing_time'])
+            resp['valid_times'].forEach(function (round, i) {
+                // console.log('%d: %s', i, value);
+                round.id = i
+            });
+            playing_times = resp['valid_times']
+            setSchedule(DataTable(playing_times, game_time_columns))
+            // schedule = DataTable(playing_times, game_time_columns)
         }
         fetchData();
     }, []); // Or [] if effect doesn't need props or state
 
-
-    
+    // check if user is logged in
+    if (window.sessionStorage.getItem("token") == null) {
+        return <Redirect to="/login" />;
+    }
 
     function DataTable(rows, columns) {
-    return (
-        <div style={{ height: 400, width: '100%' }}>
-        <DataGrid rows={rows} columns={columns} pageSize={5} checkboxSelection />
+        return (
+            <div style={{ height: 400, width: '100%' }}>
+                <DataGrid rows={rows} columns={columns} pageSize={5} />
+            </div>
+        );
+    }
+
+    let play_button;
+    
+    if (playerData.game_over) {
+        play_button = <Link to="/play">
+            <Button variant="contained" color="primary" className={classes.margin} disabled>
+                Game Finished!
+            </Button>
+        </Link>
+    } else if (!roundInProgress) {
+        play_button = <Link to="/play">
+            <Button variant="contained" color="primary" className={classes.margin} disabled>
+                Waiting for Round to Start...
+            </Button>
+        </Link>
+    } else if (playerData.question_number === 0 && roundInProgress) {
+        play_button = <Link to="/play">
+            <Button variant="contained" color="primary" className={classes.margin}>
+                Start Game!
+            </Button>
+        </Link>
+    } else {
+        play_button = 
+        <div>
+            <Button variant="contained" color="primary" className={classes.margin}>
+                Resume Game!
+            </Button>
         </div>
-    );
     }
     
-
     return (
 
         // <div className={classes.root}>
-        <div>
+        <div className={classes.root}>
 
             {/* <Steps
             enabled={stepsEnabled}
@@ -121,19 +143,21 @@ export default withStyles(useStyles)(function Home(props) {
             onExit={this.onExit}
         /> */}
 
-            <Navbar text="CheatBowl" />
+            <Navbar text="Cheater Bowl" />
 
+
+            <div className={classes.body} style={{ maxWidth: 1500, margin: "auto" }}>
+
+            <h2>Welcome, {window.sessionStorage.getItem("username")}</h2>
+            
+            {play_button}
 
             <h2>Leaderboard</h2>
             {leaderboard}
 
+            <h2>Schedule</h2>
+            {schedule}
 
-            <p>You clicked {count} times</p>
-            <button onClick={() => setCount(count + 1)}>
-                Click me
-            </button>
-
-            <div className={classes.body} style={{ maxWidth: 1500, margin: "auto" }}>
                 <Grid container spacing={1}
                     bgcolor="background.paper"
                 >

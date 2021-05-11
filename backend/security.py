@@ -91,13 +91,13 @@ async def read_users_me(current_user: str = Depends(get_current_user)):
     return current_user
 
 def get_access_token(form_data):
-    # user = authenticate_user(form_data.username, form_data.password)
-    # if not user:
-    #     raise HTTPException(
-    #         status_code=401,
-    #         detail="Incorrect username or password",
-    #         headers={"WWW-Authenticate": "Bearer"},
-    #     )
+    user = authenticate_user(form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     access_token_expires = timedelta(
         minutes=security_config.ACCESS_TOKEN_EXPIRE_MINUTES
     )
@@ -111,6 +111,24 @@ def get_access_token(form_data):
     else:
         print("error storing session")
 
+# @router.post("/register")
+# async def register(form_data: OAuth2PasswordRequestForm = Depends()):
+#     print(
+#         "adding {} {} to database".format(
+#             form_data.username, pwd_context.hash(form_data.password)
+#         )
+#     )
+
+#     if db.insert_user_email_password(
+#         form_data.username, pwd_context.hash(form_data.password)
+#     ):
+#     # if db.insert_user_password(
+#     #     form_data.username, pwd_context.hash(form_data.password)
+#     # ):
+#         return get_access_token(form_data)
+#     print("User already exists")
+#     return {}
+
 @router.post("/register")
 async def register(form_data: OAuth2PasswordRequestForm = Depends()):
     print(
@@ -118,12 +136,13 @@ async def register(form_data: OAuth2PasswordRequestForm = Depends()):
             form_data.username, pwd_context.hash(form_data.password)
         )
     )
-
-    if db.insert_email_password(
+    
+    if db.insert_user_email_password(
         form_data.username, pwd_context.hash(form_data.password)
     ):
+        print('authorized')
         return get_access_token(form_data)
-    print("User already exists")
+    print("User or email already exists")
     return {}
 
 # registers username without password

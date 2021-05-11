@@ -55,6 +55,7 @@ export default class Login extends React.Component<Props, State> {
       .then((result) => {
         if ("access_token" in result) {
           let token = result["access_token"];
+          window.sessionStorage.setItem("username", this.state.username);
           window.sessionStorage.setItem("token", token);
           this.setState({ username: this.state.username });
         } else {
@@ -83,13 +84,13 @@ export default class Login extends React.Component<Props, State> {
             Sign in
           </Typography>
           <form className="form" noValidate onSubmit={this.handleSubmit}>
-            <TextField
+          <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
               id="username"
-              label="Email"
+              label="Username"
               name="username"
               value={this.state.username}
               onChange={this.handleUsername}
@@ -119,14 +120,19 @@ export default class Login extends React.Component<Props, State> {
             >
               Sign In
             </Button>
-            <Grid container className="signup">
+            <p>
+            <a href="/register">
+                  {"Don't have an account? Sign Up"}
+                </a>
+            </p>
+            {/* <Grid container className="signup">
               <Grid item xs></Grid>
               <Grid item>
                 <a href="/register" className="register">
                   {"Don't have an account? Sign Up"}
                 </a>
               </Grid>
-            </Grid>
+            </Grid> */}
           </form>
         </div>
       </Container>

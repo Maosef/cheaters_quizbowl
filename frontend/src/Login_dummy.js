@@ -12,6 +12,8 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import * as login_css from "./Login.css";
 
+// import consentForm from './assets/consent_form.html';
+
 interface Props {}
 
 interface State {
@@ -22,6 +24,7 @@ interface State {
   token: string;
 }
 
+
 export default class Login extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -30,6 +33,7 @@ export default class Login extends React.Component<Props, State> {
     this.handlePassword = this.handlePassword.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
 
   handleUsername(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ username: event.target.value });
@@ -119,7 +123,7 @@ export default class Login extends React.Component<Props, State> {
               color="primary"
               className="submit"
             >
-              Start!
+              Login
             </Button>
             <Grid container className="signup">
               <Grid item xs></Grid>
@@ -129,6 +133,9 @@ export default class Login extends React.Component<Props, State> {
                 </a>
               </Grid>
             </Grid>
+
+            
+            
           </form>
         </div>
       </Container>

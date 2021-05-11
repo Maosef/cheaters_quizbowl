@@ -17,6 +17,7 @@ import wikipediaapi
 from typing import Optional
 import copy
 import requests
+from datetime import datetime
 
 DRQA_RETRIEVER_URL = 'http://127.0.0.1:5000'
 
@@ -40,7 +41,10 @@ class Answer(BaseModel):
 class ActionRecord(BaseModel):
     data: dict
 
+
 app = FastAPI()
+db = Database()
+
 origins = [
     "http://localhost:8000",
     "http://localhost:3000",
@@ -62,16 +66,37 @@ app.include_router(qanta.router)
 app.include_router(data_server.router)
 
 
-# todo: allow managing multiple game sessions at once
+# cache for storing game sessions.
 game_sessions = dict()
-# game_manager = GameManager() 
 
 def get_game_object(current_user: str):
-    if current_user not in game_sessions:
-        game_sessions[current_user] = GameManager()
-    game_object = game_sessions[current_user]
     print('current user: ', current_user)
+
+    if current_user not in game_sessions:
+        game_object = GameManager(current_user)
+        game_sessions[current_user] = game_object
+
+        # saved state from disk
+        state = db.get_user_state(current_user)
+        if state:
+            print('loading state from disk...')
+            game_object.load(state)
+    else:
+        print('loading state from cache...')
+        
     return game_sessions[current_user]
+
+# def get_game_object(current_user: str):
+#     state = db.get_user_state(current_user)
+#     if state:
+#         return state
+    # if current_user not in game_sessions:
+    #     game_sessions[current_user] = GameManager()
+    # game_object = game_sessions[current_user]
+    # print('current user: ', current_user)
+    # return game_sessions[current_user]
+
+
 
 def destroy_game_object(current_user: str):
     del game_sessions[current_user]
@@ -83,6 +108,17 @@ def destroy_game_object(current_user: str):
 def read_root():
     return {"Hello": "World"}
 
+# get player info from database
+@app.get("/get_player_info")
+async def get_player_info(current_user: str = Depends(get_current_user)):
+
+    print(f'cur user: {current_user}')
+    game_manager = get_game_object(current_user)
+    # get state of the game
+    return game_manager.state
+    # if game_manager.state['packet_finished'] = False:
+
+
 # start a new game
 @app.post("/start_new_game")
 async def start_new_game(request: InitRequest, current_user: str = Depends(get_current_user)):
@@ -92,6 +128,9 @@ async def start_new_game(request: InitRequest, current_user: str = Depends(get_c
     # remember the state of the game
     if 'mode' not in game_manager.state or game_manager.state['mode'] != request.mode:
         game_manager.start_game(current_user, request.mode)
+    else:
+        game_manager.state['packet_finished'] = False
+        
     return game_manager.state
 
 @app.post("/buzz")
@@ -186,11 +225,24 @@ def get_document_passages(page_title: str, current_user: str = Depends(get_curre
     # game_manager.state['tfidf_search_map']['documents_selected'].append(r.json())
     return r.json()
 
+# name, score, questions answered
 @app.get("/get_leaderboard")
 def get_leaderboard():
-    top_players = {}
+    top_players = []
     for user, game_manager in game_sessions.items():
-        top_players[user] = game_manager.state
+        player_state = game_manager.state
+        # packet_scores = player_state['packet_scores'].values()
+        packet_scores = player_state['packet_scores']
+        top_players.append({
+            'id': player_state['username'],
+            'username': player_state['username'], 
+            'score': player_state['score'],
+            'num_questions': player_state['question_number'],
+            'score1': packet_scores[0],
+            'score2': packet_scores[1],
+            'score3': packet_scores[2],
+            'score4': packet_scores[3],
+            })
     return top_players
 
 @app.get("/get_players")
@@ -207,12 +259,22 @@ def get_top_scores():
         top_players[user] = game_manager.state['score']
     return top_players
 
-# @app.post("/record_next_sentence")
-# def record_next_sentence(name: str, sentence_index: int, current_user: str = Depends(get_current_user)):
-#     game_manager = get_game_object(current_user)
-#     game_manager.record_action(name, sentence_index)
 
-#     return True
+# times
+@app.get("/get_schedule_info")
+def get_schedule_info():
+    res = db.get_playing_times()
+    print('playing times', res)
+    now = datetime.now()
+    for interval in res:
+        print('interval', interval)
+        # datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S.%f')
+        if now >= datetime.strptime(interval['start_datetime'], '%Y-%m-%d %H:%M:%S') and now <= datetime.strptime(interval['end_datetime'], '%Y-%m-%d %H:%M:%S'):
+            print('valid playing time!')
+            return {'is_valid_playing_time': True, 'valid_times': res, 'next_end_datetime': interval['end_datetime']}
+    return {'is_valid_playing_time': False, 'valid_times': res}
+
+
 
 @app.post("/record_action")
 def record_action(name: str, action: ActionRecord, current_user: str = Depends(get_current_user)):

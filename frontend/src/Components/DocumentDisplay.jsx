@@ -72,10 +72,10 @@ class DocumentDisplay extends React.Component {
       // ignore event the first time
       let passage_id = entry.target.id;
       if (this.observe_target_ids.has(passage_id)) {
-        this.props.addIntersectionEvent({'passage_id': passage_id, 'time': Math.round(entry.time), 'is_visible': entry.isIntersecting});
+        this.props.addIntersectionEvent({'passage_id': passage_id, 'time': Math.round(entry.time/1000), 'is_visible': entry.isIntersecting});
       } else if (entry.isIntersecting) {
         this.observe_target_ids.add(passage_id);
-        this.props.addIntersectionEvent({'passage_id': passage_id, 'time': Math.round(entry.time), 'is_visible': entry.isIntersecting});
+        this.props.addIntersectionEvent({'passage_id': passage_id, 'time': Math.round(entry.time/1000), 'is_visible': entry.isIntersecting});
       }
     });
   };
@@ -242,13 +242,14 @@ class DocumentDisplay extends React.Component {
           // console.log(position, $content.parent());
           $current[0].scrollIntoView({block: 'nearest'});
           // $content.parent()[0].scrollTo(0, position);
-          console.log($current[0], $current[0].parentElement, $current[0].textContent)
+          // console.log($current[0], $current[0].parentElement, $current[0].textContent)
+
           if (record) {
             postRequest(`/record_action?name=advance_keyword_match`, {data: 
               {'action': 'advance', 
               'text': $current[0].textContent, 
               'passage_id': $current[0].parentElement.id, 
-              'dom_time': Math.round(performance.now())}})
+              'dom_time': Math.round(performance.now()/1000)}})
           }
         }
       }

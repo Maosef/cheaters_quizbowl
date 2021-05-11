@@ -24,7 +24,7 @@ import QuestionDisplay from '../Components/QuestionDisplaySentence';
 // import SearcherTfidf from '../Components/SearcherTfidf';
 import SearcherPassage from '../Components/SearcherPassage';
 
-import {postRequest, getRequest} from '../utils';
+import {postRequest, getRequest, getScheduleInfo} from '../utils';
 
 import '../App.css';
 import HighlightTool from '../Components/HighlightTool';
@@ -63,28 +63,28 @@ class Dashboard extends React.Component {
         this.recordKeywordSearchTerms = this.recordKeywordSearchTerms.bind(this);
         this.updateCurrentDocument = this.updateCurrentDocument.bind(this);
         this.recordHighlight = this.recordHighlight.bind(this);        
-
         this.recordEvidence = this.recordEvidence.bind(this);
         this.highlightToolCallback = this.highlightToolCallback.bind(this);
-
         this.handleShortcut = this.handleShortcut.bind(this);
         this.deactivateShortcut = this.deactivateShortcut.bind(this);
-
         this.onExit = this.onExit.bind(this);
-
         this.addIntersectionEvent = this.addIntersectionEvent.bind(this);
+        
+
         // this.intersectionEvents = [];
-
         this.maxAttempts = 1;
-
         // this.keywords = {};
         // this.passage_keywords_map = {};
         this.curDocumentInfo = {'title': null, 'keyword_matches': [], 'intersectionEvents': []};
 
+        
 
         this.state = {
 
             game_state: {}, // game state used by server
+            
+            isValidPlayingTime: true,
+            gameOver: false,
 
             currentQuery: '',
             searchLoading: false,
@@ -139,15 +139,40 @@ class Dashboard extends React.Component {
 
     // on init: authenticate, grab the user data, fetch first question
     async componentDidMount() {
-        // start game
+        
+        // if it's not a set playing time
+        // console.log('isValidPlayingTime', this.isValidPlayingTime())
+        const scheduleInfo = await getScheduleInfo()
+        if (!scheduleInfo['is_valid_playing_time']) {
+            console.log('not valid playing time')
+            this.setState({isValidPlayingTime: false})
+            return
+        } else {
+            console.log('endDateTime', new Date(this.state.endDateTime))
+            this.setState({endDateTime: scheduleInfo['next_end_datetime']})
+        }
+
         let username = window.sessionStorage.getItem("username");
         let token = window.sessionStorage.getItem("token");
-        
+        console.log('starting new game for',username)
+
+        // postRequest('get_player_info', {'username': username, 'session_token': token, 'mode': 'sentence'}).then(data => {
+        //     console.log('player info, ', data);
+        //     // this.setState({game_state: data});
+        // });
+        // let localState = window.sessionStorage.getItem( 'localState' );
+        // console.log('local state: ', localState)
+        // if (localState) {
+        //     this.setState(localState);
+        // } else {
+        // start game
         postRequest('start_new_game', {'username': username, 'session_token': token, 'mode': 'sentence'}).then(data => {
             console.log('new game started, ', data);
             this.setState({game_state: data});
         });
-
+        // if this is a new game, show intro for the first time
+        introJs().start();
+        // }
         // console.log('new game started, ', response.json());
         // this.setState({game_state: response.json()});
 
@@ -155,7 +180,6 @@ class Dashboard extends React.Component {
         window.addEventListener("keydown", this.handleShortcut);
         window.addEventListener("keyup", this.deactivateShortcut);
 
-        introJs().start();
         // answer shortcut
         HighlightAnswerTool(81, this.answerQuestion);
     }
@@ -231,7 +255,14 @@ class Dashboard extends React.Component {
     
     }
 
-    answerQuestion(answer, origin='none', selectedPassageId, context) {
+    async answerQuestion(answer, origin='none', selectedPassageId, context) {
+
+        const isValid = await getScheduleInfo()
+        if (!isValid['is_valid_playing_time']) {
+            console.log('not valid playing time')
+            this.setState({isValidPlayingTime: false})
+            return
+        }
 
         postRequest(`/record_action?name=answer`, {data: {answer: answer, origin: origin, passage_id: selectedPassageId, context: context, time: Date.now()}})
 
@@ -251,7 +282,15 @@ class Dashboard extends React.Component {
     }
 
     // advance to next question
-    advanceQuestion(player_decision=null, skip=false){
+    async advanceQuestion(player_decision=null, skip=false){
+
+        const isValid = await getScheduleInfo()
+        if (!isValid['is_valid_playing_time']) {
+            console.log('not valid playing time')
+            this.setState({isValidPlayingTime: false})
+            return
+        }
+
         // record keyword search data and intersection events
         console.log('keywords: ', this.keywords);
         // postRequest(`/record_keyword_search`, {
@@ -271,6 +310,10 @@ class Dashboard extends React.Component {
             //load the next question
             if (game_state['game_over']) {
                 alert('Game Finished. Thank you for your time!');
+                this.setState({gameOver: true})
+            } else if (game_state['packet_finished']) {
+                alert('Packet Finished!');
+                this.setState({gameOver: true})
             } else {
                 console.log("New question");
             }
@@ -284,18 +327,19 @@ class Dashboard extends React.Component {
         let cleaned_searchVal = searchVal.trim();
         // let doc_title = this.state.game_state['cur_doc_selected']['title'];
         let curDoc = this.curDocumentInfo;
-        let doc_title = curDoc['title'];
+        // let doc_title = curDoc['title'];
         console.log('doc: ', curDoc)
 
-        let keywords = curDoc.keyword_matches
+        // let keywords = curDoc.keyword_matches
         // if (search_type === 'full') {keywords = curDoc.keywords}
         // else if (search_type === 'passage') {keywords = curDoc.passage_keywords_map}
 
-        if (!keywords.hasOwnProperty(doc_title)){
-            keywords[doc_title] = [];
-        }
+        // if (!keywords.hasOwnProperty(doc_title)){
+        //     keywords[doc_title] = [];
+        // }
 
-        let doc_searchVals = keywords[doc_title];
+        // let doc_searchVals = keywords[doc_title];
+        let doc_searchVals = curDoc.keyword_matches
         // check if we're adding a duplicate
         if (cleaned_searchVal !== doc_searchVals[doc_searchVals.length - 1]) {
             doc_searchVals.push(cleaned_searchVal);
@@ -309,11 +353,12 @@ class Dashboard extends React.Component {
     }
 
     updateCurrentDocument(title){
-        // console.log('keywords: ', this.keywords);
-        // this.state.game_state['cur_doc_selected'] = doc;
-        // this.setState({curDocumentInfo: {title: title}})
-        postRequest(`/record_action?name=document_actions`, {data: {documentActions: this.curDocumentInfo}}); // record actions of prev doc
-        this.curDocumentInfo.title = title
+
+        if (this.curDocumentInfo.title) {
+            postRequest(`/record_action?name=document_actions`, {data: {documentActions: this.curDocumentInfo}}); // record actions of prev doc
+        }
+        // reset cur doc
+        this.curDocumentInfo = {'title': title, 'keyword_matches': [], 'intersectionEvents': []};
     }
 
     updateGameState(gameState) {
@@ -355,17 +400,20 @@ class Dashboard extends React.Component {
     render() {
 
         const { classes } = this.props;
+        let game_state = this.state.game_state;
 
         // const greenTheme = createMuiTheme({ palette: { primary: green } })
         // const blueTheme = createMuiTheme({ palette: { primary: red } })
 
+        // if there's no login token
         if (window.sessionStorage.getItem("token") == null) {
             return <Redirect to="/login" />;
         }
-
-        let question_data = this.state.game_state['question_data'];
-
-
+        // valid playing time or game over
+        if (!this.state.isValidPlayingTime || this.state.gameOver) {
+            return <Redirect to="/" />;
+        }
+        
 
         let queries;
         if (this.state.game_state['queries']) {
@@ -395,15 +443,30 @@ class Dashboard extends React.Component {
         }
 
         let override_window;
+        let points_breakdown;
         if (this.state.answerStatus != null) {
-            override_window = <div>
-                <p>We judged the answer as {this.state.answerStatus} (Our answer is {this.state.game_state.question_data['answer'].replaceAll("_"," ")}). 
-                Press any key to continue, or override. </p>
+            if (this.state.answerStatus === 'correct') {
+                let num_unread_clues = game_state['question_data']['tokenizations'].length - game_state['buzz_sentence_number']
+                points_breakdown = 
+                <div>
+                    Score breakdown: <br />
+                    {/* Sentence number: {this.state.game_state['buzz_sentence_number']} <br />
+                    Total sentences: {this.state.game_state['question_data']['tokenizations'].length} <br /> */}
+                    Number of unread clues = {num_unread_clues} <br />
+                    Score = 10 * (Number of unread clues) + 10 = {10 * num_unread_clues + 10}
+                </div>
+            }
+            override_window = 
+            <div>
+                <p>{this.state.answerStatus.toUpperCase()}. You answered {this.state.game_state['player_answer']}, our answer is {this.state.game_state.question_data['answer'].replaceAll("_"," ")}). 
+                Press any key to continue, or contest the decision. </p>
+                {points_breakdown}
+
                 <Button variant="contained" color="primary" onClick={() => this.advanceQuestion()} className={classes.margin}>
                     Continue (any key)
                 </Button>
                 <Button variant="contained" color="secondary" onClick={() => this.advanceQuestion(true)} className={classes.margin}>
-                    Override decision
+                    Contest decision
                 </Button>
             </div>
         }
@@ -431,7 +494,7 @@ class Dashboard extends React.Component {
                     onExit={this.onExit}
                 />
 
-                <Navbar text="CheatBowl" />
+                <Navbar text="CheatBowl" endDateTime={this.state.endDateTime}/>
 
                 <div className={classes.body} style={{maxWidth: 1500, margin: "auto"}}>
                     <Grid container spacing={1}
@@ -465,8 +528,6 @@ class Dashboard extends React.Component {
                                 {override_window}
                           
                             </Grid>
-                            {/* <Grid item xs={4}></Grid>
-                            <Grid item xs={4}></Grid> */}
 
                             {/* question display */}
                             <Grid item xs={12} id="questionText" >
@@ -475,9 +536,10 @@ class Dashboard extends React.Component {
                                     {Object.keys(this.state.game_state).length > 0 ?
                                         <div>
                                             <QuestionDisplay
-                                            text={this.state.game_state['question_data']['question']}
-                                            tokenizations={this.state.game_state['question_data']['tokenizations']}
-                                            updateSentencePosition={(index) => this.setState({ sentenceIndex: index })} 
+                                                text={this.state.game_state['question_data']['question']}
+                                                tokenizations={this.state.game_state['question_data']['tokenizations']}
+                                                updateSentencePosition={(index) => this.setState({ sentenceIndex: index })} 
+                                                // sentenceIndex={this.state.sentenceIndex}
                                             />
                                         </div>
                                         
@@ -549,6 +611,7 @@ class Dashboard extends React.Component {
                                         {/* Answer: {this.state.page} <br /> */}
                                         {/* Question Number: {this.state.game_state['question_number']} <br /> */}
                                         Question ID: {this.state.game_state['question_id']} <br />
+                                        Packet Number: {this.state.game_state['packet_number']} <br />
                                         {/* Category: {this.state.game_state['question_data']['category']} <br />
                                         {question_data['tournament']} {question_data['year']} */}
                                     </div>

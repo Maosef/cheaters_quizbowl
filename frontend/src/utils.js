@@ -29,7 +29,21 @@ export async function postRequest(url, body={}, headers={}) {
     return response.json();;
 }
 
+export async function isValidPlayingTime() {
+    const res = await getRequest('get_schedule_info');
+    console.log('check_valid_playing_time', res);
+    return res['is_valid_playing_time']
+    // return false;
+}
+export async function getScheduleInfo() {
+    const res = await getRequest('get_schedule_info');
+    console.log('check_valid_playing_time', res);
+    return res
+    // return false;
+}
 
+
+// text processing
 export function stripHtml(html) {
   let tmp = document.createElement("DIV");
   tmp.innerHTML = html;
