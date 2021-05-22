@@ -69,11 +69,12 @@ app.include_router(data_server.router)
 # cache for storing game sessions.
 game_sessions = dict()
 
-def get_game_object(current_user: str):
+def get_game_object(current_user: str, username=""):
     print('current user: ', current_user)
 
     if current_user not in game_sessions:
-        game_object = GameManager(current_user)
+        game_object = GameManager()
+        if username: game_object.state['username'] = username
         game_sessions[current_user] = game_object
 
         # saved state from disk
@@ -81,6 +82,7 @@ def get_game_object(current_user: str):
         if state:
             print('loading state from disk...')
             game_object.load(state)
+            # print('question number', game_object.state['question_number'])
     else:
         print('loading state from cache...')
         
@@ -110,10 +112,10 @@ def read_root():
 
 # get player info from database
 @app.get("/get_player_info")
-async def get_player_info(current_user: str = Depends(get_current_user)):
+async def get_player_info(username: str, current_user: str = Depends(get_current_user)):
 
     print(f'cur user: {current_user}')
-    game_manager = get_game_object(current_user)
+    game_manager = get_game_object(current_user, username)
     # get state of the game
     return game_manager.state
     # if game_manager.state['packet_finished'] = False:
@@ -125,10 +127,10 @@ async def start_new_game(request: InitRequest, current_user: str = Depends(get_c
 
     print(f'cur user: {current_user}, mode: {request.mode}')
     game_manager = get_game_object(current_user)
-    # remember the state of the game
-    if 'mode' not in game_manager.state or game_manager.state['mode'] != request.mode:
-        game_manager.start_game(current_user, request.mode)
-    else:
+    # check if game is new or existing
+    if game_manager.state['question_number'] == 0:
+        game_manager.start_game(request.username, request.mode)
+    else: # starting new packet
         game_manager.state['packet_finished'] = False
         
     return game_manager.state
@@ -203,9 +205,9 @@ def search_wikipedia_html(query: str, limit=None, current_user: str = Depends(ge
 
 # TF-IDF index
 @app.get("/search_tfidf")
-def search_tfidf(query: str, limit:int=10, current_user: str = Depends(get_current_user)):
+def search_tfidf(query: str, limit:int=20, current_user: str = Depends(get_current_user)):
     game_manager = get_game_object(current_user)
-    r = requests.get(f"{DRQA_RETRIEVER_URL}/search_passages?query={query}&n_docs={limit}")
+    r = requests.get(f"{DRQA_RETRIEVER_URL}/search_pages?query={query}&n_docs={limit}")
     search_results = r.json()
     if r.status_code != requests.codes.ok:
         print("Error in search")
@@ -233,15 +235,18 @@ def get_leaderboard():
         player_state = game_manager.state
         # packet_scores = player_state['packet_scores'].values()
         packet_scores = player_state['packet_scores']
+        filled_scores = [0]*4
+        for i,k in enumerate(sorted(packet_scores.keys())):
+            filled_scores[i] = packet_scores[k]
         top_players.append({
             'id': player_state['username'],
             'username': player_state['username'], 
             'score': player_state['score'],
             'num_questions': player_state['question_number'],
-            'score1': packet_scores[0],
-            'score2': packet_scores[1],
-            'score3': packet_scores[2],
-            'score4': packet_scores[3],
+            'score1': filled_scores[0],
+            'score2': filled_scores[1],
+            'score3': filled_scores[2],
+            'score4': filled_scores[3],
             })
     return top_players
 

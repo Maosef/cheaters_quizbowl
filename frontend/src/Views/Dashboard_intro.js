@@ -69,6 +69,8 @@ class Dashboard extends React.Component {
         this.deactivateShortcut = this.deactivateShortcut.bind(this);
         this.onExit = this.onExit.bind(this);
         this.addIntersectionEvent = this.addIntersectionEvent.bind(this);
+
+        this.startTutorial = this.startTutorial.bind(this);
         
 
         // this.intersectionEvents = [];
@@ -102,37 +104,44 @@ class Dashboard extends React.Component {
             shortcutToggled: false,
             wordIndex: 0,
 
-            stepsEnabled: true,
+            stepsEnabled: false,
             initialStep: 0,
             steps: [
             {
-                intro: "Welcome to Cheater's Quizbowl! The goal of this task is to answer trivia questions, with a twist."
-                },
+                intro: `<h1>Welcome to Cheater's Bowl!</h1> This tutorial will walk you through how to play the game.
+            The basic goal of this game is to answer trivia questions, with a twist. <b>Click "Next" to Continue.</b>`,
+                tooltipClass: 'customTooltip'
+
+            },
               {
                 element: "#questionText",
-                intro: `The goal is to answer this question. You can click 'Another Clue' to display another clue. 
-                You get more points for answering early.`
+                intro: `This is the question. You can click 'Another Clue' to reveal another sentence. 
+                You get more points for answering early (10 points per sentence unrevealed).`
               },
               {
                 element: "#answerBox",
-                intro: "Answer here. You're given a chance to override, if you think we judged your answer wrong."
+                intro: "Answer here. You're given a chance to protest, if you think we judged your answer wrong."
               },
               {
                 element: "#searcher",
-                intro: "You can search and read Wikipedia passages here. Once you open a document, you can also search for keywords."
+                intro: `You can search and read Wikipedia pages here. Once you open a document, you can also search for keywords.
+                <b>You are not allowed to use any external tools to play this game.</b>`
               },
               {
                 element: "#searcher",
-                intro: `One important task is recording evidence. We define evidence as "sentences which helped lead you to the answer."
-                To do this, highlight some text in a document to bring up the tooltip. You can choose to record it as evidence (or do other things).`
+                intro: `One important task is recording evidence. We define evidence as "text which helped lead you to the answer."
+                To do this, highlight some text in a document to bring up the tooltip, then click "Record as Evidence".`
               },
               {
                 element: "#toolbar",
-                intro: "The toolbar displays your score, evidence, and previous actions."
+                intro: "The toolbar displays your score, evidence, current packet, and other info."
               },
-            //   {
-            //     intro: "You can access this tutorial any time from the navbar. Have fun!"
-            //   }
+            {
+                element: "#navbar",
+                intro: `There are four packets, and each packet has 24 questions. Answer the questions as best as you can 
+                before time runs out. You can access this tutorial any time from the navbar. Good luck and have fun!`
+            },
+
             ],
         }
     }
@@ -154,27 +163,23 @@ class Dashboard extends React.Component {
 
         let username = window.sessionStorage.getItem("username");
         let token = window.sessionStorage.getItem("token");
-        console.log('starting new game for',username)
 
         // postRequest('get_player_info', {'username': username, 'session_token': token, 'mode': 'sentence'}).then(data => {
         //     console.log('player info, ', data);
         //     // this.setState({game_state: data});
         // });
-        // let localState = window.sessionStorage.getItem( 'localState' );
-        // console.log('local state: ', localState)
-        // if (localState) {
-        //     this.setState(localState);
-        // } else {
+
         // start game
         postRequest('start_new_game', {'username': username, 'session_token': token, 'mode': 'sentence'}).then(data => {
-            console.log('new game started, ', data);
             this.setState({game_state: data});
+
+            // if this is a new game, show intro for the first time
+            if (data.question_number === 1) {
+                console.log('new game started, ', data);
+                this.setState({stepsEnabled: true})
+                // introJs().start();
+            }
         });
-        // if this is a new game, show intro for the first time
-        introJs().start();
-        // }
-        // console.log('new game started, ', response.json());
-        // this.setState({game_state: response.json()});
 
         // buzzer shortcut
         window.addEventListener("keydown", this.handleShortcut);
@@ -264,6 +269,13 @@ class Dashboard extends React.Component {
             return
         }
 
+        // confirm
+        if (this.state.game_state.evidence.length === 0) {
+            if (!window.confirm("Are you sure you want to answer without recording evidence?")) {
+                return
+            }
+        }
+
         postRequest(`/record_action?name=answer`, {data: {answer: answer, origin: origin, passage_id: selectedPassageId, context: context, time: Date.now()}})
 
         // console.log(`expanded answer: ${expanded_answer}`)
@@ -307,12 +319,13 @@ class Dashboard extends React.Component {
             this.setState({game_state: data, interrupted: false, wordIndex: 0, sentenceIndex: 0, answerStatus: null, passages: []});
 
             let game_state = this.state.game_state;
+            console.log('game state', game_state)
             //load the next question
             if (game_state['game_over']) {
                 alert('Game Finished. Thank you for your time!');
                 this.setState({gameOver: true})
             } else if (game_state['packet_finished']) {
-                alert('Packet Finished!');
+                alert('Packet Finished! Returning to Home...');
                 this.setState({gameOver: true})
             } else {
                 console.log("New question");
@@ -366,7 +379,7 @@ class Dashboard extends React.Component {
     }
 
     async recordEvidence(text, selectedPassageId) {
-        this.state.game_state['evidence'].push(text); // TODO: make immutable update
+        // this.state.game_state['evidence'].push(text); // TODO: make immutable update
         // let cur_doc_selected = this.state.game_state['cur_doc_selected']
         // this.state.game_state['evidence'][cur_doc_selected] = text;
         let game_state = await postRequest(`/record_evidence?evidence=${text}`);
@@ -387,7 +400,7 @@ class Dashboard extends React.Component {
     }
 
     startTutorial() {
-        this.setState(() => ({ stepsEnabled: true }));
+        this.setState({ stepsEnabled: true });
     }
     onExit() {
         this.setState(() => ({ stepsEnabled: false }));
@@ -410,7 +423,8 @@ class Dashboard extends React.Component {
             return <Redirect to="/login" />;
         }
         // valid playing time or game over
-        if (!this.state.isValidPlayingTime || this.state.gameOver) {
+        // console.log('game over', this.state.game_state['game_over'])
+        if (!this.state.isValidPlayingTime || this.state.game_state['game_over'] || this.state.game_state['packet_finished']) {
             return <Redirect to="/" />;
         }
         
@@ -482,6 +496,10 @@ class Dashboard extends React.Component {
             steps,
             initialStep,
             } = this.state;
+        
+        const tutorial = <Button variant="contained" color="primary" disableElevation onClick={this.startTutorial}>
+            Tutorial
+        </Button>
 
         return (
 
@@ -494,7 +512,8 @@ class Dashboard extends React.Component {
                     onExit={this.onExit}
                 />
 
-                <Navbar text="CheatBowl" endDateTime={this.state.endDateTime}/>
+                
+                <Navbar page="game" endDateTime={this.state.endDateTime} tutorial={tutorial}/>
 
                 <div className={classes.body} style={{maxWidth: 1500, margin: "auto"}}>
                     <Grid container spacing={1}
@@ -578,7 +597,7 @@ class Dashboard extends React.Component {
                                 /> */}
                             <SearcherPassage 
                                 currentQuery={this.state.currentQuery}
-                                processQuery={(query) => this.processQuery(query, 'passage')}
+                                processQuery={(query) => this.processQuery(query, 'search_box')}
                                 searchLoading={this.state.searchLoading}
                                 // retrievedTitles={this.state.retrievedTitles}
                                 passages={this.state.passages}
@@ -605,13 +624,13 @@ class Dashboard extends React.Component {
                                         </h2>
                                         <h3>
                                         Evidence score: {this.state.game_state['evidence_score']} <br />
+                                        Packet Number: {this.state.game_state['packet_number']} <br />
                                         </h3>
 
                                         {/* debugging */}
                                         {/* Answer: {this.state.page} <br /> */}
                                         {/* Question Number: {this.state.game_state['question_number']} <br /> */}
-                                        Question ID: {this.state.game_state['question_id']} <br />
-                                        Packet Number: {this.state.game_state['packet_number']} <br />
+                                        {/* Question ID: {this.state.game_state['question_id']} <br /> */}
                                         {/* Category: {this.state.game_state['question_data']['category']} <br />
                                         {question_data['tournament']} {question_data['year']} */}
                                     </div>

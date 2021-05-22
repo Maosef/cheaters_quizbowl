@@ -130,7 +130,8 @@ def get_access_token(form_data):
 #     return {}
 
 @router.post("/register")
-async def register(form_data: OAuth2PasswordRequestForm = Depends()):
+async def register(email: str, form_data: OAuth2PasswordRequestForm = Depends()):
+    print('email', email)
     print(
         "adding {} {} to database".format(
             form_data.username, pwd_context.hash(form_data.password)
@@ -138,7 +139,7 @@ async def register(form_data: OAuth2PasswordRequestForm = Depends()):
     )
     
     if db.insert_user_email_password(
-        form_data.username, pwd_context.hash(form_data.password)
+        form_data.username, pwd_context.hash(form_data.password), email
     ):
         print('authorized')
         return get_access_token(form_data)

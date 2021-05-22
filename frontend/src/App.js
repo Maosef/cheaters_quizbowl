@@ -38,7 +38,7 @@ function App() {
         {/* <Route path="/play">
           <Dashboard />
         </Route> */}
-        <Route path="/dev">
+        <Route path="/play">
           <Dashboard />
         </Route>
         <Route path="/">

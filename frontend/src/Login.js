@@ -90,7 +90,7 @@ export default class Login extends React.Component<Props, State> {
               required
               fullWidth
               id="username"
-              label="Username"
+              label="Email"
               name="username"
               value={this.state.username}
               onChange={this.handleUsername}

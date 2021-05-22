@@ -25,7 +25,7 @@ CONFIG = {
             'dataset': 'spring_novice',
             # 'dataset': 'qanta',
             'packet_nums': [1,2,5,7],
-            'num_questions': 24,
+            'num_questions': 96,
             'multiple_answers': False,
             'randomize': False,
             'hard_questions': False,
@@ -136,7 +136,7 @@ def get_random_question(dataset_name: str):
 ## Game manager: # manages the game, records data
 
 class GameManager:
-    def __init__(self, username):
+    def __init__(self):
         '''
         dataset:
         - qanta
@@ -160,10 +160,11 @@ class GameManager:
 
         # initialize game state
         self.reset()
-        self.state['username'] = username
         # get questions, packet scores
         if self.config['dataset'] == 'spring_novice':
-            self.state['packet_scores'] = [0] * len(self.config['packet_nums'])
+            # self.state['packet_scores'] = [0] * len(self.config['packet_nums'])
+            self.state['packet_scores'] = {}
+            self.state['packets'] = self.config['packet_nums']
  
 
     def load(self, state):
@@ -184,9 +185,10 @@ class GameManager:
         # get questions, packet scores
         if self.config['dataset'] == 'spring_novice':
             for packet_num in self.config['packet_nums']:
-                self.state['question_ids'] += db.get_packet_questions(packet_num)[:3]
-                # self.state['packet_scores'][packet_num] = 0
-            self.state['packet_scores'] = [0] * len(self.config['packet_nums'])
+                self.state['question_ids'] += db.get_packet_questions(packet_num)
+                self.state['packet_scores'][packet_num] = 0
+            # self.state['packet_scores'] = [0] * len(self.config['packet_nums'])
+            self._num_questions = len(self.state['question_ids'])
         else:
             self.state['question_ids'] = self.config["question_ids"]
         
@@ -220,6 +222,7 @@ class GameManager:
             'start_datetime': str(datetime.utcnow()),
             'question_ids': [],
             'packet_number': self.config['packet_nums'][0],
+            'packets': self.config['packet_nums'],
             'question_number': 0, 
             'question_id': '', 
             'cur_question': '', 
@@ -253,7 +256,7 @@ class GameManager:
 
             'actions': [],
 
-            'packet_scores': [],
+            'packet_scores': {},
             # 'total_score': 0
         }
         return True
@@ -272,13 +275,7 @@ class GameManager:
             self.state['override_decision'] = override_decision
 
         if self.state['question_number'] > 0: # record the current state
-            if skip:
-                self.state['skipped'] = True
-                print('skipping record...')
-            else:
-                # save play, extract keys
-                print('saving play...')
-                keys = {'username','start_datetime','packet_number','question_number','question_id','skipped','evidence','tfidf_search_map',
+            keys = {'username','start_datetime','packet_number','question_number','question_id','skipped','evidence','tfidf_search_map',
                     'buzz_sentence_number',
                     'player_answer',
                     'answer',
@@ -288,11 +285,15 @@ class GameManager:
                     'override_decision',
                     'actions',
                 }
-                play = {k:self.state[k] for k in keys if k in self.state}
-                self.save_play(play)
-                # save state for loading
-                db.insert_user_game_data(self.state['username'], json.dumps(self.state))
+            play = {k:self.state[k] for k in keys if k in self.state}
 
+            if skip:
+                self.state['skipped'] = True
+                print('skipping record...')
+            else:
+                # save play, extract keys
+                print('saving play...')
+                self.save_play(play)
 
         cur_question_number = self.state['question_number'] + 1
 
@@ -321,7 +322,8 @@ class GameManager:
         if self.config['dataset'] == 'spring_novice':
             if cur_question['packet_num'] != self.state['packet_number']:
                 old_packet = self.state['packet_number']
-                self.state['packet_scores'].append(self.state['score'])
+                # self.state['packet_scores'].append(self.state['score'])
+                # self.state['packet_scores'][old_packet] = self.state['score']
                 self.state['packet_number'] = cur_question['packet_num']
                 self.state['packet_finished'] = True
                 # db.insert_user_game_data(self.state['username'], json.dumps(self.state))
@@ -354,6 +356,10 @@ class GameManager:
         self.state['override_decision'] = None
         self.state['actions'] = []
 
+        # save state for loading
+        db.insert_user_game_data(self.state['username'], json.dumps(self.state))
+
+
         return self.state
 
     def buzz(self, word_index):
@@ -383,6 +389,11 @@ class GameManager:
             points += 10 * (num_sentences - sentence_number)
         print(f'points awarded: {points}')
         self.state['score'] += points
+
+        if self.config['dataset'] == 'spring_novice':
+            packet = self.state['packet_number']
+            self.state['packet_scores'][packet] += points
+
 
         return self.state
 

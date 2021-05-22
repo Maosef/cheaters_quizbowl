@@ -194,7 +194,7 @@ export default class Register extends React.Component<Props, State> {
               Any potential loss of confidentiality will be minimized by storing your data on a password-protected cloud storage system (UMD Box). The only personally identifiable information we will collect is your email and username. After the end of the experiment, your data will be anonymized and released publicly. Only researchers will have access to your data before it is anonymized.
 If we write a report or article about this research project, your identity will be protected to the maximum extent possible. Your information may be shared with representatives of the University of Maryland, College Park or governmental authorities if you or someone else is in danger or if we are required to do so by law.
               <h2>Compensation</h2>
-              You will receive a gift card for scoring in the top five (by answering the most questions correctly). The payouts for 1st,2nd,3rd,4th,5th place are: 150,100,50,25,25. There will also be 1-3 raffles for $20. You will be responsible for any taxes assessed on the compensation.
+              You will receive a gift card for scoring in the top five (by answering the most questions correctly). The payouts for 1st,2nd,3rd place are: 50,25,10. There will also be 1-3 raffles for $20. You will be responsible for any taxes assessed on the compensation.
               If you will earn more than $100 as a research participant in this study, you must provide your name, address and SSN to receive compensation.
               If you do not earn more than $100 only your name and address will be collected to receive compensation.
               <h2>Right to Withdraw and Questions</h2>

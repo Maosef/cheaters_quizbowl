@@ -57,7 +57,7 @@ export default function Navbar(props) {
     
     return (
 
-        <div className={classes.root}>
+        <div className={classes.root} id="navbar">
 
             <AppBar position="static">
                 <Toolbar>
@@ -65,7 +65,8 @@ export default function Navbar(props) {
                         <MenuIcon />
                     </IconButton> */}
                     <Typography variant="h6" className={classes.title}>
-                        {props.text}
+                        {/* {props.text} */}
+                        Cheater's Bowl, Spring Novice
                     </Typography>
 
                     {/* time left in minutes */}
@@ -73,6 +74,8 @@ export default function Navbar(props) {
                     {timeLeft}
 
                     {/* <SimpleModal /> */}
+                    {props.tutorial}
+                        
                     <Link to="/">
                         <Button variant="contained" color="primary" disableElevation>
                             Home

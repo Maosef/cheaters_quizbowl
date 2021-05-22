@@ -25,7 +25,8 @@ from sqlalchemy.orm.scoping import ScopedSession
 from backend.log import get_logger
 # from log import get_logger
 
-PLAYS_TABLE_NAME = 'plays_dev_2'
+# PLAYS_TABLE_NAME = 'plays_dev_2'
+PLAYS_TABLE_NAME = 'plays_prod'
 
 log = get_logger(__name__)
 
@@ -205,7 +206,7 @@ class Database:
             return None
 
     # registration
-    def insert_user_email_password(self, username, password):
+    def insert_user_email_password(self, username, password, email):
         with self._session_scope as session:
             if not session.query(User).filter(User.user_id == username).first():
                 session.bulk_insert_mappings(

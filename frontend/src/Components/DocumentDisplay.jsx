@@ -269,15 +269,15 @@ class DocumentDisplay extends React.Component {
           this.props.recordKeywordSearchTerms(searchVal);
 
           // clean the text for searching
-          if (this.props.cleanText){
-            searchVal = cleanText(searchVal);
-          }
+          // if (this.props.cleanText){
+          //   searchVal = cleanText(searchVal);
+          // }
 
           // marking
           $content.unmark({
             done: function () {
               $content.mark(searchVal, {
-                separateWordSearch: separateWordSearch,
+                separateWordSearch: false,
                 done: function () {
                   $results = $content.find("mark");
                   currentIndex = 0;
