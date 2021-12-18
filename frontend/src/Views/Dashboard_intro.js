@@ -19,9 +19,6 @@ import Buzzer from '../Components/BuzzerUntimed';
 // import QuestionDisplay from './Components/QuestionDisplay';
 import QuestionDisplay from '../Components/QuestionDisplaySentence';
 
-
-// import Searcher from '../Components/SearcherControlled';
-// import SearcherTfidf from '../Components/SearcherTfidf';
 import SearcherPassage from '../Components/SearcherPassage';
 
 import {postRequest, getRequest, getScheduleInfo} from '../utils';
