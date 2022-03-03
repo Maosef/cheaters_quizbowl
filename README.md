@@ -33,6 +33,8 @@ Run backend:
 
 Run frontend:  
 `yarn start`
+You may run into this bug: https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported
+To fix, run: `export NODE_OPTIONS=--openssl-legacy-provider`
 
 Run reverse proxy (enables frontend and backend to communicate):  
 `caddy run`

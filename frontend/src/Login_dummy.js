@@ -79,14 +79,14 @@ export default class Login extends React.Component<Props, State> {
     // console.log("Login style "+login_css);
 
     return (
-      <Container maxWidth="xs">
+      <Container maxWidth="m">
         <CssBaseline />
         <div className="paper">
           <Avatar className="avatar">
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h4">
-            Cheater's Bowl
+            Cheater's Bowl Dummy Login Page
           </Typography>
           <form className="form" noValidate onSubmit={this.handleSubmit}>
             <TextField
@@ -123,7 +123,7 @@ export default class Login extends React.Component<Props, State> {
               color="primary"
               className="submit"
             >
-              Login
+              Log in
             </Button>
             <Grid container className="signup">
               <Grid item xs></Grid>

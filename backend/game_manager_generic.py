@@ -22,12 +22,12 @@ db = Database()
 
 SKIP_RECORD_ON_SKIP = True
 CONFIG = {
-            'dataset': 'spring_novice',
-            # 'dataset': 'qanta',
+            # 'dataset': 'spring_novice',
+            'dataset': 'qanta',
             'packet_nums': [1,2,5,7],
             'num_questions': 96,
             'multiple_answers': False,
-            'randomize': False,
+            'randomize': True,
             'hard_questions': False,
             'hard_questions_path': 'backend/data/hard_qanta.json',
             # 'question_ids': db.get_table_ids(),

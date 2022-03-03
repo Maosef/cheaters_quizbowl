@@ -1,4 +1,4 @@
-cbowl.cs.umd.edu {
+:2020 {
   reverse_proxy /api/* 127.0.0.1:8000
   reverse_proxy /token 127.0.0.1:8000
   reverse_proxy /token/* 127.0.0.1:8000

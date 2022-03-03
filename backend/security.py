@@ -36,6 +36,7 @@ def verify_password(plain_password, hashed_password):
 
 def authenticate_user(username, password):
     hashed_password = db.get_password(username)
+    print('retrieved password:', hashed_password)
     if not hashed_password:
         return False
     return verify_password(password, hashed_password)
@@ -146,6 +147,7 @@ async def register(email: str, form_data: OAuth2PasswordRequestForm = Depends())
     print("User or email already exists")
     return {}
 
+
 # registers username without password
 @router.post("/register_easy")
 async def register_easy(form_data: OAuth2PasswordRequestForm = Depends()):
@@ -158,6 +160,8 @@ async def register_easy(form_data: OAuth2PasswordRequestForm = Depends()):
     db.insert_user_password(
         form_data.username, pwd_context.hash(form_data.password)
     )
+
+    print('getting access token...')
     return get_access_token(form_data)
 
 

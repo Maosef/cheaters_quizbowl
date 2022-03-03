@@ -1,3 +1,4 @@
+data/
 *.ipynb
 frontend/node_modules/
 backend/data/

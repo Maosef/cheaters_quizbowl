@@ -25,8 +25,8 @@ from sqlalchemy.orm.scoping import ScopedSession
 from backend.log import get_logger
 # from log import get_logger
 
-# PLAYS_TABLE_NAME = 'plays_dev_2'
-PLAYS_TABLE_NAME = 'plays_prod'
+PLAYS_TABLE_NAME = 'plays_dev'
+# PLAYS_TABLE_NAME = 'plays_prod'
 
 log = get_logger(__name__)
 
@@ -48,6 +48,8 @@ class Database:
                     r[0] for r in session.query(Question.qanta_id).all()
                 ]
 
+        print('num qanta questions: ', len(self._all_qanta_ids))
+
         meta = MetaData()
         self.plays = Table(
             PLAYS_TABLE_NAME, meta, 
@@ -56,26 +58,28 @@ class Database:
             Column('start_datetime', String, primary_key = True), 
             Column('data', String),
         )
-        self.playing_times = Table(
-            'playing_times', meta, 
-            Column('start_datetime', String), 
-            Column('end_datetime', String),
-        )
-        self.spring_novice_data = Table(
-            'spring_novice_data', meta, 
-            Column('id', Integer, primary_key = True), 
-            Column('question', String),
-            Column('answer', String), 
-            Column('sentence_tokenizations', String),
-            Column('packet_num', Integer),
-            Column('question_num', Integer),
-            Column('other_data', String),
-        )
+        # self.playing_times = Table(
+        #     'playing_times', meta, 
+        #     Column('start_datetime', String), 
+        #     Column('end_datetime', String),
+        # )
 
-        with self._session_scope as session:
-            self._spring_novice_ids = [
-                r[0] for r in session.query(self.spring_novice_data.c.id).all()
-            ]
+        # spring novice tournament
+        # self.spring_novice_data = Table(
+        #     'spring_novice_data', meta, 
+        #     Column('id', Integer, primary_key = True), 
+        #     Column('question', String),
+        #     Column('answer', String), 
+        #     Column('sentence_tokenizations', String),
+        #     Column('packet_num', Integer),
+        #     Column('question_num', Integer),
+        #     Column('other_data', String),
+        # )
+
+        # with self._session_scope as session:
+        #     self._spring_novice_ids = [
+        #         r[0] for r in session.query(self.spring_novice_data.c.id).all()
+        #     ]
     
     def get_playing_times(self):
         s = self.playing_times.select()
@@ -198,9 +202,9 @@ class Database:
 
     ### authentication ###
 
-    def get_password(self, email):
+    def get_password(self, user_id):
         with self._session_scope as session:
-            results = session.query(User).filter(User.email == email).first()
+            results = session.query(User).filter(User.user_id == user_id).first()
             if results:
                 return results.password
             return None
@@ -286,7 +290,7 @@ class Question(Base):
 class User(Base):
     __tablename__ = "users"
     user_id = Column(String, primary_key=True)
-    email = Column(String, primary_key=True)
+    # email = Column(String, primary_key=True)
     password = Column(String)
     sessions = relationship('Session')
     # score = Column(Integer)
@@ -295,11 +299,6 @@ class User(Base):
 
     def __str__(self):
         return self.user_id
-
-# record_question_table = Table('record_question_table', Base.metadata,
-#     Column('record_id', String, ForeignKey('questions.qanta_id')),
-#     Column('question_id', Integer, ForeignKey('records.record_id'))
-# )
 
 class Session(Base): # data on a single session
     __tablename__ = "sessions"

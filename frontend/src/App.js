@@ -4,14 +4,13 @@ import * as s from "./App.css";
 import Dashboard from './Views/Dashboard_intro';
 import Home from './Views/Home';
 
+// import Dashboard_incremental from './Views/Dashboard_incremental';
+// import Dashboard_static from './Views/Dashboard_static';
+// import Dashboard_passage from './Views/Dashboard_passage';
 
-import Dashboard_incremental from './Views/Dashboard_incremental';
-import Dashboard_static from './Views/Dashboard_static';
-import Dashboard_passage from './Views/Dashboard_passage';
 
-
-// import Login from "./Login_dummy";
-import Login from "./Login";
+import Login from "./Login_dummy";
+// import Login from "./Login";
 // import Register from "./Views/Register";
 import Register from "./Views/RegisterEmail";
 

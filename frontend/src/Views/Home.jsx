@@ -23,11 +23,6 @@ import { postRequest, getRequest, getScheduleInfo } from '../utils';
 import '../App.css';
 import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import useStyles from '../Styles';
-// import { green, purple } from '@material-ui/core/colors';
-
-// import { Steps, Hints } from 'intro.js-react';
-// import introJs from 'intro.js';
-// import 'intro.js/introjs.css';
 
 import { DataGrid } from '@material-ui/data-grid';
 
@@ -40,7 +35,7 @@ export default withStyles(useStyles)(function Home(props) {
     const [playerData, setPlayerData] = useState({});
     const [playerStats, setPlayerStats] = useState("Loading Player Statistics...");
     const [schedule, setSchedule] = useState("Loading Schedule...")
-    const [roundInProgress, setRoundInProgress] = useState(false)
+    const [roundInProgress, setRoundInProgress] = useState(true)
 
     const { classes } = props;
 
@@ -88,16 +83,16 @@ export default withStyles(useStyles)(function Home(props) {
             // setPlayerData(<div>{resp}</div>)
             // setLeaderboard(DataTable(rows, leaderboard_columns))
 
-            const resp = await getScheduleInfo();
-            console.log('resp', resp)
-            setRoundInProgress(resp['is_valid_playing_time'])
-            resp['valid_times'].forEach(function (round, i) {
-                // console.log('%d: %s', i, value);
-                round.id = i
-            });
-            playing_times = resp['valid_times']
-            setSchedule(DataTable(playing_times, game_time_columns))
-            // schedule = DataTable(playing_times, game_time_columns)
+            // schedule whether round has started
+            // const resp = await getScheduleInfo();
+            // console.log('resp', resp)
+            // setRoundInProgress(resp['is_valid_playing_time'])
+            // resp['valid_times'].forEach(function (round, i) {
+            //     // console.log('%d: %s', i, value);
+            //     round.id = i
+            // });
+            // playing_times = resp['valid_times']
+            // setSchedule(DataTable(playing_times, game_time_columns))
         }
         // check if user is logged in
         if (window.sessionStorage.getItem("token") == null) {

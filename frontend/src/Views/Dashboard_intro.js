@@ -146,17 +146,16 @@ class Dashboard extends React.Component {
     // on init: authenticate, grab the user data, fetch first question
     async componentDidMount() {
         
-        // if it's not a set playing time
-        // console.log('isValidPlayingTime', this.isValidPlayingTime())
-        const scheduleInfo = await getScheduleInfo()
-        if (!scheduleInfo['is_valid_playing_time']) {
-            console.log('not valid playing time')
-            this.setState({isValidPlayingTime: false})
-            return
-        } else {
-            console.log('endDateTime', new Date(this.state.endDateTime))
-            this.setState({endDateTime: scheduleInfo['next_end_datetime']})
-        }
+        // if it's not a valid playing time
+        // const scheduleInfo = await getScheduleInfo()
+        // if (!scheduleInfo['is_valid_playing_time']) {
+        //     console.log('not valid playing time')
+        //     this.setState({isValidPlayingTime: false})
+        //     return
+        // } else {
+        //     console.log('endDateTime', new Date(this.state.endDateTime))
+        //     this.setState({endDateTime: scheduleInfo['next_end_datetime']})
+        // }
 
         let username = window.sessionStorage.getItem("username");
         let token = window.sessionStorage.getItem("token");
